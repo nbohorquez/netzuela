@@ -1,0 +1,142 @@
+USE `Spuria`;
+
+/*
+*************************************************************
+*				RegistroCrear				*
+*************************************************************
+*/
+
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS `RegistroCrear`;
+DELIMITER $$
+
+CREATE FUNCTION `RegistroCrear` (a_ActorActivo INT, a_ActorPasivo INT, a_Accion CHAR(13), a_Parametros TEXT, a_CodigoDeError CHAR(10))
+RETURNS INT NOT DETERMINISTIC
+BEGIN
+/*
+	DECLARE EXIT HANDLER FOR 1452
+	BEGIN
+		SET @MensajeDeError = 'Error de clave externa en RegistroCrear()';
+		SET @CodigoDeError = 1452;
+		RETURN -1452;
+	END; 
+
+	DECLARE EXIT HANDLER FOR 1048
+	BEGIN
+		SET @MensajeDeError = 'Error de valor nulo en RegistroCrear()';
+		SET @CodigoDeError = 1048;
+		RETURN -1048;
+	END; 
+*/
+	INSERT INTO Registro VALUES (
+		NULL,
+		NOW(),
+		a_ActorActivo,
+		a_ActorPasivo,
+		a_Accion,
+		a_Parametros,
+		a_CodigoDeError
+	);
+	
+	RETURN LAST_INSERT_ID();
+END$$
+
+/*
+*************************************************************
+*			RegistrarEliminacion				*
+*************************************************************
+*/
+
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS `RegistrarEliminacion`;
+DELIMITER $$
+
+CREATE FUNCTION `RegistrarEliminacion` (a_Rastreable INT, a_Parametros TEXT)
+RETURNS INT NOT DETERMINISTIC
+BEGIN
+    	DECLARE ActorActivo, bobo INT;
+
+	SELECT EliminadoPor FROM Rastreable
+    	WHERE RastreableID = a_Rastreable
+    	INTO ActorActivo;
+
+	SELECT RegistroCrear (
+     		ActorActivo,
+      	a_Rastreable,
+        	'Eliminar',
+        	a_Parametros,
+        	'OK'
+	) INTO bobo;
+
+	RETURN bobo;
+END$$
+
+/*
+*************************************************************
+*				RegistrarCreacion				*
+*************************************************************
+*/
+
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS `RegistrarCreacion`;
+DELIMITER $$
+
+CREATE FUNCTION `RegistrarCreacion` (a_Rastreable INT, a_Parametros TEXT)
+
+RETURNS INT NOT DETERMINISTIC
+BEGIN
+	DECLARE ActorActivo, bobo INT;
+
+   	SELECT CreadoPor FROM Rastreable
+   	WHERE RastreableID = a_Rastreable
+    	INTO ActorActivo;
+
+   	SELECT RegistroCrear (
+		ActorActivo,
+        	a_Rastreable,
+        	'Crear',
+        	a_Parametros,
+      	'OK'
+	) INTO bobo;
+
+	RETURN bobo;
+END$$
+
+/*
+*************************************************************
+*			RegistrarModificacion				*
+*************************************************************
+*/
+
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS `RegistrarModificacion`;
+DELIMITER $$
+
+CREATE FUNCTION `RegistrarModificacion` (a_Rastreable INT, a_Parametros TEXT)
+
+RETURNS INT NOT DETERMINISTIC
+BEGIN
+	DECLARE ActorActivo, bobo INT;
+
+   	SELECT ModificadoPor FROM Rastreable
+   	WHERE RastreableID = a_Rastreable
+    	INTO ActorActivo;
+
+   	SELECT RegistroCrear (
+		ActorActivo,
+        	a_Rastreable,
+        	'Modificar',
+        	a_Parametros,
+      	'OK'
+	) INTO bobo;
+
+	RETURN bobo;
+END$$
+
+/***********************************************************/
+DELIMITER ;
+/***********************************************************/
