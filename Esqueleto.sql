@@ -582,7 +582,7 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Inventario` (
   INDEX `fk_Inventario_Visibilidad` (`Visibilidad` ASC) ,
   INDEX `fk_Inventario_Rastreable` (`Rastreable_P` ASC) ,
   UNIQUE INDEX `Rastreable_P_UNIQUE` (`Rastreable_P` ASC) ,
-  INDEX `fk_Inventario_Cobrable1` (`Cobrable_P` ASC) ,
+  INDEX `fk_Inventario_Cobrable` (`Cobrable_P` ASC) ,
   UNIQUE INDEX `Cobrable_P_UNIQUE` (`Cobrable_P` ASC) ,
   CONSTRAINT `fk_Inventario_Tienda`
     FOREIGN KEY (`TiendaID` )
@@ -604,7 +604,7 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Inventario` (
     REFERENCES `Spuria`.`Rastreable` (`RastreableID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Inventario_Cobrable1`
+  CONSTRAINT `fk_Inventario_Cobrable`
     FOREIGN KEY (`Cobrable_P` )
     REFERENCES `Spuria`.`Cobrable` (`CobrableID` )
     ON DELETE NO ACTION
