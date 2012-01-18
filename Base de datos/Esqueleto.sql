@@ -1707,6 +1707,19 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`TiendasConsumidores` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Placeholder table for view `Spuria`.`InventarioTienda`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `ProductoID` INT, `SKU` INT, `Precio` INT, `Cantidad` INT, `Visibilidad` INT);
+
+-- -----------------------------------------------------
+-- View `Spuria`.`InventarioTienda`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Spuria`.`InventarioTienda`;
+USE `Spuria`;
+CREATE  OR REPLACE VIEW `Spuria`.`InventarioTienda` AS
+SELECT TiendaID, ProductoID, SKU, Precio, Cantidad, Visibilidad FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, ProductoID) WHERE FechaFin IS NULL ;
 USE `Spuria`;
 
 DELIMITER $$

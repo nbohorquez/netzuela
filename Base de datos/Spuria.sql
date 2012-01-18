@@ -15,3 +15,5 @@ SOURCE D:\Netzuela\Spuria\Funciones miscelaneas.sql
 SOURCE D:\Netzuela\Spuria\Funciones sobre registro.sql
 
 SOURCE D:\Netzuela\Spuria\Inicializacion.sql
+
+SOURCE D:\Netzuela\Spuria\Usuarios.sql

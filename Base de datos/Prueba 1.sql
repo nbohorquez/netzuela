@@ -28,23 +28,68 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 */
 
 SELECT CategoriaID FROM Categoria 
-WHERE Nombre = 'Automotriz e industrial' 
+WHERE Nombre = 'Electronica' 
 INTO @CategoriaID;
 
 SELECT ProductoCrear (
 	@Creador,
 	'GTIN-13', 
-	'AB123456789CD', 
+	'P-001', 
 	'Activo', 
-	'ZuliaWorks C.A.', 
-	'PAE-1516', 
-	'Silicio', 
+	'Silicon Graphics', 
+	'CMN B014ANT300', 
+	'O2', 
 	@CategoriaID, 
-	'2011/07/04', 
+	'2001/02/20', 
 	3.64, 2.18, 
-	2.18, 1649.94, 
+	2.18, 3.94, 
 	@VenezuelaID
-) INTO @ProductoID;
+) INTO @ProductoID1;
+
+SELECT ProductoCrear (
+	@Creador,
+	'GTIN-13', 
+	'P-002', 
+	'Activo', 
+	'Nokia', 
+	'N78', 
+	'Nokia N78', 
+	@CategoriaID, 
+	'1994/08/15', 
+	3.64, 2.18, 
+	2.18, 0.14, 
+	@VenezuelaID
+) INTO @ProductoID2;
+
+SELECT ProductoCrear (
+	@Creador,
+	'GTIN-13', 
+	'P-003', 
+	'Activo', 
+	'Nintendo', 
+	'NUS-001', 
+	'Nintendo 64 Control', 
+	@CategoriaID, 
+	'1996/09/23', 
+	3.64, 2.18, 
+	2.18, 0.21, 
+	@VenezuelaID
+) INTO @ProductoID3;
+
+SELECT ProductoCrear (
+	@Creador,
+	'GTIN-13', 
+	'P-004', 
+	'Activo', 
+	'Shure', 
+	'SM57', 
+	'Microfono SM57', 
+	@CategoriaID, 
+	'1996/09/23', 
+	3.64, 2.18, 
+	2.18, 0.45, 
+	@VenezuelaID
+) INTO @ProductoID4;
 
 /*
 *******************************************************
@@ -64,6 +109,8 @@ Usuario --------> Administrador
 	   |				   -----> Patrocinante
 	   |------> Consumidor	
 */
+
+/* TIENDA 1 */
 
 SELECT ParroquiaID FROM Parroquia, RegionGeografica 
 WHERE RegionGeografica.Nombre = 'Ambrosio' AND Parroquia.RegionGeografica_P = RegionGeografica.RegionGeograficaID
@@ -93,23 +140,71 @@ SELECT ClienteCrear(
 	NULL
 ) INTO @ClienteID;
 
-SELECT TiendaCrear(@ClienteID) INTO @TiendaID;
+SELECT TiendaCrear(@ClienteID) INTO @TiendaID1;
 
-SELECT HorarioDeTrabajoCrear(@TiendaID, 'Lunes', TRUE) INTO @HT1ID;
-SELECT HorarioDeTrabajoCrear(@TiendaID, 'Martes', TRUE) INTO @HT2ID;
-SELECT HorarioDeTrabajoCrear(@TiendaID, 'Miercoles', TRUE) INTO @HT3ID;
-SELECT HorarioDeTrabajoCrear(@TiendaID, 'Jueves', TRUE) INTO @HT4ID;
-SELECT HorarioDeTrabajoCrear(@TiendaID, 'Viernes', TRUE) INTO @HT5ID;
-SELECT HorarioDeTrabajoCrear(@TiendaID, 'Sabado', FALSE) INTO @HT6ID;
-SELECT HorarioDeTrabajoCrear(@TiendaID, 'Domingo', FALSE) INTO @HT7ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID1, 'Lunes', TRUE) INTO @HT1ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID1, 'Martes', TRUE) INTO @HT2ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID1, 'Miercoles', TRUE) INTO @HT3ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID1, 'Jueves', TRUE) INTO @HT4ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID1, 'Viernes', TRUE) INTO @HT5ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID1, 'Sabado', FALSE) INTO @HT6ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID1, 'Domingo', FALSE) INTO @HT7ID;
 
-SELECT TurnoCrear(@TiendaID, 'Lunes', '08:00:00', '16:00:00') INTO @HT1ID;
-SELECT TurnoCrear(@TiendaID, 'Martes', '08:00:00', '16:00:00') INTO @HT2ID;
-SELECT TurnoCrear(@TiendaID, 'Miercoles', '08:00:00', '16:00:00') INTO @HT3ID;
-SELECT TurnoCrear(@TiendaID, 'Jueves', '08:00:00', '16:00:00') INTO @HT4ID;
-SELECT TurnoCrear(@TiendaID, 'Viernes', '08:00:00', '16:00:00') INTO @HT5ID;
-SELECT TurnoCrear(@TiendaID, 'Sabado', '00:00:00', '00:00:00') INTO @HT6ID;
-SELECT TurnoCrear(@TiendaID, 'Domingo', '00:00:00', '00:00:00') INTO @HT7ID;
+SELECT TurnoCrear(@TiendaID1, 'Lunes', '08:00:00', '16:00:00') INTO @HT1ID;
+SELECT TurnoCrear(@TiendaID1, 'Martes', '08:00:00', '16:00:00') INTO @HT2ID;
+SELECT TurnoCrear(@TiendaID1, 'Miercoles', '08:00:00', '16:00:00') INTO @HT3ID;
+SELECT TurnoCrear(@TiendaID1, 'Jueves', '08:00:00', '16:00:00') INTO @HT4ID;
+SELECT TurnoCrear(@TiendaID1, 'Viernes', '08:00:00', '16:00:00') INTO @HT5ID;
+SELECT TurnoCrear(@TiendaID1, 'Sabado', '00:00:00', '00:00:00') INTO @HT6ID;
+SELECT TurnoCrear(@TiendaID1, 'Domingo', '00:00:00', '00:00:00') INTO @HT7ID;
+
+/* TIENDA 2 */
+
+SELECT ParroquiaID FROM Parroquia, RegionGeografica 
+WHERE RegionGeografica.Nombre = 'La Rosa' AND Parroquia.RegionGeografica_P = RegionGeografica.RegionGeograficaID
+INTO @ParroquiaID;
+
+SELECT UsuarioCrear(
+	@ParroquiaID, 
+	'tca7410nb@gmail.com', 
+	'444544sd54sd4sd4s4548494s'
+) INTO @UsuarioID;
+
+SELECT ClienteCrear(
+	@Creador,
+	@UsuarioID, 
+	'J-1515151D', 
+	@CategoriaID, 
+	'Activo', 
+	'FRALNECA C.A.', 
+	'Subway La Rosa', 
+	'0264-3711515', 
+	NULL, NULL, NULL,
+	'3194', NULL,
+	'Zulia',
+	'La Rosa',
+	NULL,
+	'www.facebook.com/subwaylarosa',
+	NULL
+) INTO @ClienteID;
+
+SELECT TiendaCrear(@ClienteID) INTO @TiendaID2;
+
+SELECT HorarioDeTrabajoCrear(@TiendaID2, 'Lunes', TRUE) INTO @HT1ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID2, 'Martes', TRUE) INTO @HT2ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID2, 'Miercoles', TRUE) INTO @HT3ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID2, 'Jueves', TRUE) INTO @HT4ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID2, 'Viernes', TRUE) INTO @HT5ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID2, 'Sabado', TRUE) INTO @HT6ID;
+SELECT HorarioDeTrabajoCrear(@TiendaID2, 'Domingo', TRUE) INTO @HT7ID;
+
+SELECT TurnoCrear(@TiendaID2, 'Lunes', '11:00:00', '22:00:00') INTO @HT1ID;
+SELECT TurnoCrear(@TiendaID2, 'Martes', '11:00:00', '22:00:00') INTO @HT2ID;
+SELECT TurnoCrear(@TiendaID2, 'Miercoles', '11:00:00', '22:00:00') INTO @HT3ID;
+SELECT TurnoCrear(@TiendaID2, 'Jueves', '11:00:00', '22:00:00') INTO @HT4ID;
+SELECT TurnoCrear(@TiendaID2, 'Viernes', '11:00:00', '23:30:00') INTO @HT5ID;
+SELECT TurnoCrear(@TiendaID2, 'Sabado', '11:00:00', '23:30:00') INTO @HT6ID;
+SELECT TurnoCrear(@TiendaID2, 'Domingo', '11:00:00', '22:00:00') INTO @HT7ID;
 
 /*
 *******************************************************
@@ -119,11 +214,20 @@ SELECT TurnoCrear(@TiendaID, 'Domingo', '00:00:00', '00:00:00') INTO @HT7ID;
 *******************************************************
 */
 
-SELECT Rastreable_P FROM Cliente, Tienda
-WHERE Tienda.TiendaID = @TiendaID AND Tienda.Cliente_P = Cliente.RIF
+SELECT Rastreable_P FROM Tienda, Cliente
+WHERE Tienda.TiendaID = @TiendaID1 AND Cliente.RIF = Tienda.Cliente_P
 INTO @TiendaRastreable;
 
-SELECT InventarioCrear(@TiendaRastreable, @TiendaID, @ProductoID, 'Ambos visibles', NULL, 640.00, 12);
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, @ProductoID1, 'Ambos visibles', NULL, 640.00, 12);
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, @ProductoID2, 'Ambos visibles', NULL, 104.00, 9);
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, @ProductoID3, 'Ambos visibles', NULL, 8400.00, 2);
+
+SELECT Rastreable_P FROM Tienda, Cliente
+WHERE Tienda.TiendaID = @TiendaID2 AND Cliente.RIF = Tienda.Cliente_P
+INTO @TiendaRastreable;
+
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID2, @ProductoID4, 'Ambos visibles', NULL, 1500.00, 4);
+
 
 /*
 *******************************************************
@@ -164,7 +268,7 @@ WHERE Nombre = 'Alberto' AND Apellido = 'Atkins'
 INTO @InterlocutorA, @ConsumidorRastreable;
 
 SELECT Interlocutor_P FROM Tienda 
-WHERE TiendaID = @TiendaID 
+WHERE TiendaID = @TiendaID1
 INTO @InterlocutorB;
 
 SELECT MensajeCrear (
@@ -244,7 +348,7 @@ WHERE Rastreable_P = @ConsumidorRastreable
 INTO @UsuarioID;
 
 SELECT Buscable_P FROM Producto
-WHERE ProductoID = @ProductoID
+WHERE ProductoID = @ProductoID1
 INTO @BuscableID;
 
 SELECT BusquedaCrear(@ConsumidorRastreable, @UsuarioID, 'Motor de aviones') INTO @BusquedaID;
@@ -259,7 +363,7 @@ SELECT ResultadoDeBusquedaCrear(@BusquedaID, @BuscableID, 0.91) INTO @bobo;
 */
 
 SELECT CalificableSeguible_P FROM Tienda
-WHERE TiendaID = @TiendaID
+WHERE TiendaID = @TiendaID2
 INTO @CalificableID;
 
 SELECT CalificacionResenaCrear(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'Mal', 'Mas mala quer cono...') INTO @bobo;
@@ -283,7 +387,7 @@ SELECT SeguidorCrear(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'TENE
 */
 
 SELECT Describible_P FROM Producto
-WHERE ProductoID = @ProductoID
+WHERE ProductoID = @ProductoID1
 INTO @ProductoDescribible;
 
 SELECT DescripcionCrear(@ConsumidorRastreable, @ProductoDescribible, 'El motor aeroespacial PAE-1516 de 20kN de empuje...') INTO @bobo;
@@ -316,7 +420,7 @@ WHERE FacturaID = @FacturaID AND CobrableID = @CobrableID;
 */
 
 SELECT Dibujable_P FROM Tienda
-WHERE TiendaID = @TiendaID
+WHERE TiendaID = @TiendaID2
 INTO @DibujableID;
 
 SELECT CroquisCrear(@Creador, @DibujableID) INTO @CroquisID;
@@ -342,7 +446,7 @@ SELECT PalabraCrear('Avion') INTO @PalabraID;
 */
 
 SELECT Buscable_P FROM Tienda
-WHERE TiendaID = @TiendaID
+WHERE TiendaID = @TiendaID1
 INTO @BuscableID;
 
 SELECT EstadisticasDeVisitasCrear(@Creador, @BuscableID, @ParroquiaID) INTO @bobo;
