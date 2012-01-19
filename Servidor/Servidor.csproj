@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\ServidorDocumentacion.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,6 +35,10 @@
   <ItemGroup>
     <Reference Include="Comunes">
       <HintPath>..\..\Valeria\Comunes\bin\Debug\Comunes.dll</HintPath>
+    </Reference>
+    <Reference Include="Datos, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Valeria\Datos\bin\Debug\Datos.dll</HintPath>
     </Reference>
     <Reference Include="Logica">
       <HintPath>..\..\Valeria\Logica\bin\Debug\Logica.dll</HintPath>

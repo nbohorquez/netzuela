@@ -15,12 +15,18 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
     {
         public DataSetXML() { }
 
-        public DataSetXML(string EsquemaXML, string XML)
+        public DataSetXML(string BaseDeDatos, string NombreTabla, string EsquemaXML, string XML)
         {
+            this.BaseDeDatos = BaseDeDatos;
+            this.NombreTabla = NombreTabla;            
             this.EsquemaXML = EsquemaXML;
             this.XML = XML;
         }
-        
+
+        [DataMember]
+        public string BaseDeDatos { get; set; }
+        [DataMember]
+        public string NombreTabla { get; set; }
         [DataMember]
         public string EsquemaXML { get; set; }
         [DataMember]

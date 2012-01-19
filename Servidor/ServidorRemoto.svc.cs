@@ -77,22 +77,24 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
             DataSet Set = new DataSet(Tabla);
             Set.Tables.Add(T);
 
-            DataSetXML DatosAEnviar = new DataSetXML(Set.GetXmlSchema(), Set.GetXml());
+            DataSetXML DatosAEnviar = new DataSetXML(Tabla, BaseDeDatos, Set.GetXmlSchema(), Set.GetXml());
             return DatosAEnviar;
         }
 
-        public bool EscribirTabla(DataSetXML Tabla)
+        public bool EscribirTabla(DataSetXML TablaXML)
         {
             // Con codigo de: http://pstaev.blogspot.com/2008/04/passing-dataset-to-wcf-method.html
 
-            DataSet Tablas = new DataSet();
+            DataSet TablaInterna = new DataSet();
             bool Resultado = false;
 
             try
             {
-                Tablas.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(Tabla.EsquemaXML)));
-                Tablas.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(Tabla.XML)));
-                Tablas.WriteXml(Tablas.Tables[0].TableName + ".xml");
+                TablaInterna.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.EsquemaXML)));
+                TablaInterna.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.XML)));
+                TablaInterna.WriteXml(TablaInterna.Tables[0].TableName + ".xml");
+
+                _Conexion.EscribirTabla(TablaXML.BaseDeDatos, TablaXML.NombreTabla, TablaInterna.Tables[0]);
 
                 Resultado = true;
             }
