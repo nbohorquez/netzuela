@@ -605,6 +605,71 @@ BEGIN
 	RETURN TRUE;
 END$$
 
+/*
+*************************************************************
+*			       SepararString				*
+*************************************************************
+*/
+
+/* 
+ * Codigo importado
+ * ================
+ * 
+ * Autor: Jay Pipes
+ * Titulo: Split a Delimited String in SQL
+ * Licencia: 
+ * Fuente: http://forge.mysql.com/tools/tool.php?id=4
+ * 
+ * Tipo de uso
+ * ===========
+ * 
+ * Textual                                              []
+ * Adaptado                                             [X]
+ * Solo se cambiaron los nombres de las variables       []
+ * 
+ */
+
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS `SepararString`;
+DELIMITER $$
+
+CREATE PROCEDURE `SepararString` (IN input TEXT, IN `delimiter` VARCHAR(10))
+
+BEGIN
+	DECLARE cur_position INT DEFAULT 1;
+	DECLARE remainder TEXT;
+	DECLARE cur_string VARCHAR(1000);
+	DECLARE delimiter_length TINYINT UNSIGNED;
+ 
+	DROP TEMPORARY TABLE IF EXISTS Parametros;
+
+	CREATE TEMPORARY TABLE Parametros (
+		`ID` INT NOT NULL AUTO_INCREMENT,
+		`Valor` VARCHAR(1000) NOT NULL,
+	  PRIMARY KEY (`ID`)
+	) ENGINE=MyISAM;
+ 
+	SET remainder = input;
+	SET delimiter_length = CHAR_LENGTH(delimiter);
+ 
+	WHILE CHAR_LENGTH(remainder) > 0 AND cur_position > 0 DO
+		SET cur_position = INSTR(remainder, `delimiter`);
+		
+		IF cur_position = 0 THEN
+			SET cur_string = remainder;
+		ELSE
+			SET cur_string = LEFT(remainder, cur_position - 1);
+		END IF;
+		
+		IF TRIM(cur_string) != '' THEN
+			INSERT INTO Parametros VALUES (NULL, cur_string);
+		END IF;
+	
+		SET remainder = SUBSTRING(remainder, cur_position + delimiter_length);
+	END WHILE;
+END$$
+
 /***********************************************************/
 DELIMITER ;
 /***********************************************************/

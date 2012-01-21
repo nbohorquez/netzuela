@@ -1719,7 +1719,7 @@ CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `Product
 DROP TABLE IF EXISTS `Spuria`.`InventarioTienda`;
 USE `Spuria`;
 CREATE  OR REPLACE VIEW `Spuria`.`InventarioTienda` AS
-SELECT TiendaID, ProductoID, SKU, Precio, Cantidad, Visibilidad FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, ProductoID) WHERE FechaFin IS NULL ;
+SELECT Inventario.TiendaID TiendaID, Inventario.ProductoID ProductoID, SKU, Precio, Cantidad, Visibilidad FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, ProductoID) WHERE FechaFin IS NULL ;
 USE `Spuria`;
 
 DELIMITER $$

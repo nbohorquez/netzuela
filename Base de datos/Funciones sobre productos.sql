@@ -31,7 +31,7 @@ BEGIN
 		RETURN -1048;
 	END;
 */	
-	/* Vemos si ya existe un registro "Precio" ya asociado al inventario */
+	/* Vemos si ya existe un registro "PrecioCantidad" ya asociado al inventario */
 	SELECT COUNT(*) FROM PrecioCantidad
 	WHERE TiendaID = a_TiendaID AND ProductoID = a_ProductoID
 	INTO C;

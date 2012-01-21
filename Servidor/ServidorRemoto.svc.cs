@@ -60,24 +60,60 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
 
         public string[] ListarBasesDeDatos()
         {
-            string[] Resultado = _Conexion.ListarBasesDeDatos();
-            return Resultado;
+            List<string> ResultadoFinal = new List<string>();
+
+            try
+            {
+                string[] ResultadoBruto = _Conexion.ListarBasesDeDatos();
+
+                foreach (string S in ResultadoBruto)
+                    ResultadoFinal.Add(S);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("SPURIA: Error de listado de base de datos", ex);
+            }
+
+            return ResultadoFinal.ToArray();
         }
 
         public string[] ListarTablas(string BaseDeDatos)
         {
-            string[] Resultado = _Conexion.ListarTablas(BaseDeDatos);
-            return Resultado;
+            List<string> ResultadoFinal = new List<string>();
+
+            try
+            {
+                string[] ResultadoBruto = _Conexion.ListarTablas(BaseDeDatos);
+
+                foreach (string S in ResultadoBruto)
+                    ResultadoFinal.Add(S);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("SPURIA: Error de listado de tablas", ex);
+            }
+
+            return ResultadoFinal.ToArray();
         }
 
         public DataSetXML LeerTabla(string BaseDeDatos, string Tabla)
         {
-            DataTable T = _Conexion.LeerTabla(BaseDeDatos, Tabla);
+            DataSetXML DatosAEnviar = null;
 
-            DataSet Set = new DataSet(Tabla);
-            Set.Tables.Add(T);
+            try
+            {
+                DataTable T = _Conexion.LeerTabla(BaseDeDatos, Tabla);
 
-            DataSetXML DatosAEnviar = new DataSetXML(Tabla, BaseDeDatos, Set.GetXmlSchema(), Set.GetXml());
+                DataSet Set = new DataSet(Tabla);
+                Set.Tables.Add(T);
+
+                DatosAEnviar = new DataSetXML(Tabla, BaseDeDatos, Set.GetXmlSchema(), Set.GetXml());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("SPURIA: Error de lectura", ex);
+            }
+
             return DatosAEnviar;
         }
 
@@ -92,7 +128,7 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
             {
                 TablaInterna.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.EsquemaXML)));
                 TablaInterna.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.XML)));
-                TablaInterna.WriteXml(TablaInterna.Tables[0].TableName + ".xml");
+                TablaInterna.WriteXml(TablaXML.NombreTabla + ".xml");
 
                 _Conexion.EscribirTabla(TablaXML.BaseDeDatos, TablaXML.NombreTabla, TablaInterna.Tables[0]);
 
@@ -100,7 +136,7 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("SPURIA: Error de escritura", ex);
             }
 
             return Resultado;

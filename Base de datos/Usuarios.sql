@@ -32,18 +32,18 @@ BEGIN
 	END IF;
 
 	CREATE USER 'Valeria'@'localhost' IDENTIFIED BY '#25pAz7_?Xx#OR9?';
-END $$
+END$$
 
 DELIMITER ;
 
-
 CALL CrearUsuarioValeria();
-	
-GRANT SELECT (TiendaID, ProductoID) ON InventarioTienda TO 'Valeria'@'localhost';
-GRANT SELECT (SKU, Precio, Cantidad, Visibilidad) ON InventarioTienda TO 'Valeria'@'localhost';
-GRANT INSERT (SKU, Precio, Cantidad, Visibilidad) ON InventarioTienda TO 'Valeria'@'localhost';
-GRANT UPDATE (SKU, Precio, Cantidad, Visibilidad) ON InventarioTienda TO 'Valeria'@'localhost';
-GRANT DELETE ON InventarioTienda TO 'Valeria'@'localhost';
+
+GRANT SELECT (TiendaID, ProductoID, SKU, Precio, Cantidad, Visibilidad) ON InventarioTienda TO 'Valeria'@'localhost';
+GRANT EXECUTE ON PROCEDURE Spuria.Actualizar TO 'Valeria'@'localhost';
+GRANT EXECUTE ON PROCEDURE Spuria.Insertar TO 'Valeria'@'localhost';
+GRANT EXECUTE ON PROCEDURE Spuria.Borrar TO 'Valeria'@'localhost';
+
+FLUSH PRIVILEGES;
 
 /*
 *******************************************************
@@ -68,7 +68,7 @@ BEGIN
 	END IF;
 
 	CREATE USER 'Paris'@'localhost' IDENTIFIED BY '#37KhVFmG1_Lp@#j?R4';
-END $$
+END$$
 
 DELIMITER ;
 
