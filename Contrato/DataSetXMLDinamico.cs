@@ -10,12 +10,17 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
 {
     public class DataSetXMLDinamico : DynamicObject
     {
+        #region Constantes
+
         const string Tipo = "Zuliaworks.Netzuela.Spuria.Contrato.DataSetXML";
         const string BaseDeDatosPropiedad = "BaseDeDatos";
         const string NombreTablaPropiedad = "NombreTabla";
         const string EsquemaXMLPropiedad = "EsquemaXML";
         const string XMLPropiedad = "XML";
-        
+        const string EstadoFilasPropiedad = "EstadoFilas";
+
+        #endregion
+
         #region Constructores
 
         public DataSetXMLDinamico(Assembly Ensamblado)
@@ -60,6 +65,12 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
         {
             get { return (string)GetProperty(XMLPropiedad); }
             set { SetProperty(XMLPropiedad, value); }
+        }
+
+        public DataSetXML.EstadoFila[] EstadoFilas
+        {
+            get { return (DataSetXML.EstadoFila[])GetProperty(EstadoFilasPropiedad); }
+            set { SetProperty(EstadoFilasPropiedad, value); }
         }
 
         #endregion

@@ -13,6 +13,8 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
     [DataContract]
     public class DataSetXML
     {
+        public enum EstadoFila { Agregada, Borrada, Desligada, Modificada, Igual };
+
         public DataSetXML() { }
 
         public DataSetXML(string BaseDeDatos, string NombreTabla, string EsquemaXML, string XML)
@@ -31,5 +33,7 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
         public string EsquemaXML { get; set; }
         [DataMember]
         public string XML { get; set; }
+        [DataMember]
+        public EstadoFila[] EstadoFilas { get; set; }
     }
 }
