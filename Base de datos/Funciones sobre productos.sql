@@ -11,7 +11,7 @@ DELIMITER ;
 DROP FUNCTION IF EXISTS `PrecioCantidadCrear`;
 DELIMITER $$
 
-CREATE FUNCTION `PrecioCantidadCrear` (a_TiendaID INT, a_ProductoID INT, a_Precio DECIMAL(10,2), a_Cantidad INT)
+CREATE FUNCTION `PrecioCantidadCrear` (a_TiendaID INT, a_Codigo CHAR(15), a_Precio DECIMAL(10,2), a_Cantidad INT)
 
 RETURNS INT DETERMINISTIC
 BEGIN
@@ -39,12 +39,12 @@ BEGIN
 	IF C > 0 THEN
 		UPDATE PrecioCantidad
      		SET FechaFin = NOW()
-     		WHERE TiendaID = a_TiendaID AND ProductoID = a_ProductoID AND FechaFin IS NULL;
+     		WHERE TiendaID = a_TiendaID AND Codigo = a_Codigo AND FechaFin IS NULL;
 	END IF;
 
 	INSERT INTO PrecioCantidad VALUES (
 		a_TiendaID,
-		a_ProductoID,
+		a_Codigo,
 		NOW(),
 		NULL,
 		a_Precio,
@@ -133,19 +133,19 @@ DELIMITER ;
 DROP FUNCTION IF EXISTS `InventarioCrear`;
 DELIMITER $$
 
-CREATE FUNCTION `InventarioCrear` (a_Creador INT, a_TiendaID INT, a_ProductoID INT, a_Visibilidad CHAR(16), a_SKU CHAR(15), 
-						a_Precio DECIMAL(10,2), a_Cantidad INT)
+CREATE FUNCTION `InventarioCrear` (a_Creador INT, a_TiendaID INT, a_Codigo CHAR(15), a_Descripcion VARCHAR(45), 
+						a_Visibilidad CHAR(16), a_ProductoID INT, a_Precio DECIMAL(10,2), a_Cantidad INT)
 
 RETURNS INT DETERMINISTIC
 BEGIN
-	DECLARE Rastreable_P, Cobrable_P, bobo INT;
+	DECLARE Rastreable_P, Cobrable_P, Resultado INT;
 /*
 	DECLARE EXIT HANDLER FOR 1452
 	BEGIN
 		SET @MensajeDeError = 'Error de clave externa en InventarioCrear()';
 		SET @CodigoDeError = 1452;
 		RETURN -1452;
-	END; 
+	END;
 
 	DECLARE EXIT HANDLER FOR 1048
 	BEGIN
@@ -159,7 +159,7 @@ BEGIN
 		SET @MensajeDeError = 'Error de valor duplicado en InventarioCrear()';
 		SET @CodigoDeError = 1062;
 		RETURN -1062;
-	END; 
+	END;
 */
 	SELECT RastreableCrear(a_Creador) INTO Rastreable_P;
 	SELECT CobrableCrear() INTO Cobrable_P;
@@ -168,13 +168,14 @@ BEGIN
 		Rastreable_P,
 		Cobrable_P,
 		a_TiendaID,
-		a_ProductoID,
+		a_Codigo,
+		a_Descripcion,
 		a_Visibilidad,
-		a_SKU
+		a_ProductoID
 	);
 
-	SELECT PrecioCantidadCrear(a_TiendaID, a_ProductoID, a_Precio, a_Cantidad) INTO bobo;
-	RETURN bobo;
+	SELECT PrecioCantidadCrear(a_TiendaID, a_Codigo, a_Precio, a_Cantidad) INTO Resultado;
+	RETURN Resultado;
 END$$
 
 /***********************************************************/

@@ -129,6 +129,32 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
                 TablaInterna.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.EsquemaXML)));
                 TablaInterna.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.XML)));
                 TablaInterna.WriteXml(TablaXML.NombreTabla + ".xml");
+                TablaInterna.Tables[0].AcceptChanges();
+
+                DataRowCollection Fila = TablaInterna.Tables[0].Rows;
+
+                for (int i = 0; i < Fila.Count; i++)
+                {
+                    switch (TablaXML.EstadoFilas[i])
+                    {
+                        case DataRowState.Added:
+                            Fila[i].SetAdded();
+                            break;
+                        case DataRowState.Deleted:
+                            Fila[i].Delete();
+                            break;
+                        case DataRowState.Detached:
+                            //Fila[i].Delete();
+                            break;
+                        case DataRowState.Modified:
+                            Fila[i].SetModified();
+                            break;
+                        case DataRowState.Unchanged:
+                            break;
+                        default:
+                            throw new Exception("No se reconoce el estado de la fila");
+                    }
+                }
 
                 _Conexion.EscribirTabla(TablaXML.BaseDeDatos, TablaXML.NombreTabla, TablaInterna.Tables[0]);
 

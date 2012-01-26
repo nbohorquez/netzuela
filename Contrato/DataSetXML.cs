@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Data;                          // DataRowState
 using System.Runtime.Serialization;         // DataMember, DataContract
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -13,7 +14,7 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
     [DataContract]
     public class DataSetXML
     {
-        public enum EstadoFila { Agregada, Borrada, Desligada, Modificada, Igual };
+        //public enum EstadoFila { Agregada, Borrada, Desligada, Modificada, Igual };
 
         public DataSetXML() { }
 
@@ -34,6 +35,6 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
         [DataMember]
         public string XML { get; set; }
         [DataMember]
-        public EstadoFila[] EstadoFilas { get; set; }
+        public DataRowState[] EstadoFilas { get; set; }
     }
 }

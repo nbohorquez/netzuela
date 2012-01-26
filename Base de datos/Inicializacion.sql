@@ -25,10 +25,10 @@ INSERT INTO TipoDeCodigoUniversal VALUES("GTIN-13");
 INSERT INTO TipoDeCodigoUniversal VALUES("GTIN-8");
 INSERT INTO TipoDeCodigoUniversal VALUES("GTIN-14");
 INSERT INTO TipoDeCodigoUniversal VALUES("GS1-128");
+INSERT INTO TipoDeCodigoUniversal VALUES("Desconocido");
 
 INSERT INTO Sexo VALUES("Hombre");
 INSERT INTO Sexo VALUES("Mujer");
-INSERT INTO Sexo VALUES("Otro");
 
 INSERT INTO GradoDeInstruccion VALUES("Primaria");
 INSERT INTO GradoDeInstruccion VALUES("Secundia");
@@ -145,6 +145,8 @@ SELECT CategoriaCrear('Joyas', 				@CategoriaRaiz) INTO @bobo;
 SELECT CategoriaCrear('Deportes y entretenimiento', 	@CategoriaRaiz) INTO @bobo;
 SELECT CategoriaCrear('Ferreterias y materiales', 	@CategoriaRaiz) INTO @bobo;
 SELECT CategoriaCrear('Automotriz e industrial', 	@CategoriaRaiz) INTO @bobo;
+SELECT CategoriaCrear('No asignada', 			@CategoriaRaiz) INTO @bobo;
+
 
 /*
 *************************************************************

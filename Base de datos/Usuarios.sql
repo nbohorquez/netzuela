@@ -38,7 +38,7 @@ DELIMITER ;
 
 CALL CrearUsuarioValeria();
 
-GRANT SELECT (TiendaID, ProductoID, SKU, Precio, Cantidad, Visibilidad) ON InventarioTienda TO 'Valeria'@'localhost';
+GRANT SELECT (TiendaID, CodigoDeBarras, Descripcion, CodigoInterno, Precio, Cantidad, Visibilidad) ON InventarioTienda TO 'Valeria'@'localhost';
 GRANT EXECUTE ON PROCEDURE Spuria.Actualizar TO 'Valeria'@'localhost';
 GRANT EXECUTE ON PROCEDURE Spuria.Insertar TO 'Valeria'@'localhost';
 GRANT EXECUTE ON PROCEDURE Spuria.Borrar TO 'Valeria'@'localhost';

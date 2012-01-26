@@ -240,7 +240,7 @@ CREATE FUNCTION `TiendaCrear` (a_Cliente_P CHAR(10))
 
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-	DECLARE Buscable_P, CalificableSeguible_P, Interlocutor_P, Dibujable_P, bobo, T INT;
+	DECLARE Buscable_P, CalificableSeguible_P, Interlocutor_P, Dibujable_P, Resultado, T INT;
 /*
 	DECLARE EXIT HANDLER FOR 1048
 	BEGIN
@@ -279,7 +279,7 @@ BEGIN
 	);
 
 	SELECT LAST_INSERT_ID() INTO T;
-	SELECT TamanoCrear(T, 0, 0, 0) INTO bobo;
+	SELECT TamanoCrear(T, 0, 0, 0) INTO Resultado;
 
 	RETURN T;
 END$$

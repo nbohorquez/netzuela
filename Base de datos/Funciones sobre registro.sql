@@ -56,7 +56,7 @@ DELIMITER $$
 CREATE FUNCTION `RegistrarEliminacion` (a_Rastreable INT, a_Parametros TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    	DECLARE ActorActivo, bobo INT;
+    	DECLARE ActorActivo, Resultado INT;
 
 	SELECT EliminadoPor FROM Rastreable
     	WHERE RastreableID = a_Rastreable
@@ -68,9 +68,9 @@ BEGIN
         	'Eliminar',
         	a_Parametros,
         	'OK'
-	) INTO bobo;
+	) INTO Resultado;
 
-	RETURN bobo;
+	RETURN Resultado;
 END$$
 
 /*
@@ -88,7 +88,7 @@ CREATE FUNCTION `RegistrarCreacion` (a_Rastreable INT, a_Parametros TEXT)
 
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-	DECLARE ActorActivo, bobo INT;
+	DECLARE ActorActivo, Resultado INT;
 
    	SELECT CreadoPor FROM Rastreable
    	WHERE RastreableID = a_Rastreable
@@ -100,9 +100,9 @@ BEGIN
         	'Crear',
         	a_Parametros,
       	'OK'
-	) INTO bobo;
+	) INTO Resultado;
 
-	RETURN bobo;
+	RETURN Resultado;
 END$$
 
 /*
@@ -120,7 +120,7 @@ CREATE FUNCTION `RegistrarModificacion` (a_Rastreable INT, a_Parametros TEXT)
 
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-	DECLARE ActorActivo, bobo INT;
+	DECLARE ActorActivo, Resultado INT;
 
    	SELECT ModificadoPor FROM Rastreable
    	WHERE RastreableID = a_Rastreable
@@ -132,9 +132,9 @@ BEGIN
         	'Modificar',
         	a_Parametros,
       	'OK'
-	) INTO bobo;
+	) INTO Resultado;
 
-	RETURN bobo;
+	RETURN Resultado;
 END$$
 
 /***********************************************************/

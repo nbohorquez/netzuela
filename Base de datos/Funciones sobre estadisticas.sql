@@ -116,7 +116,7 @@ DELIMITER $$
 CREATE FUNCTION `EstadisticasCrear` (a_Creador INT, a_RegionGeografica INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-	DECLARE Rastreable_P, EstaID, bobo INT;
+	DECLARE Rastreable_P, EstaID, Resultado INT;
 /*
 	DECLARE EXIT HANDLER FOR 1452
 	BEGIN
@@ -148,7 +148,7 @@ BEGIN
 	);
 
 	SELECT LAST_INSERT_ID() INTO EstaID;
-	SELECT EstadisticasTemporalesCrear(EstaID, 0, 0, 0) INTO bobo;
+	SELECT EstadisticasTemporalesCrear(EstaID, 0, 0, 0) INTO Resultado;
 	RETURN EstaID;
 END$$
 
@@ -264,7 +264,7 @@ DELIMITER $$
 CREATE FUNCTION `EstadisticasDeVisitasCrear` (a_Creador INT, a_Buscable INT, a_RegionGeografica INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-	DECLARE Estadisticas_P, bobo INT;
+	DECLARE Estadisticas_P, EstaID, Resultado INT;
 /*
 	DECLARE EXIT HANDLER FOR 1452
 	BEGIN
@@ -295,9 +295,9 @@ BEGIN
 		a_Buscable
 	);
 
-	SELECT LAST_INSERT_ID() INTO bobo;
-	SELECT ContadorDeExhibicionesCrear(bobo, 0) INTO bobo;
-	RETURN bobo; 
+	SELECT LAST_INSERT_ID() INTO EstaID;
+	SELECT ContadorDeExhibicionesCrear(bobo, 0) INTO Resultado;
+	RETURN EstaID; 
 END$$
 
 /***********************************************************/

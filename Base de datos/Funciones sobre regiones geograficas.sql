@@ -72,7 +72,7 @@ DELIMITER $$
 CREATE FUNCTION `RegionGeograficaCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-	DECLARE RegionGeografica_P, Dibujable_P, Rastreable_P, bobo INT;
+	DECLARE RegionGeografica_P, Dibujable_P, Rastreable_P, Resultado INT;
 /*
 	DECLARE EXIT HANDLER FOR 1048
 	BEGIN
@@ -95,7 +95,7 @@ BEGIN
 
 	SELECT LAST_INSERT_ID() INTO RegionGeografica_P;
 
-	SELECT TiendasConsumidoresCrear(RegionGeografica_P, 0, 0) INTO bobo;
+	SELECT TiendasConsumidoresCrear(RegionGeografica_P, 0, 0) INTO Resultado;
 	RETURN RegionGeografica_P;
 END$$
 

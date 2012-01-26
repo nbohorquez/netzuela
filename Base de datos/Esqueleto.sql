@@ -1711,15 +1711,36 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Placeholder table for view `Spuria`.`InventarioTienda`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `ProductoID` INT, `SKU` INT, `Precio` INT, `Cantidad` INT, `Visibilidad` INT);
+CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `CodigoDeBarras` INT, `Descripcion` INT, `CodigoInterno` INT, `Precio` INT, `Cantidad` INT, `Visibilidad` INT);
 
 -- -----------------------------------------------------
 -- View `Spuria`.`InventarioTienda`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Spuria`.`InventarioTienda`;
 USE `Spuria`;
+/*
+Version origienal:
+
 CREATE  OR REPLACE VIEW `Spuria`.`InventarioTienda` AS
-SELECT Inventario.TiendaID TiendaID, Inventario.ProductoID ProductoID, SKU, Precio, Cantidad, Visibilidad FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, ProductoID) WHERE FechaFin IS NULL ;
+SELECT Inventario.TiendaID TiendaID, Inventario.ProductoID ProductoID, SKU, Precio, Cantidad, Visibilidad 
+FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, ProductoID) WHERE FechaFin IS NULL
+*/
+
+/*
+No se pueden hacer subqueries cuando se crea un VIEW en MySQL:
+
+CREATE VIEW `Spuria`.`InventarioTienda` AS
+SELECT TiendaID, Producto.CodigoUniversal CodigoProducto, SKU, Precio, Cantidad, Visibilidad 
+FROM (SELECT Inventario.TiendaID TiendaID, Inventario.ProductoID ProductoID, SKU, Precio, Cantidad, Visibilidad 
+FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, ProductoID) WHERE FechaFin IS NULL) LEFT JOIN Producto
+USING (ProductoID)
+*/
+
+CREATE VIEW `Spuria`.`InventarioTienda` AS
+SELECT Inventario.TiendaID, Producto.CodigoUniversal CodigoDeBarras, Producto.Nombre Descripcion, SKU CodigoInterno, Precio, Cantidad, Visibilidad 
+FROM Inventario, PrecioCantidad, Producto
+WHERE Inventario.ProductoID = PrecioCantidad.ProductoID AND Inventario.TiendaID = PrecioCantidad.TiendaID 
+AND PrecioCantidad.FechaFin IS NULL AND Inventario.ProductoID = Producto.ProductoID;
 USE `Spuria`;
 
 DELIMITER $$

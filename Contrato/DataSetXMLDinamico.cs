@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using WcfSamples.DynamicProxy;                      // DynamicProxyFactory, DynamicObject
-using System.Reflection;                            // Assembly, Type
+using System.Data;                  // DataRowState    
+using System.Reflection;            // Assembly, Type
+using WcfSamples.DynamicProxy;      // DynamicProxyFactory, DynamicObject
 
 namespace Zuliaworks.Netzuela.Spuria.Contrato
 {
@@ -67,9 +68,9 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
             set { SetProperty(XMLPropiedad, value); }
         }
 
-        public DataSetXML.EstadoFila[] EstadoFilas
+        public DataRowState[] EstadoFilas
         {
-            get { return (DataSetXML.EstadoFila[])GetProperty(EstadoFilasPropiedad); }
+            get { return (DataRowState[])GetProperty(EstadoFilasPropiedad); }
             set { SetProperty(EstadoFilasPropiedad, value); }
         }
 
