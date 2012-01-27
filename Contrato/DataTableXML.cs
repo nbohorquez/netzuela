@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Data;                          // DataRowState
+using System.Data;                          // DataRowState, DataColumn
 using System.Runtime.Serialization;         // DataMember, DataContract
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -12,19 +12,23 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
 {
 	// Esta informacion es empleada por el servidor y los clientes
     [DataContract]
-    public class DataSetXML
+    public class DataTableXML
     {
-        //public enum EstadoFila { Agregada, Borrada, Desligada, Modificada, Igual };
+        #region Constructores
 
-        public DataSetXML() { }
+        public DataTableXML() { }
 
-        public DataSetXML(string BaseDeDatos, string NombreTabla, string EsquemaXML, string XML)
+        public DataTableXML(string BaseDeDatos, string NombreTabla, string EsquemaXML, string XML)
         {
             this.BaseDeDatos = BaseDeDatos;
             this.NombreTabla = NombreTabla;            
             this.EsquemaXML = EsquemaXML;
             this.XML = XML;
         }
+
+        #endregion
+
+        #region Propiedades
 
         [DataMember]
         public string BaseDeDatos { get; set; }
@@ -36,5 +40,9 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
         public string XML { get; set; }
         [DataMember]
         public DataRowState[] EstadoFilas { get; set; }
-    }
+        [DataMember]
+        public int[] ClavePrimaria { get; set; }
+
+        #endregion
+    }        
 }

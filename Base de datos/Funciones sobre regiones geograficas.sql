@@ -1,3 +1,4 @@
+SELECT 'Funciones sobre regiones geograficas.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `TiendasConsumidoresCrear`;
+SELECT 'TiendasConsumidoresCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `TiendasConsumidoresCrear` (a_RegionGeograficaID INT, a_NumeroDeConsumidores INT, a_NumeroDeTiendas INT)
@@ -67,6 +70,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `RegionGeograficaCrear`;
+SELECT 'RegionGeograficaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `RegionGeograficaCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED)
@@ -108,6 +113,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ContinenteCrear`;
+SELECT 'ContinenteCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ContinenteCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED)
@@ -145,6 +152,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `SubcontinenteCrear`;
+SELECT 'SubcontinenteCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `SubcontinenteCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Continente INT)
@@ -189,6 +198,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PaisCrear`;
+SELECT 'PaisCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PaisCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Continente INT, a_Capital INT, 
@@ -252,6 +263,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PaisSubcontinenteCrear`;
+SELECT 'PaisSubcontinenteCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PaisSubcontinenteCrear` (a_PaisID INT, a_SubcontinenteID INT)
@@ -296,6 +309,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EstadoCrear`;
+SELECT 'EstadoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EstadoCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Pais INT, a_HusoHorarioNormal TIME,
@@ -348,6 +363,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `CiudadCrear`;
+SELECT 'CiudadCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `CiudadCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED)
@@ -387,6 +404,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `MunicipioCrear`;
+SELECT 'MunicipioCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `MunicipioCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Estado INT, a_Ciudad INT)
@@ -437,6 +456,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ParroquiaCrear`;
+SELECT 'ParroquiaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ParroquiaCrear` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Municipio INT, a_CodigoPostal CHAR(10))

@@ -1,3 +1,4 @@
+SELECT 'Funciones sobre productos.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PrecioCantidadCrear`;
+SELECT 'PrecioCantidadCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PrecioCantidadCrear` (a_TiendaID INT, a_Codigo CHAR(15), a_Precio DECIMAL(10,2), a_Cantidad INT)
@@ -33,7 +36,7 @@ BEGIN
 */	
 	/* Vemos si ya existe un registro "PrecioCantidad" ya asociado al inventario */
 	SELECT COUNT(*) FROM PrecioCantidad
-	WHERE TiendaID = a_TiendaID AND ProductoID = a_ProductoID
+	WHERE TiendaID = a_TiendaID AND Codigo = a_Codigo
 	INTO C;
 		
 	IF C > 0 THEN
@@ -62,6 +65,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ProductoCrear`;
+SELECT 'ProductoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ProductoCrear` (a_Creador INT, a_TipoDeCodigoUniversal CHAR(7), a_Codigo CHAR(15), 
@@ -131,6 +136,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `InventarioCrear`;
+SELECT 'InventarioCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `InventarioCrear` (a_Creador INT, a_TiendaID INT, a_Codigo CHAR(15), a_Descripcion VARCHAR(45), 
@@ -138,7 +145,7 @@ CREATE FUNCTION `InventarioCrear` (a_Creador INT, a_TiendaID INT, a_Codigo CHAR(
 
 RETURNS INT DETERMINISTIC
 BEGIN
-	DECLARE Rastreable_P, Cobrable_P, Resultado INT;
+	DECLARE Rastreable_P, Cobrable_P, Resultado, ResultadoSecundario INT;
 /*
 	DECLARE EXIT HANDLER FOR 1452
 	BEGIN
@@ -174,8 +181,9 @@ BEGIN
 		a_ProductoID
 	);
 
-	SELECT PrecioCantidadCrear(a_TiendaID, a_Codigo, a_Precio, a_Cantidad) INTO Resultado;
-	RETURN Resultado;
+	SELECT LAST_INSERT_ID() INTO Resultado;
+	SELECT PrecioCantidadCrear(a_TiendaID, a_Codigo, a_Precio, a_Cantidad) INTO ResultadoSecundario;
+	RETURN TRUE;
 END$$
 
 /***********************************************************/

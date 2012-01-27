@@ -1,3 +1,4 @@
+SELECT 'Funciones sobre estadisticas.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EstadisticasTemporalesCrear`;
+SELECT 'EstadisticasTemporalesCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EstadisticasTemporalesCrear` (a_EstadisticasID INT, a_Contador INT, a_Ranking INT, a_Indice INT)
@@ -61,6 +64,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ContadorDeExhibicionesCrear`;
+SELECT 'ContadorDeExhibicionesCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ContadorDeExhibicionesCrear` (a_EstadisticasDeVisitasID INT, a_ContadorDeExhibiciones INT)
@@ -111,6 +116,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EstadisticasCrear`;
+SELECT 'EstadisticasCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EstadisticasCrear` (a_Creador INT, a_RegionGeografica INT)
@@ -161,6 +168,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EstadisticasDeInfluenciaCrear`;
+SELECT 'EstadisticasDeInfluenciaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EstadisticasDeInfluenciaCrear` (a_Creador INT, a_Palabra INT, a_RegionGeografica INT)
@@ -210,6 +219,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EstadisticasDePopularidadCrear`;
+SELECT 'EstadisticasDePopularidadCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EstadisticasDePopularidadCrear` (a_Creador INT, a_CalificableSeguible INT, a_RegionGeografica INT)
@@ -259,6 +270,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EstadisticasDeVisitasCrear`;
+SELECT 'EstadisticasDeVisitasCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EstadisticasDeVisitasCrear` (a_Creador INT, a_Buscable INT, a_RegionGeografica INT)
@@ -296,7 +309,7 @@ BEGIN
 	);
 
 	SELECT LAST_INSERT_ID() INTO EstaID;
-	SELECT ContadorDeExhibicionesCrear(bobo, 0) INTO Resultado;
+	SELECT ContadorDeExhibicionesCrear(EstaID, 0) INTO Resultado;
 	RETURN EstaID; 
 END$$
 

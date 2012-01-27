@@ -15,9 +15,9 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
         [OperationContract]
         string[] ListarTablas(string BaseDeDatos);
         [OperationContract]
-        DataSetXML LeerTabla(string BaseDeDatos, string Tabla);
+        DataTableXML LeerTabla(string BaseDeDatos, string Tabla);
         [OperationContract]
-        bool EscribirTabla(DataSetXML Tablas);
+        bool EscribirTabla(DataTableXML Tablas);
         /*
         [OperationContract]
         object CrearUsuario(SecureString Usuario, SecureString Contrasena, string[] Columnas, int Privilegios);

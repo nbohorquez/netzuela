@@ -1,3 +1,4 @@
+SELECT 'Funciones miscelaneas.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `CategoriaCrear`;
+SELECT 'CategoriaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `CategoriaCrear` (a_Nombre CHAR(30), a_HijoDeCategoria INT)
@@ -53,6 +56,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `MensajeCrear`;
+SELECT 'MensajeCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `MensajeCrear` (a_Creador INT, a_Remitente INT, a_Destinatario INT, a_Contenido TEXT)
@@ -98,6 +103,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `DescripcionCrear`;
+SELECT 'DescripcionCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `DescripcionCrear` (a_Creador INT, a_Describible INT, a_Contenido TEXT)
@@ -142,6 +149,8 @@ END $$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `FotoCrear`;
+SELECT 'FotoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `FotoCrear` (a_RutaDeFoto CHAR(80), a_Describible INT)
@@ -179,6 +188,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PuntoCrear`;
+SELECT 'PuntoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PuntoCrear` (a_Latitud DECIMAL(9,6), a_Longitud DECIMAL(9,6))
@@ -216,6 +227,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `CroquisCrear`;
+SELECT 'CroquisCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `CroquisCrear` (a_Creador INT, a_Dibujable INT)
@@ -264,6 +277,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PuntoDeCroquisCrear`;
+SELECT 'PuntoDeCroquisCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PuntoDeCroquisCrear` (a_CroquisID INT, a_PuntoID INT)
@@ -300,6 +315,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PalabraCrear`;
+SELECT 'PalabraCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PalabraCrear` (a_Palabra_Frase CHAR(15))
@@ -337,6 +354,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `RelacionDePalabrasCrear`;
+SELECT 'RelacionDePalabrasCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `RelacionDePalabrasCrear` (a_Palabra1ID INT, a_Palabra2ID INT)
@@ -373,6 +392,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EtiquetaCrear`;
+SELECT 'EtiquetaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EtiquetaCrear` (a_EtiquetableID INT, a_PalabraID INT)
@@ -416,6 +437,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `CalificacionResenaCrear`;
+SELECT 'CalificacionResenaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `CalificacionResenaCrear` (a_Creador INT, a_CalificableSeguibleID INT, a_ConsumidorID INT, a_Calificacion CHAR(4), a_Resena TEXT)
@@ -467,6 +490,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `SeguidorCrear`;
+SELECT 'SeguidorCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `SeguidorCrear` (a_Creador INT, a_CalificableSeguibleID INT, a_ConsumidorID INT, a_AvisarSi CHAR(40))
@@ -516,6 +541,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `BusquedaCrear`;
+SELECT 'BusquedaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `BusquedaCrear` (a_Creador INT, a_UsuarioID INT, a_Contenido TEXT)
@@ -568,6 +595,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ResultadoDeBusquedaCrear`;
+SELECT 'ResultadoDeBusquedaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ResultadoDeBusquedaCrear` (a_BusquedaID INT, a_BuscableID INT, a_Relevancia FLOAT)
@@ -632,6 +661,8 @@ END$$
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS `SepararString`;
+SELECT 'SepararString';
+
 DELIMITER $$
 
 CREATE PROCEDURE `SepararString` (IN input TEXT, IN `delimiter` VARCHAR(10))

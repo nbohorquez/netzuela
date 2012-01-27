@@ -9,33 +9,34 @@ using WcfSamples.DynamicProxy;      // DynamicProxyFactory, DynamicObject
 
 namespace Zuliaworks.Netzuela.Spuria.Contrato
 {
-    public class DataSetXMLDinamico : DynamicObject
+    public class DataTableXMLDinamico : DynamicObject
     {
         #region Constantes
 
-        const string Tipo = "Zuliaworks.Netzuela.Spuria.Contrato.DataSetXML";
+        const string Tipo = "Zuliaworks.Netzuela.Spuria.Contrato.DataTableXML";
         const string BaseDeDatosPropiedad = "BaseDeDatos";
         const string NombreTablaPropiedad = "NombreTabla";
         const string EsquemaXMLPropiedad = "EsquemaXML";
         const string XMLPropiedad = "XML";
         const string EstadoFilasPropiedad = "EstadoFilas";
+        const string ClavePrimariaPropiedad = "ClavePrimaria";
 
         #endregion
 
         #region Constructores
 
-        public DataSetXMLDinamico(Assembly Ensamblado)
+        public DataTableXMLDinamico(Assembly Ensamblado)
             : this(GetType(Ensamblado))
         {
         }
 
-        public DataSetXMLDinamico(Type TipoDelEmpleado)
+        public DataTableXMLDinamico(Type TipoDelEmpleado)
             : base(TipoDelEmpleado)
         {
             CallConstructor();
         }
 
-        public DataSetXMLDinamico(object Datasetxml)
+        public DataTableXMLDinamico(object Datasetxml)
             : base(Datasetxml)
         {
         }
@@ -72,6 +73,12 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
         {
             get { return (DataRowState[])GetProperty(EstadoFilasPropiedad); }
             set { SetProperty(EstadoFilasPropiedad, value); }
+        }
+
+        public int[] ClavePrimaria
+        {
+            get { return (int[])GetProperty(ClavePrimariaPropiedad); }
+            set { SetProperty(ClavePrimariaPropiedad, value); }
         }
 
         #endregion

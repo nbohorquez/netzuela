@@ -1,3 +1,4 @@
+SELECT 'Funciones sobre usuarios.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `UsuarioCrear`;
+SELECT 'UsuarioCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `UsuarioCrear` (a_Parroquia INT, a_CorreoElectronico VARCHAR(45), a_Contraseña VARCHAR(45))
@@ -68,6 +71,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `AdministradorCrear`;
+SELECT 'AdministradorCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `AdministradorCrear` (a_Creador INT, a_Usuario_P INT, a_Estatus CHAR(9), a_Privilegios VARCHAR(45), 
@@ -114,6 +119,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ConsumidorCrear`;
+SELECT 'ConsumidorCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ConsumidorCrear` (a_Creador INT, a_Usuario_P INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), 
@@ -166,6 +173,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ClienteCrear`;
+SELECT 'ClienteCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ClienteCrear` (a_Creador INT, a_Usuario_P INT, a_RIF CHAR(10), a_Categoria INT, a_Estatus CHAR(9), 
@@ -234,6 +243,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `TiendaCrear`;
+SELECT 'TiendaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `TiendaCrear` (a_Cliente_P CHAR(10))
@@ -293,6 +304,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `HorarioDeTrabajoCrear`;
+SELECT 'HorarioDeTrabajoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `HorarioDeTrabajoCrear` (a_TiendaID INT, a_Dia CHAR(9), a_Laborable BOOLEAN)
@@ -339,6 +352,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `TurnoCrear`;
+SELECT 'TurnoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `TurnoCrear` (a_TiendaID INT, a_Dia CHAR(9), a_HoraDeApertura TIME, a_HoraDeCierre TIME)
@@ -386,6 +401,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `TamanoCrear`;
+SELECT 'TamanoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `TamanoCrear` (a_TiendaID INT, a_NumeroTotalDeProductos INT, a_CantidadTotalDeProductos INT, a_Tamano INT)
@@ -447,6 +464,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PatrocinanteCrear`;
+SELECT 'PatrocinanteCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PatrocinanteCrear` (a_Cliente_P CHAR(10))

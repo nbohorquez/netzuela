@@ -573,25 +573,22 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Inventario` (
   `Rastreable_P` INT NOT NULL ,
   `Cobrable_P` INT NOT NULL ,
   `TiendaID` INT NOT NULL ,
-  `ProductoID` INT NOT NULL ,
+  `Codigo` CHAR(15) NOT NULL ,
+  `Descripcion` VARCHAR(45) NULL ,
   `Visibilidad` CHAR(16) NOT NULL ,
-  `SKU` CHAR(15) NULL ,
-  PRIMARY KEY (`TiendaID`, `ProductoID`) ,
-  INDEX `fk_Inventario_Producto` (`ProductoID` ASC) ,
+  `ProductoID` INT NULL ,
+  PRIMARY KEY (`TiendaID`, `Codigo`) ,
   INDEX `fk_Inventario_Tienda` (`TiendaID` ASC) ,
   INDEX `fk_Inventario_Visibilidad` (`Visibilidad` ASC) ,
   INDEX `fk_Inventario_Rastreable` (`Rastreable_P` ASC) ,
   UNIQUE INDEX `Rastreable_P_UNIQUE` (`Rastreable_P` ASC) ,
   INDEX `fk_Inventario_Cobrable` (`Cobrable_P` ASC) ,
   UNIQUE INDEX `Cobrable_P_UNIQUE` (`Cobrable_P` ASC) ,
+  INDEX `fk_Inventario_Producto` (`ProductoID` ASC) ,
+  UNIQUE INDEX `ProductoID_UNIQUE` (`ProductoID` ASC) ,
   CONSTRAINT `fk_Inventario_Tienda`
     FOREIGN KEY (`TiendaID` )
     REFERENCES `Spuria`.`Tienda` (`TiendaID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Inventario_Producto`
-    FOREIGN KEY (`ProductoID` )
-    REFERENCES `Spuria`.`Producto` (`ProductoID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Inventario_Visibilidad`
@@ -607,6 +604,11 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Inventario` (
   CONSTRAINT `fk_Inventario_Cobrable`
     FOREIGN KEY (`Cobrable_P` )
     REFERENCES `Spuria`.`Cobrable` (`CobrableID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Inventario_Producto`
+    FOREIGN KEY (`ProductoID` )
+    REFERENCES `Spuria`.`Producto` (`ProductoID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1674,16 +1676,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `Spuria`.`PrecioCantidad` (
   `TiendaID` INT NOT NULL ,
-  `ProductoID` INT NOT NULL ,
+  `Codigo` CHAR(15) NOT NULL ,
   `FechaInicio` DATETIME NOT NULL ,
   `FechaFin` DATETIME NULL ,
   `Precio` DECIMAL(10,2) NOT NULL ,
   `Cantidad` INT NOT NULL ,
-  PRIMARY KEY (`TiendaID`, `ProductoID`, `FechaInicio`) ,
-  INDEX `fk_PrecioCantidad_Inventario` (`TiendaID` ASC, `ProductoID` ASC) ,
+  PRIMARY KEY (`TiendaID`, `Codigo`, `FechaInicio`) ,
+  INDEX `fk_PrecioCantidad_Inventario` (`TiendaID` ASC, `Codigo` ASC) ,
   CONSTRAINT `fk_PrecioCantidad_Inventario`
-    FOREIGN KEY (`TiendaID` , `ProductoID` )
-    REFERENCES `Spuria`.`Inventario` (`TiendaID` , `ProductoID` )
+    FOREIGN KEY (`TiendaID` , `Codigo` )
+    REFERENCES `Spuria`.`Inventario` (`TiendaID` , `Codigo` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1711,7 +1713,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Placeholder table for view `Spuria`.`InventarioTienda`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `CodigoDeBarras` INT, `Descripcion` INT, `CodigoInterno` INT, `Precio` INT, `Cantidad` INT, `Visibilidad` INT);
+CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`Codigo` INT, `Descripcion` INT, `Precio` INT);
 
 -- -----------------------------------------------------
 -- View `Spuria`.`InventarioTienda`
@@ -1719,7 +1721,7 @@ CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `CodigoD
 DROP TABLE IF EXISTS `Spuria`.`InventarioTienda`;
 USE `Spuria`;
 /*
-Version origienal:
+Version original:
 
 CREATE  OR REPLACE VIEW `Spuria`.`InventarioTienda` AS
 SELECT Inventario.TiendaID TiendaID, Inventario.ProductoID ProductoID, SKU, Precio, Cantidad, Visibilidad 
@@ -1736,11 +1738,18 @@ FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, ProductoID) WHERE Fech
 USING (ProductoID)
 */
 
+/*
 CREATE VIEW `Spuria`.`InventarioTienda` AS
-SELECT Inventario.TiendaID, Producto.CodigoUniversal CodigoDeBarras, Producto.Nombre Descripcion, SKU CodigoInterno, Precio, Cantidad, Visibilidad 
+SELECT Inventario.TiendaID TiendaID, Producto.CodigoUniversal CodigoDeBarras, Producto.Nombre Descripcion, SKU CodigoInterno, Precio, Cantidad, Visibilidad 
 FROM Inventario, PrecioCantidad, Producto
 WHERE Inventario.ProductoID = PrecioCantidad.ProductoID AND Inventario.TiendaID = PrecioCantidad.TiendaID 
-AND PrecioCantidad.FechaFin IS NULL AND Inventario.ProductoID = Producto.ProductoID;
+AND PrecioCantidad.FechaFin IS NULL AND Inventario.ProductoID = Producto.ProductoID
+*/
+
+CREATE VIEW `Spuria`.`InventarioTienda` AS
+SELECT Inventario.Codigo Codigo, Descripcion, Precio
+FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, Codigo) WHERE FechaFin IS NULL
+;
 USE `Spuria`;
 
 DELIMITER $$
@@ -2340,8 +2349,8 @@ BEGIN
     IF NEW.TiendaID != OLD.TiendaID THEN
         SET NEW.TiendaID = OLD.TiendaID;
     END IF;
-    IF NEW.ProductoID != OLD.ProductoID THEN
-        SET NEW.ProductoID = OLD.ProductoID;
+    IF NEW.Codigo != OLD.Codigo THEN
+        SET NEW.Codigo = OLD.Codigo;
     END IF;
 END $$
 
@@ -2355,7 +2364,7 @@ BEGIN
     DECLARE bobo INT;
     
     SELECT Nombre FROM Producto 
-    WHERE ProductoID = OLD.ProductoID
+    WHERE Codigo = OLD.Codigo
     INTO Denominacion;
     
     SELECT NombreLegal FROM Cliente, Tienda
@@ -2371,48 +2380,14 @@ BEGIN
         )
     ) INTO bobo;
 
-    DELETE FROM PrecioCantidad WHERE TiendaID = OLD.TiendaID AND ProductoID = OLD.ProductoID;
+    DELETE FROM PrecioCantidad WHERE TiendaID = OLD.TiendaID AND Codigo = OLD.Codigo;
 /*
-    DELETE FROM Cantidad WHERE TiendaID = OLD.TiendaID AND ProductoID = OLD.ProductoID;
-    DELETE FROM Precio WHERE TiendaID = OLD.TiendaID AND ProductoID = OLD.ProductoID;
+    DELETE FROM Cantidad WHERE TiendaID = OLD.TiendaID AND Codigo = OLD.Codigo;
+    DELETE FROM Precio WHERE TiendaID = OLD.TiendaID AND Codigo = OLD.Codigo;
 */
     DELETE FROM Cobrable WHERE CobrableID = OLD.Cobrable_P;
     /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
     DELETE FROM Rastreable WHERE RastreableID = OLD.Rastreable_P;
-END $$
-
-USE `Spuria`$$
-
-
-CREATE TRIGGER t_InventarioModificarDespues AFTER UPDATE ON Inventario
-FOR EACH ROW
-BEGIN
-    DECLARE Parametros TEXT;
-    DECLARE bobo INT;
-    
-    IF NEW.Visibilidad != OLD.Visibilidad THEN
-        SELECT CONCAT(
-            'Inventario(columna): (', 
-            CAST(NEW.TiendaID AS CHAR),',',
-            CAST(NEW.ProductoID AS CHAR),'(Visibilidad)',
-            CAST(NEW.Visibilidad AS CHAR),' ahora es ',
-            CAST(NEW.Visibilidad AS CHAR)
-        ) INTO Parametros;
-    
-        SELECT RegistrarModificacion(NEW.Rastreable_P, Parametros) INTO bobo;
-    END IF;
-    
-    IF NEW.SKU != OLD.SKU THEN
-        SELECT CONCAT(
-            'Inventario(columna): (', 
-            CAST(NEW.TiendaID AS CHAR),',',
-            CAST(NEW.ProductoID AS CHAR),'(SKU)',
-            CAST(NEW.SKU AS CHAR),' ahora es ',
-            CAST(NEW.SKU AS CHAR)
-        ) INTO Parametros;
-    
-        SELECT RegistrarModificacion(NEW.Rastreable_P, Parametros) INTO bobo;
-    END IF;
 END $$
 
 USE `Spuria`$$
@@ -2429,11 +2404,57 @@ BEGIN
         CAST(NEW.Rastreable_P AS CHAR),',',
         CAST(NEW.Cobrable_P AS CHAR),',',
         CAST(NEW.TiendaID AS CHAR),',',
-        CAST(NEW.ProductoID AS CHAR), ',',
+        NEW.Codigo, ',',
         NEW.Visibilidad
     ) INTO Parametros;
         
     SELECT RegistrarCreacion (NEW.Rastreable_P, Parametros) INTO bobo;
+END $$
+
+USE `Spuria`$$
+
+
+CREATE TRIGGER t_InventarioModificarDespues AFTER UPDATE ON Inventario
+FOR EACH ROW
+BEGIN
+    DECLARE Parametros TEXT;
+    DECLARE bobo INT;
+    
+    IF NEW.Descripcion != OLD.Descripcion THEN
+        SELECT CONCAT(
+            'Inventario(columna): (', 
+            CAST(NEW.TiendaID AS CHAR),',',
+            NEW.Codigo,'(Descripcion)',
+            CAST(OLD.Descripcion AS CHAR),' ahora es ',
+            CAST(NEW.Descripcion AS CHAR)
+        ) INTO Parametros;
+    
+        SELECT RegistrarModificacion(NEW.Rastreable_P, Parametros) INTO bobo;
+    END IF;
+    
+    IF NEW.Visibilidad != OLD.Visibilidad THEN
+        SELECT CONCAT(
+            'Inventario(columna): (', 
+            CAST(NEW.TiendaID AS CHAR),',',
+            NEW.Codigo,'(Visibilidad)',
+            CAST(OLD.Visibilidad AS CHAR),' ahora es ',
+            CAST(NEW.Visibilidad AS CHAR)
+        ) INTO Parametros;
+    
+        SELECT RegistrarModificacion(NEW.Rastreable_P, Parametros) INTO bobo;
+    END IF;
+    
+    IF NEW.ProductoID != OLD.ProductoID THEN
+        SELECT CONCAT(
+            'Inventario(columna): (', 
+            CAST(NEW.TiendaID AS CHAR),',',
+            NEW.Codigo,'(ProductoID)',
+            CAST(OLD.ProductoID AS CHAR),' ahora es ',
+            CAST(NEW.ProductoID AS CHAR)
+        ) INTO Parametros;
+    
+        SELECT RegistrarModificacion(NEW.Rastreable_P, Parametros) INTO bobo;
+    END IF;    
 END $$
 
 
@@ -5943,14 +5964,14 @@ BEGIN
     SELECT CONCAT(
         'Inventario->PrecioCantidad: (',
         CAST(NEW.TiendaID AS CHAR),',',
-        CAST(NEW.ProductoID AS CHAR),')->',
+        CAST(NEW.Codigo AS CHAR),')->',
         CAST(NEW.FechaInicio AS CHAR),': ',
         CAST(NEW.Precio AS CHAR),
         CAST(NEW.Cantidad AS CHAR)
     ) INTO Parametros;
     
     SELECT Inventario.Rastreable_P FROM Inventario
-    WHERE TiendaID = NEW.TiendaID AND ProductoID = NEW.ProductoID
+    WHERE TiendaID = NEW.TiendaID AND Codigo = NEW.Codigo
     INTO Rastreable_P;
     
     SELECT RegistrarModificacion(Rastreable_P, Parametros) INTO bobo;
@@ -5965,8 +5986,8 @@ BEGIN
     IF NEW.TiendaID != OLD.TiendaID THEN
         SET NEW.TiendaID = OLD.TiendaID;
     END IF;
-    IF NEW.ProductoID != OLD.ProductoID THEN
-        SET NEW.ProductoID = OLD.ProductoID;
+    IF NEW.Codigo != OLD.Codigo THEN
+        SET NEW.Codigo = OLD.Codigo;
     END IF;
     IF NEW.FechaInicio != OLD.FechaInicio THEN
         SET NEW.FechaInicio = OLD.FechaInicio;
@@ -5983,14 +6004,14 @@ BEGIN
     DECLARE Rastreable_P, bobo INT;
     
     SELECT Inventario.Rastreable_P FROM Inventario
-    WHERE TiendaID = NEW.TiendaID AND ProductoID = NEW.ProductoID
+    WHERE TiendaID = NEW.TiendaID AND Codigo = NEW.Codigo
     INTO Rastreable_P;
         
     IF NEW.FechaFin != OLD.FechaFin THEN
         SELECT CONCAT(
             'Inventario->PrecioCantidad(columna): (',
             CAST(NEW.TiendaID AS CHAR),',',
-            CAST(NEW.ProductoID AS CHAR),')->',
+            CAST(NEW.Codigo AS CHAR),')->',
             CAST(NEW.FechaInicio AS CHAR),'(FechaFin): ',
             CAST(OLD.FechaFin AS CHAR),' ahora es ',
             CAST(NEW.FechaFin AS CHAR)
@@ -6003,7 +6024,7 @@ BEGIN
         SELECT CONCAT(
             'Inventario->PrecioCantidad(columna): (',
             CAST(NEW.TiendaID AS CHAR),',',
-            CAST(NEW.ProductoID AS CHAR),')->',
+            CAST(NEW.Codigo AS CHAR),')->',
             CAST(NEW.FechaInicio AS CHAR),'(Precio): ',
             CAST(OLD.Precio AS CHAR),' ahora es ',
             CAST(NEW.Precio AS CHAR)
@@ -6016,7 +6037,7 @@ BEGIN
         SELECT CONCAT(
             'Inventario->PrecioCantidad(columna): (',
             CAST(NEW.TiendaID AS CHAR),',',
-            CAST(NEW.ProductoID AS CHAR),')->',
+            CAST(NEW.Codigo AS CHAR),')->',
             CAST(NEW.FechaInicio AS CHAR),'(Cantidad): ',
             CAST(OLD.Cantidad AS CHAR),' ahora es ',
             CAST(NEW.Cantidad AS CHAR)

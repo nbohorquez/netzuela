@@ -1,10 +1,4 @@
-/*
-*******************************************************
-*							  		*
-*				USUARIOS 				*
-*									*
-*******************************************************
-*/
+SELECT 'Usuarios.sql';
 USE `Spuria`;
 
 /*
@@ -16,6 +10,7 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP PROCEDURE IF EXISTS `CrearUsuarioValeria`;
+SELECT 'CrearUsuarioValeria';
 
 DELIMITER $$
 
@@ -38,7 +33,7 @@ DELIMITER ;
 
 CALL CrearUsuarioValeria();
 
-GRANT SELECT (TiendaID, CodigoDeBarras, Descripcion, CodigoInterno, Precio, Cantidad, Visibilidad) ON InventarioTienda TO 'Valeria'@'localhost';
+GRANT SELECT (Codigo, Descripcion, Precio) ON InventarioTienda TO 'Valeria'@'localhost';
 GRANT EXECUTE ON PROCEDURE Spuria.Actualizar TO 'Valeria'@'localhost';
 GRANT EXECUTE ON PROCEDURE Spuria.Insertar TO 'Valeria'@'localhost';
 GRANT EXECUTE ON PROCEDURE Spuria.Borrar TO 'Valeria'@'localhost';
@@ -52,6 +47,7 @@ FLUSH PRIVILEGES;
 */
 
 DROP PROCEDURE IF EXISTS `CrearUsuarioParis`;
+SELECT 'CrearUsuarioParis';
 
 DELIMITER $$
 

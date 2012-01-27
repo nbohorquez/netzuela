@@ -1,3 +1,4 @@
+SELECT 'Funciones sobre ventas.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `FacturaCrear`;
+SELECT 'FacturaCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `FacturaCrear` (a_Creador INT, a_Cliente CHAR(10), a_InicioDeMedicion DATETIME, a_FinDeMedicion DATETIME)
@@ -54,6 +57,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ServicioVendidoCrear`;
+SELECT 'ServicioVendidoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ServicioVendidoCrear` (a_FacturaID INT, a_CobrableID INT)

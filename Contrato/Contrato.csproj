@@ -47,8 +47,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataSetXML.cs" />
-    <Compile Include="DataSetXMLDinamico.cs" />
+    <Compile Include="DataTableXML.cs" />
+    <Compile Include="DataTableXMLDinamico.cs" />
+    <Compile Include="DataTableXMLExtensiones.cs" />
     <Compile Include="ISpuria.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

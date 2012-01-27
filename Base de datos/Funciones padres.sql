@@ -1,3 +1,4 @@
+SELECT 'Funciones padres.sql';
 USE `Spuria`;
 
 /*
@@ -7,6 +8,8 @@ USE `Spuria`;
 */
 
 DROP FUNCTION IF EXISTS `RastreableCrear`;
+SELECT 'RastreableCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `RastreableCrear` (a_Creador INT)
@@ -31,6 +34,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `CobrableCrear`;
+SELECT 'CobrableCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `CobrableCrear` ()
@@ -49,6 +54,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `DescribibleCrear`;
+SELECT 'DescribibleCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `DescribibleCrear` ()
@@ -67,6 +74,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `BuscableCrear`;
+SELECT 'BuscableCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `BuscableCrear` ()
@@ -85,6 +94,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `CalificableSeguibleCrear`;
+SELECT 'CalificableSeguibleCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `CalificableSeguibleCrear` ()
@@ -103,6 +114,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `EtiquetableCrear`;
+SELECT 'EtiquetableCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `EtiquetableCrear` ()
@@ -121,6 +134,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `DibujableCrear`;
+SELECT 'DibujableCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `DibujableCrear` ()
@@ -139,6 +154,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `InterlocutorCrear`;
+SELECT 'InterlocutorCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `InterlocutorCrear` ()

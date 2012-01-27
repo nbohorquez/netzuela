@@ -218,16 +218,15 @@ SELECT Rastreable_P FROM Tienda, Cliente
 WHERE Tienda.TiendaID = @TiendaID1 AND Cliente.RIF = Tienda.Cliente_P
 INTO @TiendaRastreable;
 
-SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, @ProductoID1, 'Ambos visibles', NULL, 640.00, 12);
-SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, @ProductoID2, 'Ambos visibles', NULL, 104.00, 9);
-SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, @ProductoID3, 'Ambos visibles', NULL, 8400.00, 2);
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, 'TD-015SC', 'Computadora SGI 02', 'Ambos visibles', @ProductoID1, 640.00, 12);
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, 'TD-1841C', 'Celular N78 Ve', 'Ambos visibles', @ProductoID2, 104.00, 9);
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID1, 'TD-99410', 'Control de N64 Gris', 'Ambos visibles', @ProductoID3, 8400.00, 2);
 
 SELECT Rastreable_P FROM Tienda, Cliente
 WHERE Tienda.TiendaID = @TiendaID2 AND Cliente.RIF = Tienda.Cliente_P
 INTO @TiendaRastreable;
 
-SELECT InventarioCrear(@TiendaRastreable, @TiendaID2, @ProductoID4, 'Ambos visibles', NULL, 1500.00, 4);
-
+SELECT InventarioCrear(@TiendaRastreable, @TiendaID2, 'PSDC-41C', 'Microfono en vivo SM57 XLR', 'Ambos visibles', @ProductoID4, 1500.00, 4);
 
 /*
 *******************************************************
@@ -281,7 +280,7 @@ SELECT MensajeCrear (
 /*
 *******************************************************
 *							  		*
-*			PATROCINANTE 				*
+*			    PATROCINANTE 				*
 *									*
 *******************************************************
 */
@@ -318,7 +317,7 @@ SELECT PatrocinanteCrear(@ClienteID) INTO @PatrocinanteID;
 /*
 *******************************************************
 *							  		*
-*				PUBLICIDAD 				*
+*			     PUBLICIDAD 				*
 *									*
 *******************************************************
 */
@@ -371,7 +370,7 @@ SELECT CalificacionResenaCrear(@ConsumidorRastreable, @CalificableID, @Consumido
 /*
 *******************************************************
 *							  		*
-*				SEGUIDOR				*
+*			     SEGUIDOR				*
 *									*
 *******************************************************
 */
@@ -381,7 +380,7 @@ SELECT SeguidorCrear(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'TENE
 /*
 *******************************************************
 *							  		*
-*				DESCRIPCION 			*
+*			    DESCRIPCION 				*
 *									*
 *******************************************************
 */
@@ -440,7 +439,7 @@ SELECT PalabraCrear('Avion') INTO @PalabraID;
 /*
 *******************************************************
 *							  		*
-*				ESTADISTICAS	 		*
+*			    ESTADISTICAS		 		*
 *									*
 *******************************************************
 */

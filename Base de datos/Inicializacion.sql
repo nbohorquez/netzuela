@@ -1,3 +1,6 @@
+SELECT 'Inicializacion.sql';
+USE `Spuria`;
+
 /*
 *************************************************************
 *							  			*
@@ -6,30 +9,36 @@
 *************************************************************
 */
 
+SELECT 'CodigoDeError';
 /* Estos codigos son inventados... todavia no se ha fijado su utilidad */
 INSERT INTO CodigoDeError VALUES("OK");
 INSERT INTO CodigoDeError VALUES("Privilegios insuficientes");
 INSERT INTO CodigoDeError VALUES("Accion imposible");
 
+SELECT 'Privilegios';
 /* Estos codigos son inventados... todavia no se ha fijado su utilidad */
 INSERT INTO Privilegios VALUES("Todos");
 INSERT INTO Privilegios VALUES("Ninguno");
 
+SELECT 'Idioma';
 INSERT INTO Idioma VALUES("Español");
 INSERT INTO Idioma VALUES("English");
 INSERT INTO Idioma VALUES("Français");
 INSERT INTO Idioma VALUES("Deutsch");
 
+SELECT 'TipoDeCodigoUniversal';
 /* Hay que considerar tambien otros codigos que no contempla GS-1 como los automotrices */
 INSERT INTO TipoDeCodigoUniversal VALUES("GTIN-13");
 INSERT INTO TipoDeCodigoUniversal VALUES("GTIN-8");
 INSERT INTO TipoDeCodigoUniversal VALUES("GTIN-14");
 INSERT INTO TipoDeCodigoUniversal VALUES("GS1-128");
-INSERT INTO TipoDeCodigoUniversal VALUES("Desconocido");
+INSERT INTO TipoDeCodigoUniversal VALUES("Otro");
 
+SELECT 'Sexo';
 INSERT INTO Sexo VALUES("Hombre");
 INSERT INTO Sexo VALUES("Mujer");
 
+SELECT 'GradoDeInstruccion';
 INSERT INTO GradoDeInstruccion VALUES("Primaria");
 INSERT INTO GradoDeInstruccion VALUES("Secundia");
 INSERT INTO GradoDeInstruccion VALUES("Tecnico Medio");
@@ -39,11 +48,13 @@ INSERT INTO GradoDeInstruccion VALUES("Especializacion");
 INSERT INTO GradoDeInstruccion VALUES("Maestria");
 INSERT INTO GradoDeInstruccion VALUES("Doctorado");
 
+SELECT 'Visibilidad';
 INSERT INTO Visibilidad VALUES("Ninguno visible");
 INSERT INTO Visibilidad VALUES("Cantidad visible");
 INSERT INTO Visibilidad VALUES("Precio visible");
 INSERT INTO Visibilidad VALUES("Ambos visibles");
 
+SELECT 'Accion';
 INSERT INTO Accion VALUES("Crear");
 INSERT INTO Accion VALUES("Abrir");
 INSERT INTO Accion VALUES("Modificar");
@@ -52,19 +63,23 @@ INSERT INTO Accion VALUES("Bloquear");
 INSERT INTO Accion VALUES("Abrir sesion");
 INSERT INTO Accion VALUES("Cerrar sesion");
 
+SELECT 'Calificacion';
 INSERT INTO Calificacion VALUES("Bien");
 INSERT INTO Calificacion VALUES("Mal");
 
+SELECT 'GrupoDeEdad';
 INSERT INTO GrupoDeEdad VALUES("Adolescentes");
 INSERT INTO GrupoDeEdad VALUES("Adultos jovenes");
 INSERT INTO GrupoDeEdad VALUES("Adultos maduros");
 INSERT INTO GrupoDeEdad VALUES("Adultos mayores");
 INSERT INTO GrupoDeEdad VALUES("Tercera edad");
 
+SELECT 'Estatus';
 INSERT INTO Estatus VALUES("Activo");
 INSERT INTO Estatus VALUES("Bloqueado");
 INSERT INTO Estatus VALUES("Eliminado");
 
+SELECT 'Dia';
 INSERT INTO Dia VALUES("Lunes");
 INSERT INTO Dia VALUES("Martes");
 INSERT INTO Dia VALUES("Miercoles");
@@ -73,6 +88,7 @@ INSERT INTO Dia VALUES("Viernes");
 INSERT INTO Dia VALUES("Sabado");
 INSERT INTO Dia VALUES("Domingo");
 
+SELECT 'HusoHorario';
 INSERT INTO HusoHorario VALUES("-12:00");
 INSERT INTO HusoHorario VALUES("-11:00");
 INSERT INTO HusoHorario VALUES("-10:00");
@@ -122,6 +138,8 @@ INSERT INTO HusoHorario VALUES("14:00");
 *******************************************************
 */
 
+SELECT 'Categorias';
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
@@ -133,6 +151,7 @@ UPDATE Categoria SET HijoDeCategoria = @CategoriaRaiz WHERE CategoriaID = @Categ
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 
 /* Hay que agregarle las subdivisiones (mas adelante) */
 SELECT CategoriaCrear('Libros', 				@CategoriaRaiz) INTO @bobo;
@@ -155,6 +174,8 @@ SELECT CategoriaCrear('No asignada', 			@CategoriaRaiz) INTO @bobo;
 *										*
 *************************************************************
 */
+
+SELECT 'Administrador';
 
 /* Las condiciones de borde (el primero y el ultimo) siempre joden. En este caso, el primer administrador... */
 
@@ -199,6 +220,7 @@ SET @Creador = @RastreableID;
    completamente a las parroquias de Cabimas
 */
 
+SELECT 'Continentes';
 /* Continentes del mundo */
 SELECT ContinenteCrear(@Creador, 'Africa', 	1000000000) INTO @bobo;
 
@@ -207,10 +229,12 @@ SELECT ContinenteCrear(@Creador, 'Asia', 		3879000000) INTO @bobo;
 SELECT ContinenteCrear(@Creador, 'Europa', 	739000000) INTO @bobo;
 SELECT ContinenteCrear(@Creador, 'Oceania', 	33000000) INTO @bobo;
 
+SELECT 'Ciudades';
 /* Es necesario crear Caracas D.C. para poder definir a Venezuela */
 SELECT CiudadCrear(@Creador, 'Caracas D.C.', 	2109166) INTO @CaracasID;
 SELECT CiudadCrear(@Creador, 'Maracaibo', 	1897655) INTO @MaracaiboID;
 
+SELECT 'Paises';
 SELECT PaisCrear (
 	@Creador, 
 	'Venezuela', 
@@ -222,8 +246,10 @@ SELECT PaisCrear (
 	4.30, 326498000000
 ) INTO @VenezuelaID;
 
+SELECT 'Estados';
 SELECT EstadoCrear(@Creador, 'Zulia', 3887171, @VenezuelaID, '-04:30', NULL) INTO @ZuliaID;
 
+SELECT 'Municipios';
 /* Municipios del Zulia */
 SELECT MunicipioCrear(@Creador, 'Almirante Padilla', 		9030, 	@ZuliaID, 		NULL) 		INTO @bobo;
 SELECT MunicipioCrear(@Creador, 'Baralt', 			80000, 	@ZuliaID, 		NULL) 		INTO @bobo;
@@ -247,6 +273,7 @@ SELECT MunicipioCrear(@Creador, 'Simon Bolivar', 		50000, 	@ZuliaID, 		NULL) 		I
 SELECT MunicipioCrear(@Creador, 'Sucre', 				57396, 	@ZuliaID, 		NULL) 		INTO @bobo;
 SELECT MunicipioCrear(@Creador, 'Valmore Rodriguez', 		55000, 	@ZuliaID, 		NULL) 		INTO @bobo;
 
+SELECT 'Parroquias';
 /* Parroquias de Cabimas */
 SELECT ParroquiaCrear(@Creador, 'Ambrosio', 			40768, 	@CabimasID, 	'4013') 		INTO @bobo;
 SELECT ParroquiaCrear(@Creador, 'Aristides Calvani', 		40768, 	@CabimasID, 	'4013') 		INTO @bobo;

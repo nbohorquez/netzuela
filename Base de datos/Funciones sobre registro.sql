@@ -1,3 +1,4 @@
+SELECT 'Funciones sobre registro.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `RegistroCrear`;
+SELECT 'RegistroCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `RegistroCrear` (a_ActorActivo INT, a_ActorPasivo INT, a_Accion CHAR(13), a_Parametros TEXT, a_CodigoDeError CHAR(10))
@@ -51,6 +54,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `RegistrarEliminacion`;
+SELECT 'RegistrarEliminacion';
+
 DELIMITER $$
 
 CREATE FUNCTION `RegistrarEliminacion` (a_Rastreable INT, a_Parametros TEXT)
@@ -82,6 +87,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `RegistrarCreacion`;
+SELECT 'RegistrarCreacion';
+
 DELIMITER $$
 
 CREATE FUNCTION `RegistrarCreacion` (a_Rastreable INT, a_Parametros TEXT)
@@ -114,6 +121,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `RegistrarModificacion`;
+SELECT 'RegistrarModificacion';
+
 DELIMITER $$
 
 CREATE FUNCTION `RegistrarModificacion` (a_Rastreable INT, a_Parametros TEXT)

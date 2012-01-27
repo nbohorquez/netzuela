@@ -1,3 +1,4 @@
+SELECT 'Funciones sobre publicidades.sql';
 USE `Spuria`;
 
 /*
@@ -9,6 +10,8 @@ USE `Spuria`;
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `PublicidadCrear`;
+SELECT 'PublicidadCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `PublicidadCrear` (a_Creador INT, a_Patrocinante INT)
@@ -60,6 +63,8 @@ END$$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `ConsumidorObjetivoCrear`;
+SELECT 'ConsumidorObjetivoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `ConsumidorObjetivoCrear` (a_PublicidadID INT, a_ConsumidorID INT)
@@ -104,6 +109,8 @@ END $$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `GrupoDeEdadObjetivoCrear`;
+SELECT 'GrupoDeEdadObjetivoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `GrupoDeEdadObjetivoCrear` (a_PublicidadID INT, a_GrupoDeEdad CHAR(15))
@@ -149,6 +156,8 @@ END $$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `GradoDeInstruccionObjetivoCrear`;
+SELECT 'GradoDeInstruccionObjetivoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `GradoDeInstruccionObjetivoCrear` (a_PublicidadID INT, a_GradoDeInstruccion CHAR(16))
@@ -194,6 +203,8 @@ END $$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `RegionGeograficaObjetivoCrear`;
+SELECT 'RegionGeograficaObjetivoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `RegionGeograficaObjetivoCrear` (a_PublicidadID INT, a_RegionGeograficaID INT)
@@ -239,6 +250,8 @@ END $$
 DELIMITER ;
 
 DROP FUNCTION IF EXISTS `SexoObjetivoCrear`;
+SELECT 'SexoObjetivoCrear';
+
 DELIMITER $$
 
 CREATE FUNCTION `SexoObjetivoCrear` (a_PublicidadID INT, a_Sexo CHAR(6))

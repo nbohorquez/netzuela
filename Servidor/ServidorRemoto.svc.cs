@@ -96,18 +96,29 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
             return ResultadoFinal.ToArray();
         }
 
-        public DataSetXML LeerTabla(string BaseDeDatos, string Tabla)
+        public DataTableXML LeerTabla(string BaseDeDatos, string Tabla)
         {
-            DataSetXML DatosAEnviar = null;
+            DataTableXML DatosAEnviar = null;
 
             try
             {
                 DataTable T = _Conexion.LeerTabla(BaseDeDatos, Tabla);
+                DatosAEnviar = T.DataTableAXml(BaseDeDatos, Tabla);
 
+                /*
                 DataSet Set = new DataSet(Tabla);
                 Set.Tables.Add(T);
 
-                DatosAEnviar = new DataSetXML(Tabla, BaseDeDatos, Set.GetXmlSchema(), Set.GetXml());
+                DatosAEnviar = new DataTableXML(Tabla, BaseDeDatos, Set.GetXmlSchema(), Set.GetXml());
+
+                List<DataRowState> EstadoFilas = new List<DataRowState>();
+                foreach (DataRow Fila in Tabla.Rows)
+                {
+                    EstadoFilas.Add(Fila.RowState);
+                }
+                DatosAEnviar.EstadoFilas = EstadoFilas.ToArray();
+                DatosAEnviar.ClavePrimaria = Tabla.PrimaryKey;
+                */
             }
             catch (Exception ex)
             {
@@ -117,21 +128,24 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
             return DatosAEnviar;
         }
 
-        public bool EscribirTabla(DataSetXML TablaXML)
+        public bool EscribirTabla(DataTableXML TablaXML)
         {
             // Con codigo de: http://pstaev.blogspot.com/2008/04/passing-dataset-to-wcf-method.html
 
-            DataSet TablaInterna = new DataSet();
             bool Resultado = false;
 
             try
             {
-                TablaInterna.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.EsquemaXML)));
-                TablaInterna.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.XML)));
-                TablaInterna.WriteXml(TablaXML.NombreTabla + ".xml");
-                TablaInterna.Tables[0].AcceptChanges();
+                DataTable Tabla = TablaXML.XmlADataTable();
+                /*
+                SetTemporal.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.EsquemaXML)));
+                SetTemporal.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.XML)));
+                SetTemporal.WriteXml(TablaXML.NombreTabla + ".xml");
 
-                DataRowCollection Fila = TablaInterna.Tables[0].Rows;
+                Tabla = SetTemporal.Tables[0];
+                Tabla.AcceptChanges();
+
+                DataRowCollection Fila = Tabla.Rows;
 
                 for (int i = 0; i < Fila.Count; i++)
                 {
@@ -156,7 +170,9 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
                     }
                 }
 
-                _Conexion.EscribirTabla(TablaXML.BaseDeDatos, TablaXML.NombreTabla, TablaInterna.Tables[0]);
+                Tabla.PrimaryKey = TablaXML.ClavePrimaria;
+                */
+                _Conexion.EscribirTabla(TablaXML.BaseDeDatos, TablaXML.NombreTabla, Tabla);
 
                 Resultado = true;
             }
