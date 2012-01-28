@@ -1713,7 +1713,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 -- Placeholder table for view `Spuria`.`InventarioTienda`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`Codigo` INT, `Descripcion` INT, `Precio` INT);
+CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `Codigo` INT, `Descripcion` INT, `Precio` INT, `Cantidad` INT);
 
 -- -----------------------------------------------------
 -- View `Spuria`.`InventarioTienda`
@@ -1747,7 +1747,7 @@ AND PrecioCantidad.FechaFin IS NULL AND Inventario.ProductoID = Producto.Product
 */
 
 CREATE VIEW `Spuria`.`InventarioTienda` AS
-SELECT Inventario.Codigo Codigo, Descripcion, Precio
+SELECT Inventario.TiendaID TiendaID, Inventario.Codigo Codigo, Descripcion, Precio, Cantidad
 FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, Codigo) WHERE FechaFin IS NULL
 ;
 USE `Spuria`;

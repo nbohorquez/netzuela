@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using System.Data;                          // DataTable, DataSet, DataRowCollection, DataRowState
-using System.IO;                            // MemoryStream
+using System.Data;      // DataTable, DataSet, DataRowCollection, DataRowState
+using System.IO;        // MemoryStream
 
 namespace Zuliaworks.Netzuela.Spuria.Contrato
 {
@@ -14,6 +14,8 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
 
         public static DataTable XmlADataTable(this DataTableXML TablaXML)
         {
+            // Con codigo de: http://pstaev.blogspot.com/2008/04/passing-dataset-to-wcf-method.html
+
             DataTable Tabla = null;
 
             try
@@ -104,7 +106,6 @@ namespace Zuliaworks.Netzuela.Spuria.Contrato
                 }
 
                 DatosAEnviar.ClavePrimaria = ClavePrimaria.ToArray();
-                
             }
             catch (Exception ex)
             {

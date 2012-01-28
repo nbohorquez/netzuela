@@ -22,7 +22,6 @@ BEGIN
 	DECLARE Descripcion VARCHAR(45);
 	DECLARE Precio DECIMAL(10,2);
 	DECLARE Cantidad INT;
-	DECLARE Visibilidad CHAR(16);
 
 	DECLARE Creador INT;
 	DECLARE Resultado INT;
@@ -38,7 +37,6 @@ BEGIN
 	SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
 	SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
 	SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
-	SELECT CONVERT(Valor, CHAR(16)) FROM Parametros WHERE ID = 6 INTO Visibilidad;
 	
 	DROP TEMPORARY TABLE IF EXISTS Parametros;
 
@@ -47,7 +45,7 @@ BEGIN
 	WHERE Tienda.TiendaID = TiendaID AND Cliente.RIF = Tienda.Cliente_P
 	INTO Creador;
 
-	SELECT InventarioCrear(Creador, TiendaID, Codigo, Descripcion, Visibilidad, NULL, Precio, Cantidad) INTO Resultado;
+	SELECT InventarioCrear(Creador, TiendaID, Codigo, Descripcion, 'Ambos visibles', NULL, Precio, Cantidad) INTO Resultado;
 
 	/* COMMIT; */
 END$$
@@ -73,7 +71,6 @@ BEGIN
 	DECLARE Descripcion VARCHAR(45);
 	DECLARE Precio DECIMAL(10,2);
 	DECLARE Cantidad INT;
-	DECLARE Visibilidad CHAR(16);
 
 	DECLARE Resultado INT;
 	DECLARE PrecioViejo DECIMAL(10,2);
@@ -88,7 +85,6 @@ BEGIN
 	SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
 	SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
 	SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
-	SELECT CONVERT(Valor, CHAR(16)) FROM Parametros WHERE ID = 6 INTO Visibilidad;
 	
 	DROP TEMPORARY TABLE IF EXISTS Parametros;
 	
@@ -102,7 +98,7 @@ BEGIN
 	END IF;
 
 	UPDATE Inventario
-	SET Inventario.SKU = SKU, Inventario.Visibilidad = Visibilidad
+	SET Inventario.Descripcion = Descripcion
 	WHERE Inventario.TiendaID = TiendaID AND Inventario.Codigo = Codigo;
 
 	/*COMMIT;*/
@@ -116,12 +112,12 @@ END$$
 
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS `Borrar`;
-SELECT 'Borrar';
+DROP PROCEDURE IF EXISTS `Eliminar`;
+SELECT 'Eliminar';
 
 DELIMITER $$
 
-CREATE PROCEDURE `Borrar` (a_Parametros TEXT)
+CREATE PROCEDURE `Eliminar` (a_Parametros TEXT)
 
 BEGIN
 	DECLARE TiendaID INT;
@@ -129,7 +125,6 @@ BEGIN
 	DECLARE Descripcion VARCHAR(45);
 	DECLARE Precio DECIMAL(10,2);
 	DECLARE Cantidad INT;
-	DECLARE Visibilidad CHAR(16);
 
 	/*START TRANSACTION;*/
 
@@ -140,7 +135,6 @@ BEGIN
 	SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
 	SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
 	SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
-	SELECT CONVERT(Valor, CHAR(16)) FROM Parametros WHERE ID = 6 INTO Visibilidad;
 	
 	DROP TEMPORARY TABLE IF EXISTS Parametros;
 

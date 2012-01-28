@@ -104,21 +104,6 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
             {
                 DataTable T = _Conexion.LeerTabla(BaseDeDatos, Tabla);
                 DatosAEnviar = T.DataTableAXml(BaseDeDatos, Tabla);
-
-                /*
-                DataSet Set = new DataSet(Tabla);
-                Set.Tables.Add(T);
-
-                DatosAEnviar = new DataTableXML(Tabla, BaseDeDatos, Set.GetXmlSchema(), Set.GetXml());
-
-                List<DataRowState> EstadoFilas = new List<DataRowState>();
-                foreach (DataRow Fila in Tabla.Rows)
-                {
-                    EstadoFilas.Add(Fila.RowState);
-                }
-                DatosAEnviar.EstadoFilas = EstadoFilas.ToArray();
-                DatosAEnviar.ClavePrimaria = Tabla.PrimaryKey;
-                */
             }
             catch (Exception ex)
             {
@@ -130,48 +115,11 @@ namespace Zuliaworks.Netzuela.Spuria.Servidor
 
         public bool EscribirTabla(DataTableXML TablaXML)
         {
-            // Con codigo de: http://pstaev.blogspot.com/2008/04/passing-dataset-to-wcf-method.html
-
             bool Resultado = false;
 
             try
             {
                 DataTable Tabla = TablaXML.XmlADataTable();
-                /*
-                SetTemporal.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.EsquemaXML)));
-                SetTemporal.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.XML)));
-                SetTemporal.WriteXml(TablaXML.NombreTabla + ".xml");
-
-                Tabla = SetTemporal.Tables[0];
-                Tabla.AcceptChanges();
-
-                DataRowCollection Fila = Tabla.Rows;
-
-                for (int i = 0; i < Fila.Count; i++)
-                {
-                    switch (TablaXML.EstadoFilas[i])
-                    {
-                        case DataRowState.Added:
-                            Fila[i].SetAdded();
-                            break;
-                        case DataRowState.Deleted:
-                            Fila[i].Delete();
-                            break;
-                        case DataRowState.Detached:
-                            //Fila[i].Delete();
-                            break;
-                        case DataRowState.Modified:
-                            Fila[i].SetModified();
-                            break;
-                        case DataRowState.Unchanged:
-                            break;
-                        default:
-                            throw new Exception("No se reconoce el estado de la fila");
-                    }
-                }
-
-                Tabla.PrimaryKey = TablaXML.ClavePrimaria;
-                */
                 _Conexion.EscribirTabla(TablaXML.BaseDeDatos, TablaXML.NombreTabla, Tabla);
 
                 Resultado = true;
