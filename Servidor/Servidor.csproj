@@ -88,9 +88,9 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Contrato\Contrato.csproj">
+    <ProjectReference Include="..\ApiPublica\ApiPublica.csproj">
       <Project>{8DE4172C-BAE2-4320-A092-585077DBB33F}</Project>
-      <Name>Contrato</Name>
+      <Name>ApiPublica</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

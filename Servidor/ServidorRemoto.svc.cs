@@ -13,14 +13,14 @@ using System.Security;                                  // SecureString
 using Zuliaworks.Netzuela.Valeria.Comunes;              // ParametrosDeConexion
 using Zuliaworks.Netzuela.Valeria.Logica;               // Conexion
 using Zuliaworks.Netzuela.Valeria.Preferencias;         // ConexionesSection
-using Zuliaworks.Netzuela.Spuria.Contrato;              // ISpuria
+using Zuliaworks.Netzuela.Spuria.ApiPublica;            // IApiPublica
 
 namespace Zuliaworks.Netzuela.Spuria.Servidor
 {
     // Para informacion sobre concurrencia ver: http://www.codeproject.com/KB/WCF/WCFConcurrency.aspx
 
     [ServiceBehavior(ConcurrencyMode=ConcurrencyMode.Multiple, InstanceContextMode=InstanceContextMode.PerSession)]
-    public class ServidorRemoto : ISpuria
+    public class ServidorRemoto : IApiPublica
     {
         #region Variables
 

@@ -1,5 +1,8 @@
-Contrato/bin/
-Contrato/obj/
+ApiPublica/bin/
+ApiPublica/obj/
 
 Servidor/bin/
 Servidor/obj/
+
+ServidorOAuth/bin/
+ServidorOAuth/obj/
