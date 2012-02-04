@@ -1,0 +1,18 @@
+﻿@model Zuliaworks.Netzuela.Spuria.ServidorOAuth.Models.AutorizacionModel
+
+@{
+    ViewBag.Title = "Autorizar";
+}
+
+<h2>Autorizar</h2>
+<p>
+    <b>Advertencia</b>: No otorgue sus credenciales (nombre y/o contraseña) a ningún otro sitio o aplicación.
+</p>
+<p>
+	La aplicación @Html.Encode(Model.AplicacionConsumidora) está pidiendo acceso a loa datos privados de su 
+    cuenta. ¿Está Ud. de acuerdo?
+</p>
+<p>
+	If you grant access now, you can revoke it at any time by returning to
+	@Html.ActionLink("your account page", "Edit").
+</p>

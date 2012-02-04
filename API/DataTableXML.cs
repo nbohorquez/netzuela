@@ -8,7 +8,7 @@ using System.Runtime.Serialization;         // DataMember, DataContract
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
-namespace Zuliaworks.Netzuela.Spuria.ApiPublica
+namespace Zuliaworks.Netzuela.Spuria.Api
 {
 	// Esta informacion es empleada por el servidor y los clientes
     [DataContract]

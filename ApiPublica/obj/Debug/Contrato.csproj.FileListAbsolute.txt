@@ -1,8 +1,0 @@
-D:\Netzuela\Spuria\Contrato\bin\Debug\ContratoDocumentacion.XML
-D:\Netzuela\Spuria\Contrato\bin\Debug\Contrato.dll
-D:\Netzuela\Spuria\Contrato\bin\Debug\Contrato.pdb
-D:\Netzuela\Spuria\Contrato\bin\Debug\WcfSamples.DynamicProxy.dll
-D:\Netzuela\Spuria\Contrato\bin\Debug\WcfSamples.DynamicProxy.pdb
-D:\Netzuela\Spuria\Contrato\obj\Debug\ResolveAssemblyReference.cache
-D:\Netzuela\Spuria\Contrato\obj\Debug\Contrato.dll
-D:\Netzuela\Spuria\Contrato\obj\Debug\Contrato.pdb

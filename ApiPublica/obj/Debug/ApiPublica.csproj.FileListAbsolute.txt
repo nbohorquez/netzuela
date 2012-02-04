@@ -1,7 +1,0 @@
-D:\Netzuela\Spuria\Contrato\bin\Debug\WcfSamples.DynamicProxy.dll
-D:\Netzuela\Spuria\Contrato\bin\Debug\WcfSamples.DynamicProxy.pdb
-D:\Netzuela\Spuria\Contrato\obj\Debug\ResolveAssemblyReference.cache
-D:\Netzuela\Spuria\Contrato\bin\Debug\ApiPublica.dll
-D:\Netzuela\Spuria\Contrato\bin\Debug\ApiPublica.pdb
-D:\Netzuela\Spuria\Contrato\obj\Debug\ApiPublica.dll
-D:\Netzuela\Spuria\Contrato\obj\Debug\ApiPublica.pdb

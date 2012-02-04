@@ -24,7 +24,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
             routes.MapRoute(
                 "Default", // Nombre de ruta
                 "{controller}/{action}/{id}", // URL con parámetros
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Valores predeterminados de parámetro
+                new { controller = "Inicio", action = "Index", id = UrlParameter.Optional } // Valores predeterminados de parámetro
             );
 
         }

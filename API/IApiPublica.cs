@@ -5,7 +5,7 @@ using System.Text;
 
 using System.ServiceModel;                              // ServiceContract, OperationContract
 
-namespace Zuliaworks.Netzuela.Spuria.ApiPublica
+namespace Zuliaworks.Netzuela.Spuria.Api
 {
     [ServiceContract]
     public interface IApiPublica

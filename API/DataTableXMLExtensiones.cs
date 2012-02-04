@@ -6,7 +6,7 @@ using System.Text;
 using System.Data;      // DataTable, DataSet, DataRowCollection, DataRowState
 using System.IO;        // MemoryStream
 
-namespace Zuliaworks.Netzuela.Spuria.ApiPublica
+namespace Zuliaworks.Netzuela.Spuria.Api
 {
     public static class DataTableXMLExtensiones
     {

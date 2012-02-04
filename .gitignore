@@ -1,8 +1,8 @@
-ApiPublica/bin/
-ApiPublica/obj/
+API/bin/
+API/obj/
 
-Servidor/bin/
-Servidor/obj/
+ServidorApi/bin/
+ServidorApi/obj/
 
 ServidorOAuth/bin/
 ServidorOAuth/obj/

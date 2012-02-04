@@ -1,1 +1,1 @@
-﻿<%@ Application Codebehind="Global.asax.cs" Inherits="ServidorOAuth.MvcApplication" Language="C#" %>
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="Zuliaworks.Netzuela.Spuria.ServidorOAuth.MvcApplication" Language="C#" %>

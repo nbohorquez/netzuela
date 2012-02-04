@@ -7,7 +7,7 @@ using System.Data;                  // DataRowState
 using System.Reflection;            // Assembly, Type
 using WcfSamples.DynamicProxy;      // DynamicProxyFactory, DynamicObject
 
-namespace Zuliaworks.Netzuela.Spuria.ApiPublica
+namespace Zuliaworks.Netzuela.Spuria.Api
 {
     public class DataTableXMLDinamico : DynamicObject
     {
