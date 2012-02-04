@@ -11,28 +11,37 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth.Controllers
 {
     public class AutentificacionController : Controller
     {
-        //
         // GET: /Autentificacion/
-
+        [HttpGet]
         public ActionResult Index()
         {
             return View();
         }
 
+        // GET: /Autentificacion/Autorizar/
+        [HttpGet]
         public ActionResult Autorizar()
-        {
+        {/*
             if (OAuth.PeticionDeAutorizacionPendiente == null)
             {
                 return RedirectToAction("Index", "Inicio");
             }
-
+            */
             var model = new AutorizacionModel
             {
                 //AplicacionConsumidora = OAuthServiceProvider.PendingAuthorizationConsumer.Name,
-                PeticionInsegura = OAuth.PeticionDeAutorizacionPendiente.IsUnsafeRequest
+                //PeticionInsegura = OAuth.PeticionDeAutorizacionPendiente.IsUnsafeRequest
+                AplicacionConsumidora = "Valeria",
+                PeticionInsegura = false
             };
 
             return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public ActionResult Autorizar(AutorizacionModel Autorizacion)
+        {
+            return View();
         }
     }
 }
