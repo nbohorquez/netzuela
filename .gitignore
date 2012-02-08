@@ -1,5 +1,6 @@
 API/bin/
 API/obj/
+API/StyleCop.Cache
 
 ServidorApi/bin/
 ServidorApi/obj/

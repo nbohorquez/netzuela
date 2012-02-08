@@ -1,29 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.Data;                          // DataRowState, DataColumn
-using System.Runtime.Serialization;         // DataMember, DataContract
-using System.ServiceModel;
-using System.ServiceModel.Web;
-
-namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.Api
 {
-	// Esta informacion es empleada por el servidor y los clientes
+    using System;
+    using System.Collections.Generic;
+    using System.Data;                          // DataRowState, DataColumn
+    using System.Linq;
+    using System.Runtime.Serialization;         // DataMember, DataContract
+    using System.ServiceModel;
+    using System.ServiceModel.Web;
+    using System.Text;
+
     [DataContract]
-    public class DataTableXML
+    public class DataTableXml
     {
         #region Constructores
 
-        public DataTableXML() { }
+        public DataTableXml() 
+        { 
+        }
 
-        public DataTableXML(string BaseDeDatos, string NombreTabla, string EsquemaXML, string XML)
+        public DataTableXml(string baseDeDatos, string nombreTabla, string esquemaXml, string xml)
         {
-            this.BaseDeDatos = BaseDeDatos;
-            this.NombreTabla = NombreTabla;            
-            this.EsquemaXML = EsquemaXML;
-            this.XML = XML;
+            this.BaseDeDatos = baseDeDatos;
+            this.NombreTabla = nombreTabla;
+            this.EsquemaXml = esquemaXml;
+            this.Xml = xml;
         }
 
         #endregion
@@ -35,9 +35,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         [DataMember]
         public string NombreTabla { get; set; }
         [DataMember]
-        public string EsquemaXML { get; set; }
+        public string EsquemaXml { get; set; }
         [DataMember]
-        public string XML { get; set; }
+        public string Xml { get; set; }
         [DataMember]
         public DataRowState[] EstadoFilas { get; set; }
         [DataMember]

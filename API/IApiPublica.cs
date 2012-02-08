@@ -1,26 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.ServiceModel;                              // ServiceContract, OperationContract
-
-namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.Api
 {
-    [ServiceContract]
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.ServiceModel;          // ServiceContract, OperationContract
+    using System.Text;
+
+    [ServiceContract(Namespace = "http://netzuela.zuliaworks.com/spuria/api_publica")]    
     public interface IApiPublica
     {
         [OperationContract]
         string[] ListarBasesDeDatos();
         [OperationContract]
-        string[] ListarTablas(string BaseDeDatos);
+        string[] ListarTablas(string baseDeDatos);
         [OperationContract]
-        DataTableXML LeerTabla(string BaseDeDatos, string Tabla);
+        DataTableXml LeerTabla(string baseDeDatos, string tabla);
         [OperationContract]
-        bool EscribirTabla(DataTableXML Tablas);
-        /*
-        [OperationContract]
-        object CrearUsuario(SecureString Usuario, SecureString Contrasena, string[] Columnas, int Privilegios);
-         * */
+        bool EscribirTabla(DataTableXml tablas);
     }
 }

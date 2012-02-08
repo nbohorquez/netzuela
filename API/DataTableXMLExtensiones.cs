@@ -1,50 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.Data;      // DataTable, DataSet, DataRowCollection, DataRowState
-using System.IO;        // MemoryStream
-
-namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.Api
 {
-    public static class DataTableXMLExtensiones
+    using System;
+    using System.Collections.Generic;
+    using System.Data;                  // DataTable, DataSet, DataRowCollection, DataRowState
+    using System.IO;                    // MemoryStream
+    using System.Linq;
+    using System.Text;
+    
+    public static class DataTableXmlExtensiones
     {
         #region Funciones
 
-        public static DataTable XmlADataTable(this DataTableXML TablaXML)
+        public static DataTable XmlADataTable(this DataTableXml tablaXml)
         {
-            // Con codigo de: http://pstaev.blogspot.com/2008/04/passing-dataset-to-wcf-method.html
+            /*
+             * Con codigo de: http://pstaev.blogspot.com/2008/04/passing-dataset-to-wcf-method.html
+             */
 
-            DataTable Tabla = null;
+            DataTable tabla = null;
 
             try
             {
-                DataSet SetTemporal = new DataSet();
+                DataSet setTemporal = new DataSet();
 
-                SetTemporal.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.EsquemaXML)));
-                SetTemporal.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(TablaXML.XML)));
+                setTemporal.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(tablaXml.EsquemaXml)));
+                setTemporal.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(tablaXml.Xml)));
 
-                Tabla = SetTemporal.Tables[0];
-                Tabla.AcceptChanges();
+                tabla = setTemporal.Tables[0];
+                tabla.AcceptChanges();
 
-                DataRowCollection Fila = Tabla.Rows;
+                DataRowCollection fila = tabla.Rows;
 
-                for (int i = 0; i < Fila.Count; i++)
+                for (int i = 0; i < fila.Count; i++)
                 {
-                    switch (TablaXML.EstadoFilas[i])
+                    switch (tablaXml.EstadoFilas[i])
                     {
                         case DataRowState.Added:
-                            Fila[i].SetAdded();
+                            fila[i].SetAdded();
                             break;
                         case DataRowState.Deleted:
-                            Fila[i].Delete();
+                            fila[i].Delete();
                             break;
                         case DataRowState.Detached:
-                            //Fila[i].Delete();
+                            // Fila[i].Delete();
                             break;
                         case DataRowState.Modified:
-                            Fila[i].SetModified();
+                            fila[i].SetModified();
                             break;
                         case DataRowState.Unchanged:
                             break;
@@ -53,66 +54,66 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                     }
                 }
 
-                List<DataColumn> Columnas = new List<DataColumn>();
+                List<DataColumn> columnas = new List<DataColumn>();
 
-                foreach(int Columna in TablaXML.ClavePrimaria)
+                foreach (int columna in tablaXml.ClavePrimaria)
                 {
-                    Columnas.Add(Tabla.Columns[Columna]);
+                    columnas.Add(tabla.Columns[columna]);
                 }
 
-                Tabla.PrimaryKey = Columnas.ToArray();
+                tabla.PrimaryKey = columnas.ToArray();
             }
             catch (Exception ex)
             {
                 throw new Exception("Error al convertir el DataTableXML a un DataTable", ex);
             }
 
-            return Tabla;
+            return tabla;
         }
 
-        public static DataTableXML DataTableAXml(this DataTable Tabla, string BaseDeDatos, string NombreTabla)
+        public static DataTableXml DataTableAXml(this DataTable tabla, string baseDeDatos, string nombreTabla)
         {
-            DataTableXML DatosAEnviar = null;
+            DataTableXml datosAEnviar = null;
 
             try
             {
-                DataSet SetTemporal = null;
+                DataSet setTemporal = null;
 
-                if (Tabla.DataSet != null)
+                if (tabla.DataSet != null)
                 {
-                    SetTemporal = Tabla.DataSet;
+                    setTemporal = tabla.DataSet;
                 }
                 else
                 {
-                    SetTemporal = new DataSet(NombreTabla);
-                    SetTemporal.Tables.Add(Tabla);
+                    setTemporal = new DataSet(nombreTabla);
+                    setTemporal.Tables.Add(tabla);
                 }
 
-                DatosAEnviar = new DataTableXML(BaseDeDatos, NombreTabla, SetTemporal.GetXmlSchema(), SetTemporal.GetXml());
-                List<DataRowState> EstadoFilas = new List<DataRowState>();
+                datosAEnviar = new DataTableXml(baseDeDatos, nombreTabla, setTemporal.GetXmlSchema(), setTemporal.GetXml());
+                List<DataRowState> estadoFilas = new List<DataRowState>();
 
-                foreach (DataRow Fila in Tabla.Rows)
+                foreach (DataRow fila in tabla.Rows)
                 {
-                    EstadoFilas.Add(Fila.RowState);
+                    estadoFilas.Add(fila.RowState);
                 }
 
-                DatosAEnviar.EstadoFilas = EstadoFilas.ToArray();
+                datosAEnviar.EstadoFilas = estadoFilas.ToArray();
 
-                List<int> ClavePrimaria = new List<int>();
+                List<int> clavePrimaria = new List<int>();
 
-                foreach (DataColumn Columna in Tabla.PrimaryKey)
+                foreach (DataColumn columna in tabla.PrimaryKey)
                 {
-                    ClavePrimaria.Add(Columna.Ordinal);
+                    clavePrimaria.Add(columna.Ordinal);
                 }
 
-                DatosAEnviar.ClavePrimaria = ClavePrimaria.ToArray();
+                datosAEnviar.ClavePrimaria = clavePrimaria.ToArray();
             }
             catch (Exception ex)
             {
                 throw new Exception("Error al convertir el DataTable a un DataTableXML", ex);
             }
 
-            return DatosAEnviar;
+            return datosAEnviar;
         }
 
         #endregion

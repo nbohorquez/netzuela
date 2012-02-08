@@ -1,43 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using System.Data;                  // DataRowState    
-using System.Reflection;            // Assembly, Type
-using WcfSamples.DynamicProxy;      // DynamicProxyFactory, DynamicObject
-
-namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.Api
 {
-    public class DataTableXMLDinamico : DynamicObject
+    using System;
+    using System.Collections.Generic;
+    using System.Data;                  // DataRowState
+    using System.Linq;
+    using System.Reflection;            // Assembly, Type
+    using System.Text;
+
+    using WcfSamples.DynamicProxy;      // DynamicProxyFactory, DynamicObject
+
+    public class DataTableXmlDinamico : DynamicObject
     {
         #region Constantes
 
-        const string Tipo = "Zuliaworks.Netzuela.Spuria.ApiPublica.DataTableXML";
-        const string BaseDeDatosPropiedad = "BaseDeDatos";
-        const string NombreTablaPropiedad = "NombreTabla";
-        const string EsquemaXMLPropiedad = "EsquemaXML";
-        const string XMLPropiedad = "XML";
-        const string EstadoFilasPropiedad = "EstadoFilas";
-        const string ClavePrimariaPropiedad = "ClavePrimaria";
+        private const string Tipo = "Zuliaworks.Netzuela.Spuria.ApiPublica.DataTableXml";
+        private const string BaseDeDatosPropiedad = "BaseDeDatos";
+        private const string NombreTablaPropiedad = "NombreTabla";
+        private const string EsquemaXmlPropiedad = "EsquemaXml";
+        private const string XmlPropiedad = "Xml";
+        private const string EstadoFilasPropiedad = "EstadoFilas";
+        private const string ClavePrimariaPropiedad = "ClavePrimaria";
 
         #endregion
 
         #region Constructores
 
-        public DataTableXMLDinamico(Assembly Ensamblado)
-            : this(GetType(Ensamblado))
+        public DataTableXmlDinamico(Assembly ensamblado)
+            : this(GetType(ensamblado))
         {
         }
 
-        public DataTableXMLDinamico(Type TipoDelEmpleado)
-            : base(TipoDelEmpleado)
+        public DataTableXmlDinamico(Type tipoDelEmpleado)
+            : base(tipoDelEmpleado)
         {
             CallConstructor();
         }
 
-        public DataTableXMLDinamico(object Datasetxml)
-            : base(Datasetxml)
+        public DataTableXmlDinamico(object dataTableXml)
+            : base(dataTableXml)
         {
         }
 
@@ -57,16 +57,16 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             set { SetProperty(NombreTablaPropiedad, value); }
         }
 
-        public string EsquemaXML
+        public string EsquemaXml
         {
-            get { return (string)GetProperty(EsquemaXMLPropiedad); }
-            set { SetProperty(EsquemaXMLPropiedad, value); }
+            get { return (string)GetProperty(EsquemaXmlPropiedad); }
+            set { SetProperty(EsquemaXmlPropiedad, value); }
         }
 
-        public string XML
+        public string Xml
         {
-            get { return (string)GetProperty(XMLPropiedad); }
-            set { SetProperty(XMLPropiedad, value); }
+            get { return (string)GetProperty(XmlPropiedad); }
+            set { SetProperty(XmlPropiedad, value); }
         }
 
         public DataRowState[] EstadoFilas
@@ -85,9 +85,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
         #region Funciones
 
-        public static Type GetType(Assembly Ensamblado)
+        public static Type GetType(Assembly ensamblado)
         {
-            return Ensamblado.GetType(Tipo, true, true);
+            return ensamblado.GetType(Tipo, true, true);
         }
 
         #endregion
