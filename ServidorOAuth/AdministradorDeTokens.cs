@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-using DotNetOpenAuth.OAuth.ChannelElements;     // IServiceProviderTokenManager
-
-namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
+﻿namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+
+    using DotNetOpenAuth.OAuth.ChannelElements;     // IServiceProviderTokenManager
+
     public class AdministradorDeTokens : IServiceProviderTokenManager
     {
         #region Constructores
 
-        public AdministradorDeTokens() { }
+        public AdministradorDeTokens() 
+        { 
+        }
 
         #endregion
 

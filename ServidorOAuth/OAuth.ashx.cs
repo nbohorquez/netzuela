@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-using DotNetOpenAuth.Messaging;                 // MessageReceivingEndpoint
-using DotNetOpenAuth.OAuth;                     // ServiceProvider
-using DotNetOpenAuth.OAuth.ChannelElements;     // HmacSha1SigningBindingElement
-using DotNetOpenAuth.OAuth.Messages;            // UserAuthorizationRequest, AuthorizedTokenRequest
-using System.Web.SessionState;                  // IRequiresSessionState
-
-namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
+﻿namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web;
+    using System.Web.SessionState;                  // IRequiresSessionState
+
+    using DotNetOpenAuth.Messaging;                 // MessageReceivingEndpoint
+    using DotNetOpenAuth.OAuth;                     // ServiceProvider
+    using DotNetOpenAuth.OAuth.ChannelElements;     // HmacSha1SigningBindingElement
+    using DotNetOpenAuth.OAuth.Messages;            // UserAuthorizationRequest, AuthorizedTokenRequest    
+
     /// <summary>
     /// Descripción breve de OAuth
     /// </summary>
@@ -18,10 +18,10 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
     {
         #region Variables
         
-        private ServiceProvider _Proveedor;
-        private readonly Uri _UrlRaiz;
-        private readonly ServiceProviderDescription _AutoDescripcion;
-        private const string ClavePeticionDeAutorizacionPendienteDeSesion = "PeticionDeAutorizacionPendiente";
+        private readonly Uri urlRaiz;
+        private readonly ServiceProviderDescription autoDescripcion;
+        private const string PeticionDeAutorizacionPendienteDeSesion = "PeticionDeAutorizacionPendiente";
+        private ServiceProvider proveedor;
 
         #endregion
 
@@ -29,39 +29,39 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
 
         public OAuth()
         {
-            string _StringRaiz = HttpContext.Current.Request.ApplicationPath;
-            if (!_StringRaiz.EndsWith("/", StringComparison.Ordinal))
+            string stringRaiz = HttpContext.Current.Request.ApplicationPath;
+            if (!stringRaiz.EndsWith("/", StringComparison.Ordinal))
             {
-                _StringRaiz += "/";
+                stringRaiz += "/";
             }
 
-            _UrlRaiz = new Uri(HttpContext.Current.Request.Url, _StringRaiz);
+            this.urlRaiz = new Uri(HttpContext.Current.Request.Url, stringRaiz);
 
-            _AutoDescripcion = new ServiceProviderDescription
+            this.autoDescripcion = new ServiceProviderDescription
             {
-                AccessTokenEndpoint = new MessageReceivingEndpoint(new Uri(_UrlRaiz, "/OAuth.ashx"), HttpDeliveryMethods.PostRequest),
-                RequestTokenEndpoint = new MessageReceivingEndpoint(new Uri(_UrlRaiz, "/OAuth.ashx"), HttpDeliveryMethods.PostRequest),
-                UserAuthorizationEndpoint = new MessageReceivingEndpoint(new Uri(_UrlRaiz, "/OAuth.ashx"), HttpDeliveryMethods.PostRequest),
+                AccessTokenEndpoint = new MessageReceivingEndpoint(new Uri(this.urlRaiz, "/OAuth.ashx"), HttpDeliveryMethods.PostRequest),
+                RequestTokenEndpoint = new MessageReceivingEndpoint(new Uri(this.urlRaiz, "/OAuth.ashx"), HttpDeliveryMethods.PostRequest),
+                UserAuthorizationEndpoint = new MessageReceivingEndpoint(new Uri(this.urlRaiz, "/OAuth.ashx"), HttpDeliveryMethods.PostRequest),
                 TamperProtectionElements = new ITamperProtectionChannelBindingElement[] { new HmacSha1SigningBindingElement() }
             };
 
-            _Proveedor = new ServiceProvider(_AutoDescripcion, new AdministradorDeTokens());
+            this.proveedor = new ServiceProvider(this.autoDescripcion, new AdministradorDeTokens());
         }
 
         #endregion
 
         #region Propiedades
 
+        public static UserAuthorizationRequest PeticionDeAutorizacionPendiente
+        {
+            get { return HttpContext.Current.Session[PeticionDeAutorizacionPendienteDeSesion] as UserAuthorizationRequest; }
+            set { HttpContext.Current.Session[PeticionDeAutorizacionPendienteDeSesion] = value; }
+        }
+
         public bool IsReusable
         {
             get { return true; }
-        }
-
-        public static UserAuthorizationRequest PeticionDeAutorizacionPendiente
-        {
-            get { return HttpContext.Current.Session[ClavePeticionDeAutorizacionPendienteDeSesion] as UserAuthorizationRequest; }
-            set { HttpContext.Current.Session[ClavePeticionDeAutorizacionPendienteDeSesion] = value; }
-        }
+        }        
 
         #endregion
 
@@ -69,28 +69,28 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorOAuth
 
         public void ProcessRequest(HttpContext context)
         {
-            UnauthorizedTokenRequest PeticionDeToken;
-            UserAuthorizationRequest PeticionDeAutorizacion;
-            AuthorizedTokenRequest PeticionDeTokenDeAcceso;
+            UnauthorizedTokenRequest peticionDeToken;
+            UserAuthorizationRequest peticionDeAutorizacion;
+            AuthorizedTokenRequest peticionDeTokenDeAcceso;
 
             try
             {
-                IProtocolMessage Peticion = _Proveedor.ReadRequest();
+                IProtocolMessage peticion = this.proveedor.ReadRequest();
 
-                if ((PeticionDeToken = Peticion as UnauthorizedTokenRequest) != null)
+                if ((peticionDeToken = peticion as UnauthorizedTokenRequest) != null)
                 {
-                    var Respuesta = _Proveedor.PrepareUnauthorizedTokenMessage(PeticionDeToken);
-                    _Proveedor.Channel.Send(Respuesta);
+                    var respuesta = this.proveedor.PrepareUnauthorizedTokenMessage(peticionDeToken);
+                    this.proveedor.Channel.Send(respuesta);
                 }
-                else if ((PeticionDeAutorizacion = Peticion as UserAuthorizationRequest) != null)
+                else if ((peticionDeAutorizacion = peticion as UserAuthorizationRequest) != null)
                 {
-                    PeticionDeAutorizacionPendiente = PeticionDeAutorizacion;
+                    PeticionDeAutorizacionPendiente = peticionDeAutorizacion;
                     HttpContext.Current.Response.Redirect("~/Autentificacion/Autorizar");
                 }
-                else if ((PeticionDeTokenDeAcceso = Peticion as AuthorizedTokenRequest) != null)
+                else if ((peticionDeTokenDeAcceso = peticion as AuthorizedTokenRequest) != null)
                 {
-                    var Respuesta = _Proveedor.PrepareAccessTokenMessage(PeticionDeTokenDeAcceso);
-                    _Proveedor.Channel.Send(Respuesta);
+                    var respuesta = this.proveedor.PrepareAccessTokenMessage(peticionDeTokenDeAcceso);
+                    this.proveedor.Channel.Send(respuesta);
                 }
                 else
                 {
