@@ -4,6 +4,8 @@ API/StyleCop.Cache
 
 ServidorApi/bin/
 ServidorApi/obj/
+ServidorApi/StyleCop.Cache
 
 ServidorOAuth/bin/
 ServidorOAuth/obj/
+ServidorOAuth/StyleCop.Cache
