@@ -2,9 +2,13 @@ API/bin/
 API/obj/
 API/StyleCop.Cache
 
+BaseDeDatos/ModeloDeDatosRelacional.mwb.bak
+
 ServidorApi/bin/
 ServidorApi/obj/
 ServidorApi/StyleCop.Cache
+ServidorApi/ServidorApi.publish.xml
+ServidorApi/wcf-traces.svclog
 
 ServidorOAuth/bin/
 ServidorOAuth/obj/

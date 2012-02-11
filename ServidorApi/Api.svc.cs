@@ -1,4 +1,10 @@
-﻿namespace Zuliaworks.Netzuela.Spuria.ServidorApi
+﻿//-----------------------------------------------------------------------
+// <copyright file="Api.svc.cs" company="Zuliaworks">
+//     Copyright (c) Zuliaworks. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+namespace Zuliaworks.Netzuela.Spuria.ServidorApi
 {
     using System;
     using System.Collections.Generic;
@@ -10,6 +16,7 @@
     using System.Linq;
     using System.Runtime.Serialization;
     using System.Security;                                  // SecureString
+    using System.Security.Principal;                        // IIdentity
     using System.ServiceModel;                              // FaultException
     using System.ServiceModel.Web;
     using System.Text;
@@ -23,6 +30,9 @@
      * Para informacion sobre concurrencia ver: http://www.codeproject.com/KB/WCF/WCFConcurrency.aspx
      */
 
+    /// <summary>
+    /// Implementación de la API de Spuria.
+    /// </summary>
     [ServiceBehavior(
         Namespace = "http://netzuela.zuliaworks.com/spuria/api_publica",
         ConcurrencyMode = ConcurrencyMode.Multiple, 
@@ -31,40 +41,61 @@
     {
         #region Variables
 
+        private readonly int tiendaId;
+        private SpuriaEntities Datos;
         private ParametrosDeConexion parametros;
         private Conexion conexion;
-
+        
         #endregion
 
         #region Constructores
 
+        /// <summary>
+        /// Inicializa una nueva instancia de la clase Api.
+        /// </summary>
         public Api()
         {
             this.parametros = CargarGuardar.CargarParametrosDeConexion("Local");
+            SecureString[] credenciales = CargarGuardar.CargarCredenciales("Local");
 
-            if (this.parametros != null)
+            if (this.parametros == null || !(credenciales.Length > 0))
             {
-                this.conexion = new Conexion(this.parametros);
-
-                SecureString[] credenciales = CargarGuardar.CargarCredenciales("Local");
-
-                if (credenciales.Length > 0)
-                {
-                    this.conexion.Conectar(credenciales[0], credenciales[1]);
-
-                    credenciales[0].Dispose();
-                    credenciales[0] = null;
-
-                    credenciales[1].Dispose();
-                    credenciales[1] = null;
-                }
+                throw new Exception("Error interno del servidor. Por favor inténtelo más tarde");
             }
+
+            this.conexion = new Conexion(this.parametros);
+            this.conexion.Conectar(credenciales[0], credenciales[1]);
+
+            credenciales[0].Dispose();
+            credenciales[0] = null;
+
+            credenciales[1].Dispose();
+            credenciales[1] = null;
+
+            Datos = new SpuriaEntities();
+
+            acceso cuenta = Datos.acceso.First(c => c.CorreoElectronico == Cliente);
+            cliente cliente = cuenta.usuario.cliente.First(c => c. == cuenta.usuario.UsuarioID);
+            tienda tienda = Datos.tienda.First(t => t. == cliente.RIF);
+        }
+
+        #endregion
+
+        #region Propiedades
+
+        private string Cliente
+        {
+            get { return OperationContext.Current.ServiceSecurityContext.PrimaryIdentity.Name; }
         }
 
         #endregion
 
         #region Implementacion de interfaces
 
+        /// <summary>
+        /// Lista las bases de datos disponibles en el servidor.
+        /// </summary>
+        /// <returns>Nombres de las bases de datos encontradas.</returns>
         public string[] ListarBasesDeDatos()
         {
             List<string> resultadoFinal = new List<string>();
@@ -86,6 +117,11 @@
             return resultadoFinal.ToArray();
         }
 
+        /// <summary>
+        /// Lista las tablas que pertenecen a la base de datos especificada.
+        /// </summary>
+        /// <param name="baseDeDatos">Nombre de la base de datos a consultar.</param>
+        /// <returns>Nombres de las tablas encontradas.</returns>
         public string[] ListarTablas(string baseDeDatos)
         {
             List<string> resultadoFinal = new List<string>();
@@ -107,6 +143,12 @@
             return resultadoFinal.ToArray();
         }
 
+        /// <summary>
+        /// Consulta la tabla de la base de datos indicada.
+        /// </summary>
+        /// <param name="baseDeDatos">Base de datos a consultar.</param>
+        /// <param name="tabla">Nombre de la tabla a leer.</param>
+        /// <returns>Tabla leída.</returns>
         public DataTableXml LeerTabla(string baseDeDatos, string tabla)
         {
             DataTableXml datosAEnviar = null;
@@ -124,6 +166,11 @@
             return datosAEnviar;
         }
 
+        /// <summary>
+        /// Escribe el contenido de la tabla en la base de datos.
+        /// </summary>
+        /// <param name="tablaXml">Tabla a escribir.</param>
+        /// <returns>Indica si la operación de escritura tuvo éxito.</returns>
         public bool EscribirTabla(DataTableXml tablaXml)
         {
             bool resultado = false;
