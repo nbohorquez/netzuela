@@ -22,9 +22,10 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
     using System.Text;
     
     using Zuliaworks.Netzuela.Spuria.Api;                   // IApiPublica
-    using Zuliaworks.Netzuela.Valeria.Comunes;              // ParametrosDeConexion
-    using Zuliaworks.Netzuela.Valeria.Logica;               // Conexion
-    using Zuliaworks.Netzuela.Valeria.Preferencias;         // ConexionesSection
+    using Zuliaworks.Netzuela.Spuria.Datos;                 // SpuriaEntities
+    //using Zuliaworks.Netzuela.Valeria.Comunes;              // ParametrosDeConexion
+    //using Zuliaworks.Netzuela.Valeria.Logica;               // Conexion
+    //using Zuliaworks.Netzuela.Valeria.Preferencias;         // ConexionesSection
 
     /*
      * Para informacion sobre concurrencia ver: http://www.codeproject.com/KB/WCF/WCFConcurrency.aspx
@@ -42,9 +43,9 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         #region Variables
 
         private readonly int tiendaId;
-        private SpuriaEntities Datos;
-        private ParametrosDeConexion parametros;
-        private Conexion conexion;
+        private readonly SpuriaEntities datos;
+        //private ParametrosDeConexion parametros;
+        //private Conexion conexion;
         
         #endregion
 
@@ -55,6 +56,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         /// </summary>
         public Api()
         {
+            /*
             this.parametros = CargarGuardar.CargarParametrosDeConexion("Local");
             SecureString[] credenciales = CargarGuardar.CargarCredenciales("Local");
 
@@ -71,12 +73,14 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
 
             credenciales[1].Dispose();
             credenciales[1] = null;
+            */
 
-            Datos = new SpuriaEntities();
+            datos = Proveedor.Spuria;
 
-            acceso cuenta = Datos.acceso.First(c => c.CorreoElectronico == Cliente);
-            cliente cliente = cuenta.usuario.cliente.First(c => c. == cuenta.usuario.UsuarioID);
-            tienda tienda = Datos.tienda.First(t => t. == cliente.RIF);
+            acceso cuenta = datos.acceso.First(c => c.CorreoElectronico == Cliente);
+            cliente cliente = cuenta.usuario.cliente.First(c => c.usuario.UsuarioID == cuenta.AccesoID);
+            tienda tienda = cliente.tienda.First(t => t.cliente.RIF == cliente.RIF);
+            tiendaId = tienda.TiendaID;
         }
 
         #endregion
@@ -99,7 +103,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         public string[] ListarBasesDeDatos()
         {
             List<string> resultadoFinal = new List<string>();
-
+            /*
             try
             {
                 string[] resultadoBruto = this.conexion.ListarBasesDeDatos();
@@ -113,7 +117,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
             {
                 throw new Exception("SPURIA: Error de listado de base de datos", ex);
             }
-
+            */
             return resultadoFinal.ToArray();
         }
 
@@ -125,7 +129,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         public string[] ListarTablas(string baseDeDatos)
         {
             List<string> resultadoFinal = new List<string>();
-
+            /*
             try
             {
                 string[] resultadoBruto = this.conexion.ListarTablas(baseDeDatos);
@@ -139,7 +143,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
             {
                 throw new Exception("SPURIA: Error de listado de tablas", ex);
             }
-
+            */
             return resultadoFinal.ToArray();
         }
 
@@ -152,7 +156,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         public DataTableXml LeerTabla(string baseDeDatos, string tabla)
         {
             DataTableXml datosAEnviar = null;
-
+            /*
             try
             {
                 DataTable t = this.conexion.LeerTabla(baseDeDatos, tabla);
@@ -162,7 +166,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
             {
                 throw new Exception("SPURIA: Error de lectura", ex);
             }
-
+            */
             return datosAEnviar;
         }
 
@@ -174,7 +178,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         public bool EscribirTabla(DataTableXml tablaXml)
         {
             bool resultado = false;
-
+            /*
             try
             {
                 DataTable tabla = tablaXml.XmlADataTable();
@@ -186,7 +190,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
             {
                 throw new Exception("SPURIA: Error de escritura", ex);
             }
-
+            */
             return resultado;
         }
 

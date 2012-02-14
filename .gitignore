@@ -14,6 +14,7 @@ ServidorApi/obj/
 ServidorApi/StyleCop.Cache
 ServidorApi/ServidorApi.publish.xml
 ServidorApi/wcf-traces.svclog
+ServidorApi/hibernate.cfg.xml
 
 ServidorOAuth/bin/
 ServidorOAuth/obj/

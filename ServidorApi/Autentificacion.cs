@@ -8,11 +8,13 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
 {
     using System;
     using System.Collections.Generic;
-    using System.IdentityModel.Selectors;       // UserNamePasswordValidator
-    using System.IdentityModel.Tokens;          // SecurityTokenException
+    using System.IdentityModel.Selectors;               // UserNamePasswordValidator
+    using System.IdentityModel.Tokens;                  // SecurityTokenException
     using System.Linq;
-    using System.ServiceModel;                  // FaultException
+    using System.ServiceModel;                          // FaultException
     using System.Web;
+
+    using Zuliaworks.Netzuela.Spuria.Datos;             // Proveedor
 
     /// <summary>
     /// Administra los credenciales enviados por el cliente.
@@ -30,8 +32,16 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
             {
                 throw new SecurityTokenException("Se requiere usuario y contraseña");
             }
+            
+            SpuriaEntities Datos = Proveedor.Spuria;
+            acceso acceso = Datos.acceso.DefaultIfEmpty(null).FirstOrDefault(a => a.CorreoElectronico == userName);
 
-            if (!(userName == "prueba" && password == "1234"))
+            if (acceso == null)
+            {
+                throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
+            }
+
+            if (acceso.Contrasena != password)
             {
                 throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
             }
