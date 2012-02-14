@@ -4,6 +4,11 @@ API/StyleCop.Cache
 
 BaseDeDatos/ModeloDeDatosRelacional.mwb.bak
 
+Datos/bin/
+Datos/obj/
+Datos/Entidades/
+Datos/_Proveedor.cs
+
 ServidorApi/bin/
 ServidorApi/obj/
 ServidorApi/StyleCop.Cache
