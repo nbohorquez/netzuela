@@ -14,9 +14,16 @@ SELECT 'InsertarPatrocinante';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarPatrocinante` (a_Cliente_P CHAR(10))
+CREATE FUNCTION `InsertarPatrocinante` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), 
+                                        a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria INT, a_Estatus CHAR(9), 
+                                        a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
+                                        a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
+                                        a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
+                                        a_Facebook CHAR(80), a_Twitter CHAR(80))
 RETURNS INT DETERMINISTIC
 BEGIN
+    DECLARE Cliente_P CHAR(10);
+    
     DECLARE EXIT HANDLER FOR 1048   
     BEGIN
         SET @MensajeDeError = 'Error de valor nulo en InsertarPatrocinante()';
@@ -37,9 +44,32 @@ BEGIN
         SET @CodigoDeError = 1062;
         RETURN -1062;
     END;
+    
+    SELECT InsertarCliente (
+        a_Creador, 
+        a_Parroquia, 
+        a_CorreoElectronico, 
+        a_Contrasena, 
+        a_RIF, 
+        a_Categoria, 
+        a_Estatus, 
+        a_NombreLegal, 
+        a_NombreComun, 
+        a_Telefono, 
+        a_Edificio_CC, 
+        a_Piso, 
+        a_Apartamento, 
+        a_Local, 
+        a_Casa, 
+        a_Calle, 
+        a_Sector_Urb_Barrio, 
+        a_PaginaWeb, 
+        a_Facebook, 
+        a_Twitter
+    ) INTO Cliente_P;
         
     INSERT INTO Patrocinante VALUES (
-        a_Cliente_P,
+        Cliente_P,
         NULL
     );
 	

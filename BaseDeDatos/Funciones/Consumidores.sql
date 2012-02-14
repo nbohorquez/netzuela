@@ -65,12 +65,13 @@ SELECT 'InsertarConsumidor';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarConsumidor` (a_Creador INT, a_Usuario_P INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), 
-						a_Estatus CHAR(9), a_Sexo CHAR(6), a_FechaDeNacimiento DATE, 
-						a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16))
+CREATE FUNCTION `InsertarConsumidor` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), 
+                                      a_Estatus CHAR(9), a_Sexo CHAR(6), a_FechaDeNacimiento DATE, 
+                                      a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16), a_Parroquia INT, 
+                                      a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
-BEGIN   
-    DECLARE Rastreable_P, Interlocutor_P INT;
+BEGIN
+    DECLARE Rastreable_P, Interlocutor_P, UsuarioID, ConsumidorID INT;
         
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -86,13 +87,18 @@ BEGIN
         RETURN -1452;
     END;
 
+    SELECT InsertarUsuario (
+        a_Parroquia, 
+        a_CorreoElectronico, a_Contrasena
+    ) INTO UsuarioID;
+
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;    
     SELECT InsertarInterlocutor() INTO Interlocutor_P;
 
     INSERT INTO Consumidor VALUES (
         Rastreable_P,
         Interlocutor_P,
-        a_Usuario_P,
+        UsuarioID,
         NULL,
         a_Nombre,
         a_Apellido,
@@ -101,8 +107,8 @@ BEGIN
         a_FechaDeNacimiento,
         a_GrupoDeEdad,
         a_GradoDeInstruccion
-    );	
-    
+    );
+
     RETURN LAST_INSERT_ID();
 END$$
 

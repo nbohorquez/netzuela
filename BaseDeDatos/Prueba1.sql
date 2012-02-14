@@ -1,4 +1,4 @@
-SELECT 'Prueba 1.sql';
+SELECT 'Prueba1.sql';
 USE `Spuria`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
@@ -9,7 +9,6 @@ DELETE FROM Producto;
 DELETE FROM Tienda;
 DELETE FROM Patrocinante;
 DELETE FROM Consumidor;
-DELETE FROM Administrador;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -32,63 +31,63 @@ WHERE Nombre = 'Electronica'
 INTO @CategoriaID;
 
 SELECT InsertarProducto (
-	@Creador,
-	'GTIN-13', 
-	'P-001', 
-	'Activo', 
-	'Silicon Graphics', 
-	'CMN B014ANT300', 
-	'O2', 
-	@CategoriaID, 
-	'2001/02/20', 
-	3.64, 2.18, 
-	2.18, 3.94, 
-	@VenezuelaID
+    @Creador,
+    'GTIN-13', 
+    'P-001', 
+    'Activo', 
+    'Silicon Graphics', 
+    'CMN B014ANT300', 
+    'O2', 
+    @CategoriaID, 
+    '2001/02/20', 
+    3.64, 2.18, 
+    2.18, 3.94, 
+    @VenezuelaID
 ) INTO @ProductoID1;
 
 SELECT InsertarProducto (
-	@Creador,
-	'GTIN-13', 
-	'P-002', 
-	'Activo', 
-	'Nokia', 
-	'N78', 
-	'Nokia N78', 
-	@CategoriaID, 
-	'1994/08/15', 
-	3.64, 2.18, 
-	2.18, 0.14, 
-	@VenezuelaID
+    @Creador,
+    'GTIN-13', 
+    'P-002', 
+    'Activo', 
+    'Nokia', 
+    'N78', 
+    'Nokia N78', 
+    @CategoriaID, 
+    '1994/08/15', 
+    3.64, 2.18, 
+    2.18, 0.14, 
+    @VenezuelaID
 ) INTO @ProductoID2;
 
 SELECT InsertarProducto (
-	@Creador,
-	'GTIN-13', 
-	'P-003', 
-	'Activo', 
-	'Nintendo', 
-	'NUS-001', 
-	'Nintendo 64 Control', 
-	@CategoriaID, 
-	'1996/09/23', 
-	3.64, 2.18, 
-	2.18, 0.21, 
-	@VenezuelaID
+    @Creador,
+    'GTIN-13', 
+    'P-003', 
+    'Activo', 
+    'Nintendo', 
+    'NUS-001', 
+    'Nintendo 64 Control', 
+    @CategoriaID, 
+    '1996/09/23', 
+    3.64, 2.18, 
+    2.18, 0.21, 
+    @VenezuelaID
 ) INTO @ProductoID3;
 
 SELECT InsertarProducto (
-	@Creador,
-	'GTIN-13', 
-	'P-004', 
-	'Activo', 
-	'Shure', 
-	'SM57', 
-	'Microfono SM57', 
-	@CategoriaID, 
-	'1996/09/23', 
-	3.64, 2.18, 
-	2.18, 0.45, 
-	@VenezuelaID
+    @Creador,
+    'GTIN-13', 
+    'P-004', 
+    'Activo', 
+    'Shure', 
+    'SM57', 
+    'Microfono SM57', 
+    @CategoriaID, 
+    '1996/09/23', 
+    3.64, 2.18, 
+    2.18, 0.45, 
+    @VenezuelaID
 ) INTO @ProductoID4;
 
 /*
@@ -116,31 +115,25 @@ SELECT ParroquiaID FROM Parroquia, RegionGeografica
 WHERE RegionGeografica.Nombre = 'Ambrosio' AND Parroquia.RegionGeografica_P = RegionGeografica.RegionGeograficaID
 INTO @ParroquiaID;
 
-SELECT InsertarUsuario(
-	@ParroquiaID, 
-	'molleja@abc.com', 
-	'41ssdas#ASX'
-) INTO @UsuarioID;
-
-SELECT InsertarCliente(
-	@Creador,
-	@UsuarioID, 
-	'V180638080', 
-	@CategoriaID, 
-	'Activo', 
-	'TiendaABC C.A.', 
-	'La Tiendita', 
-	'0264-2415497', 
-	NULL, NULL, NULL,
-	'3194', NULL,
-	'Zulia',
-	'Delicias N.',
-	NULL,
-	'www.facebook.com/tienditadejose',
-	NULL
-) INTO @ClienteID;
-
-SELECT InsertarTienda(@ClienteID) INTO @TiendaID1;
+SELECT InsertarTienda (
+    @Creador, 
+    @ParroquiaID, 
+    'molleja@abc.com', 
+    '41ssdas#ASX',
+    'V180638080', 
+    @CategoriaID, 
+    'Activo', 
+    'TiendaABC C.A.', 
+    'La Tiendita', 
+    '0264-2415497', 
+    NULL, NULL, NULL, 
+    '3194', NULL,
+    'Zulia',
+    'Delicias N.', 
+    NULL,
+    'www.facebook.com/tienditadejose',
+    NULL
+) INTO @TiendaID1;
 
 SELECT InsertarHorarioDeTrabajo(@TiendaID1, 'Lunes', TRUE) INTO @HT1ID;
 SELECT InsertarHorarioDeTrabajo(@TiendaID1, 'Martes', TRUE) INTO @HT2ID;
@@ -164,31 +157,25 @@ SELECT ParroquiaID FROM Parroquia, RegionGeografica
 WHERE RegionGeografica.Nombre = 'La Rosa' AND Parroquia.RegionGeografica_P = RegionGeografica.RegionGeograficaID
 INTO @ParroquiaID;
 
-SELECT InsertarUsuario(
-	@ParroquiaID, 
-	'tca7410nb@gmail.com', 
-	'444544sd54sd4sd4s4548494s'
-) INTO @UsuarioID;
-
-SELECT InsertarCliente(
-	@Creador,
-	@UsuarioID, 
-	'J-1515151D', 
-	@CategoriaID, 
-	'Activo', 
-	'FRALNECA C.A.', 
-	'Subway La Rosa', 
-	'0264-3711515', 
-	NULL, NULL, NULL,
-	'3194', NULL,
-	'Zulia',
-	'La Rosa',
-	NULL,
-	'www.facebook.com/subwaylarosa',
-	NULL
-) INTO @ClienteID;
-
-SELECT InsertarTienda(@ClienteID) INTO @TiendaID2;
+SELECT InsertarTienda (
+    @Creador, 
+    @ParroquiaID, 
+    'tca7410nb@gmail.com', 
+    '444544sd54sd4sd4s4548494s',
+    'J-1515151D', 
+    @CategoriaID, 
+    'Activo', 
+    'FRALNECA C.A.', 
+    'Subway La Rosa', 
+    '0264-3711515', 
+    NULL, NULL, NULL,
+    '3194', NULL,
+    'Zulia',
+    'La Rosa',
+    NULL,
+    'www.facebook.com/subwaylarosa',
+    NULL
+) INTO @TiendaID2;
 
 SELECT InsertarHorarioDeTrabajo(@TiendaID2, 'Lunes', TRUE) INTO @HT1ID;
 SELECT InsertarHorarioDeTrabajo(@TiendaID2, 'Martes', TRUE) INTO @HT2ID;
@@ -236,22 +223,18 @@ SELECT InsertarInventario(@TiendaRastreable, @TiendaID2, 'PSDC-41C', 'Microfono 
 *******************************************************
 */
 
-SELECT InsertarUsuario (
-	@ParroquiaID, 
-	'mandoca@merey.com', 
-	'AceFoD_591dS'
-) INTO @UsuarioID;
-
 SELECT InsertarConsumidor (
-	@Creador,
-	@UsuarioID,
-	'Alberto',
-	'Atkins',
-	'Activo',
-	'Hombre',
-	'1988-06-09',
-	'Adultos jovenes',
-	'Universitaria'
+    @Creador, 
+    'Alberto',
+    'Atkins',
+    'Activo',
+    'Hombre',
+    '1988-06-09',
+    'Adultos jovenes',
+    'Universitaria',
+    @ParroquiaID, 
+    'mandoca@merey.com', 
+    'AceFoD_591dS'
 ) INTO @ConsumidorID;
 
 /*
@@ -271,10 +254,10 @@ WHERE TiendaID = @TiendaID1
 INTO @InterlocutorB;
 
 SELECT InsertarMensaje (
-	@ConsumidorRastreable,
-	@InterlocutorA, 
-	@InterlocutorB, 
-	'Hey marico... vos de casualidad teneis un pedal reverb asi cachuo?'
+    @ConsumidorRastreable,
+    @InterlocutorA, 
+    @InterlocutorB, 
+    'Hey marico... vos de casualidad teneis un pedal reverb asi cachuo?'
 );
 
 /*
@@ -285,34 +268,28 @@ SELECT InsertarMensaje (
 *******************************************************
 */
 
-SELECT InsertarUsuario (
-	@ParroquiaID, 
-	'hola@comoestais.com', 
-	'pAA101D54Om_4aidf18'
-) INTO @UsuarioID;
-
-SELECT InsertarCliente (
-	@Creador,
-	@UsuarioID, 
-	'V195445890', 
-	@CategoriaID, 
-	'Activo', 
-	'Yordonal C.A.', 
-	'Yordonal', 
-	'0264-2518490', 
-	NULL, 
-	NULL,
-	NULL,
-	'13',
-	NULL,
-	'Igualdad',
-	'Ambrosio',
-	NULL,
-	'www.facebook.com/yordonal',
-	NULL
-) INTO @ClienteID;
-
-SELECT InsertarPatrocinante(@ClienteID) INTO @PatrocinanteID;
+SELECT InsertarPatrocinante (
+    @Creador, 
+    @ParroquiaID, 
+    'hola@comoestais.com', 
+    'pAA101D54Om_4aidf18',
+    'V195445890', 
+    @CategoriaID, 
+    'Activo', 
+    'Yordonal C.A.', 
+    'Yordonal', 
+    '0264-2518490', 
+    NULL, 
+    NULL,
+    NULL,
+    '13',
+    NULL,
+    'Igualdad',
+    'Ambrosio', 
+    NULL,
+    'www.facebook.com/yordonal',
+    NULL
+) INTO @PatrocinanteID;
 
 /*
 *******************************************************
@@ -322,8 +299,8 @@ SELECT InsertarPatrocinante(@ClienteID) INTO @PatrocinanteID;
 *******************************************************
 */
 
-SELECT Rastreable_P FROM Cliente
-WHERE Cliente.RIF = @ClienteID
+SELECT Cliente.Rastreable_P FROM Cliente, Patrocinante
+WHERE Patrocinante.PatrocinanteID = @PatrocinanteID AND Patrocinante.Cliente_P = Cliente.RIF
 INTO @ClienteRastreable;
 
 SELECT InsertarPublicidad(@ClienteRastreable, @PatrocinanteID) INTO @PublicidadID;
@@ -402,6 +379,10 @@ SELECT InsertarDescripcion(@ConsumidorRastreable, @ProductoDescribible, 'El moto
 SELECT Cobrable_P FROM Publicidad
 WHERE PublicidadID = @PublicidadID
 INTO @CobrableID;
+
+SELECT Cliente_P FROM Patrocinante
+WHERE PatrocinanteID = @PatrocinanteID
+INTO @ClienteID;
 
 SELECT InsertarFactura(@Creador, @ClienteID, NOW(), '2011-07-29 21:00:00') INTO @FacturaID;
 SELECT InsertarServicioVendido(@FacturaID, @CobrableID) INTO @bobo;

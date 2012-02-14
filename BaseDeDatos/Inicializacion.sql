@@ -177,33 +177,15 @@ SELECT 'Administrador';
 
 /* Las condiciones de borde (el primero y el ultimo) siempre joden. En este caso, el primer administrador... */
 
-SELECT InsertarUsuario (
-    NULL, 
+SELECT InsertarAdministrador (
+    1, NULL,
     'admin@netzuela.com', 
-    '1asdXzp91'
-) INTO @UsuarioID;
-
-INSERT INTO Rastreable VALUES (
-    NULL,
-    NOW(), 1,
-    NOW(), 1,
-    NULL, NULL,
-    NOW(), 1
-);
-
-SELECT LAST_INSERT_ID() INTO @RastreableID;
-
-INSERT INTO Administrador VALUES (
-    @RastreableID,
-    @UsuarioID,
-    NULL,
-    'Activo',
-    'Todos',
+    '1asdXzp91',
+    'Activo', 
+    'Todos', 
     'Nestor',
     'Bohorquez'
-);
-
-SET @Creador = @RastreableID;
+) INTO @Creador;
 
 /*
 *******************************************************
@@ -273,6 +255,12 @@ SELECT InsertarMunicipio(@Creador, 'Valmore Rodriguez',         55000,      @Zul
 SELECT 'Parroquias';
 /* Parroquias de Cabimas */
 SELECT InsertarParroquia(@Creador, 'Ambrosio',              40768, @CabimasID, '4013') INTO @bobo;
+
+/* ¡El Administrador es de Ambrosio! */
+UPDATE Usuario
+SET Usuario.Parroquia = @bobo
+WHERE UsuarioID = 1;
+
 SELECT InsertarParroquia(@Creador, 'Aristides Calvani', 		40768, @CabimasID, '4013') INTO @bobo;
 SELECT InsertarParroquia(@Creador, 'Carmen Herrera',        27194, @CabimasID, '4013') INTO @bobo;
 SELECT InsertarParroquia(@Creador, 'German Rios Linares', 	44155, @CabimasID, '4013') INTO @bobo;
@@ -281,3 +269,4 @@ SELECT InsertarParroquia(@Creador, 'La Rosa', 			        25128, @CabimasID, '401
 SELECT InsertarParroquia(@Creador, 'Punta Gorda', 			    10224, @CabimasID, '4013') INTO @bobo;
 SELECT InsertarParroquia(@Creador, 'Romulo Betancourt', 		25225, @CabimasID, '4013') INTO @bobo;
 SELECT InsertarParroquia(@Creador, 'San Benito',            51501, @CabimasID, '4013') INTO @bobo;
+

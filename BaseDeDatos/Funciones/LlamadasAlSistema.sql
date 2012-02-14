@@ -110,7 +110,7 @@ BEGIN
     WHERE Tienda.TiendaID = TiendaID AND Cliente.RIF = Tienda.Cliente_P
     INTO Creador;
 
-    SELECT InventarioCrear(Creador, TiendaID, Codigo, Descripcion, 'Ambos visibles', NULL, Precio, Cantidad) INTO Resultado;
+    SELECT InsertarInventario(Creador, TiendaID, Codigo, Descripcion, 'Ambos visibles', NULL, Precio, Cantidad) INTO Resultado;
 
     /* COMMIT; */
 END$$

@@ -54,8 +54,8 @@ BEGIN
         a_Contrasena,
         NOW(),
         NULL,
-        '00:00',
-        0, '00:00', '00:00'
+        MAKETIME(0,0,0),
+        0, MAKETIME(0,0,0), MAKETIME(0,0,0)
     );
 
     RETURN AccesoID;
@@ -74,11 +74,12 @@ SELECT 'InsertarAdministrador';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarAdministrador` (a_Creador INT, a_Usuario_P INT, a_Estatus CHAR(9), a_Privilegios VARCHAR(45), 
-							a_Nombre VARCHAR(45), a_Apellido VARCHAR(45))
+CREATE FUNCTION `InsertarAdministrador` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), 
+                                         a_Contrasena VARCHAR(45), a_Estatus CHAR(9), a_Privilegios VARCHAR(45), 
+                                         a_Nombre VARCHAR(45), a_Apellido VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE Rastreable_P INT;
+    DECLARE Rastreable_P, UsuarioID, AdministradorID INT;
     
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -93,19 +94,24 @@ BEGIN
         SET @CodigoDeError = 1452;
         RETURN -1452;
     END;
-    
+                                   
+    SELECT InsertarUsuario (
+        a_Parroquia, 
+        a_CorreoElectronico, a_Contrasena
+    ) INTO UsuarioID;
+
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
 
     INSERT INTO Administrador VALUES (
         Rastreable_P,
-        a_Usuario_P,
+        UsuarioID,
         NULL,
         a_Estatus,
         a_Privilegios,
         a_Nombre,
         a_Apellido
     );
-	
+    
     RETURN LAST_INSERT_ID();
 END$$
 
@@ -122,14 +128,16 @@ SELECT 'InsertarCliente';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarCliente` (a_Creador INT, a_Usuario_P INT, a_RIF CHAR(10), a_Categoria INT, a_Estatus CHAR(9), 
-						a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
-						a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
-						a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
-						a_Facebook CHAR(80), a_Twitter CHAR(80))
+CREATE FUNCTION `InsertarCliente` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), 
+                                   a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria INT, a_Estatus CHAR(9), 
+                                   a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
+                                   a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
+                                   a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
+                                   a_Facebook CHAR(80), a_Twitter CHAR(80))
 RETURNS CHAR(10) NOT DETERMINISTIC
 BEGIN
-    DECLARE Rastreable_P, Describible_P INT;
+    DECLARE Rastreable_P, Describible_P, UsuarioID INT;
+    DECLARE RIF CHAR(10);
 
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -152,13 +160,18 @@ BEGIN
         RETURN -1062;
     END;
 
+    SELECT InsertarUsuario (
+        a_Parroquia, 
+        a_CorreoElectronico, a_Contrasena
+    ) INTO UsuarioID;
+    
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
     SELECT InsertarDescribible() INTO Describible_P;
         
     INSERT INTO Cliente VALUES (
         Rastreable_P,
         Describible_P,
-        a_Usuario_P,
+        UsuarioID,
         a_RIF,
         a_Categoria,
         a_Estatus,
@@ -176,7 +189,7 @@ BEGIN
         a_Facebook,
         a_Twitter
     );  
-    
+        
     RETURN a_RIF;
 END$$
 

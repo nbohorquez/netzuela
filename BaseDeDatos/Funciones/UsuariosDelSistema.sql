@@ -32,8 +32,6 @@ BEGIN
     GRANT EXECUTE ON PROCEDURE Spuria.Actualizar TO 'Valeria'@'localhost';
     GRANT EXECUTE ON PROCEDURE Spuria.Insertar TO 'Valeria'@'localhost';
     GRANT EXECUTE ON PROCEDURE Spuria.Eliminar TO 'Valeria'@'localhost';
-
-    FLUSH PRIVILEGES;
 END$$
 
 /*
@@ -62,8 +60,6 @@ BEGIN
     END IF;
 
     CREATE USER 'Paris'@'localhost' IDENTIFIED BY '#37KhVFmG1_Lp@#j?R4';
-    
-    FLUSH PRIVILEGES;
 END$$
 
 /******************************************************/

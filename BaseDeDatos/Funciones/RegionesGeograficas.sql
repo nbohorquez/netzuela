@@ -17,7 +17,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarTiendasConsumidores` (a_RegionGeograficaID INT, a_NumeroDeConsumidores INT, a_NumeroDeTiendas INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE C, P INT;
+    DECLARE C, Pob INT;
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -52,10 +52,14 @@ BEGIN
     );
 
     SELECT Poblacion FROM RegionGeografica 
-    WHERE RegionGeograficaID = a_RegionGeograficaID INTO P;
+    WHERE RegionGeograficaID = a_RegionGeograficaID INTO Pob;
 
     UPDATE RegionGeografica 
-    SET Consumidores_Poblacion = a_NumeroDeConsumidores/P, Tiendas_Poblacion = a_NumeroDeTiendas/P, Tiendas_Consumidores = a_NumeroDeTiendas/a_NumeroDeConsumidores 
+    SET Consumidores_Poblacion = IF(Pob > 0, a_NumeroDeConsumidores/Pob, 0), Tiendas_Poblacion = IF(Pob > 0, a_NumeroDeTiendas/Pob, 0)
+    WHERE RegionGeograficaID = a_RegionGeograficaID;
+        
+    UPDATE RegionGeografica 
+    SET Tiendas_Consumidores = IF(a_NumeroDeConsumidores > 0, a_NumeroDeTiendas/a_NumeroDeConsumidores, NULL)
     WHERE RegionGeograficaID = a_RegionGeograficaID;
 
     RETURN TRUE;
@@ -173,7 +177,7 @@ BEGIN
         SET @MensajeDeError = 'Error de valor nulo en InsertarSubcontinente()';
         SET @CodigoDeError = 1048;
         RETURN -1048;
-        END;
+    END;
 
     /* Comprobamos que no haya otro subcontinente en el continente con el mismo nombre */
     SELECT COUNT(*) FROM Subcontinente, RegionGeografica

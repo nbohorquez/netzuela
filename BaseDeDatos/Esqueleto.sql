@@ -59,11 +59,20 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Spuria`.`Dibujable`
+-- Table `Spuria`.`Describible`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Spuria`.`Dibujable` (
-  `DibujableID` INT NOT NULL AUTO_INCREMENT ,
-  PRIMARY KEY (`DibujableID`) )
+CREATE  TABLE IF NOT EXISTS `Spuria`.`Describible` (
+  `DescribibleID` INT NOT NULL AUTO_INCREMENT ,
+  PRIMARY KEY (`DescribibleID`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Spuria`.`Estatus`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `Spuria`.`Estatus` (
+  `Valor` CHAR(9) NOT NULL ,
+  PRIMARY KEY (`Valor`) )
 ENGINE = InnoDB;
 
 
@@ -81,6 +90,15 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Rastreable` (
   `FechaDeAcceso` DATETIME NOT NULL ,
   `AccesadoPor` INT NOT NULL ,
   PRIMARY KEY (`RastreableID`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Spuria`.`Dibujable`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `Spuria`.`Dibujable` (
+  `DibujableID` INT NOT NULL AUTO_INCREMENT ,
+  PRIMARY KEY (`DibujableID`) )
 ENGINE = InnoDB;
 
 
@@ -319,24 +337,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `Spuria`.`Describible`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Spuria`.`Describible` (
-  `DescribibleID` INT NOT NULL AUTO_INCREMENT ,
-  PRIMARY KEY (`DescribibleID`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `Spuria`.`Estatus`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `Spuria`.`Estatus` (
-  `Valor` CHAR(9) NOT NULL ,
-  PRIMARY KEY (`Valor`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `Spuria`.`Cliente`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `Spuria`.`Cliente` (
@@ -359,9 +359,7 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Cliente` (
   `PaginaWeb` CHAR(40) NULL ,
   `Facebook` CHAR(80) NULL ,
   `Twitter` CHAR(80) NULL ,
-  PRIMARY KEY (`RIF`) ,
   INDEX `fk_Cliente_Categoria` (`Categoria` ASC) ,
-  INDEX `fk_Cliente_Usuario` (`Usuario_P` ASC) ,
   INDEX `fk_Cliente_Describible` (`Describible_P` ASC) ,
   INDEX `fk_Cliente_Estatus` (`Estatus` ASC) ,
   INDEX `fk_Cliente_Rastreable` (`Rastreable_P` ASC) ,
@@ -369,18 +367,15 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Cliente` (
   UNIQUE INDEX `Twitter_UNIQUE` (`Twitter` ASC) ,
   UNIQUE INDEX `PaginaWeb_UNIQUE` (`PaginaWeb` ASC) ,
   UNIQUE INDEX `Telefono_UNIQUE` (`Telefono` ASC) ,
-  UNIQUE INDEX `Usuario_P_UNIQUE` (`Usuario_P` ASC) ,
   UNIQUE INDEX `Describible_P_UNIQUE` (`Describible_P` ASC) ,
   UNIQUE INDEX `Rastreable_P_UNIQUE` (`Rastreable_P` ASC) ,
   UNIQUE INDEX `NombreLegal_UNIQUE` (`NombreLegal` ASC) ,
+  PRIMARY KEY (`RIF`) ,
+  INDEX `fk_Cliente_Usuario` (`Usuario_P` ASC) ,
+  UNIQUE INDEX `Usuario_P_UNIQUE` (`Usuario_P` ASC) ,
   CONSTRAINT `fk_Cliente_Categoria`
     FOREIGN KEY (`Categoria` )
     REFERENCES `Spuria`.`Categoria` (`CategoriaID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Cliente_Usuario`
-    FOREIGN KEY (`Usuario_P` )
-    REFERENCES `Spuria`.`Usuario` (`UsuarioID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Cliente_Describible`
@@ -396,6 +391,11 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Cliente` (
   CONSTRAINT `fk_Cliente_Rastreable`
     FOREIGN KEY (`Rastreable_P` )
     REFERENCES `Spuria`.`Rastreable` (`RastreableID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cliente_Usuario`
+    FOREIGN KEY (`Usuario_P` )
+    REFERENCES `Spuria`.`Usuario` (`UsuarioID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -697,7 +697,6 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Consumidor` (
   `GradoDeInstruccion` CHAR(16) NOT NULL ,
   PRIMARY KEY (`ConsumidorID`) ,
   INDEX `fk_Consumidor_Interlocutor` (`Interlocutor_P` ASC) ,
-  INDEX `fk_Consumidor_Usuario` (`Usuario_P` ASC) ,
   INDEX `fk_Consumidor_Estatus` (`Estatus` ASC) ,
   INDEX `fk_Consumidor_Sexo` (`Sexo` ASC) ,
   INDEX `fk_Consumidor_GradoDeInstruccion` (`GradoDeInstruccion` ASC) ,
@@ -705,15 +704,11 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Consumidor` (
   INDEX `fk_Consumidor_Rastreable` (`Rastreable_P` ASC) ,
   UNIQUE INDEX `Interlocutor_P_UNIQUE` (`Interlocutor_P` ASC) ,
   UNIQUE INDEX `Rastreable_P_UNIQUE` (`Rastreable_P` ASC) ,
+  INDEX `fk_Consumidor_Usuario` (`Usuario_P` ASC) ,
   UNIQUE INDEX `Usuario_P_UNIQUE` (`Usuario_P` ASC) ,
   CONSTRAINT `fk_Consumidor_Interlocutor`
     FOREIGN KEY (`Interlocutor_P` )
     REFERENCES `Spuria`.`Interlocutor` (`InterlocutorID` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Consumidor_Usuario`
-    FOREIGN KEY (`Usuario_P` )
-    REFERENCES `Spuria`.`Usuario` (`UsuarioID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Consumidor_Estatus`
@@ -739,6 +734,11 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Consumidor` (
   CONSTRAINT `fk_Consumidor_Rastreable`
     FOREIGN KEY (`Rastreable_P` )
     REFERENCES `Spuria`.`Rastreable` (`RastreableID` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Consumidor_Usuario`
+    FOREIGN KEY (`Usuario_P` )
+    REFERENCES `Spuria`.`Usuario` (`UsuarioID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1179,7 +1179,7 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Registro` (
   `ActorPasivo` INT NULL ,
   `Accion` CHAR(13) NOT NULL ,
   `Parametros` TEXT NULL ,
-  `CodigoDeError` CHAR(10) NOT NULL ,
+  `CodigoDeError` CHAR(40) NOT NULL ,
   PRIMARY KEY (`RegistroID`) ,
   INDEX `fk_Registro_Accion` (`Accion` ASC) ,
   INDEX `fk_Registro_CodigoDeError` (`CodigoDeError` ASC) ,
@@ -1248,7 +1248,7 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Tamano` (
   `FechaFin` DATETIME NULL ,
   `NumeroTotalDeProductos` INT NOT NULL ,
   `CantidadTotalDeProductos` INT NULL ,
-  `Tamano` INT NULL ,
+  `Valor` INT NULL ,
   PRIMARY KEY (`TiendaID`, `FechaInicio`) ,
   INDEX `fk_Tamano_Tienda` (`TiendaID` ASC) ,
   CONSTRAINT `fk_Tamano_Tienda`
@@ -1595,21 +1595,16 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Administrador` (
   `Privilegios` CHAR(7) NOT NULL ,
   `Nombre` VARCHAR(45) NOT NULL ,
   `Apellido` VARCHAR(45) NOT NULL ,
-  PRIMARY KEY (`AdministradorID`) ,
   INDEX `fk_Administrador_Estatus` (`Estatus` ASC) ,
-  INDEX `fk_Administrador_Usuario` (`Usuario_P` ASC) ,
   INDEX `fk_Administrador_Rastreable` (`Rastreable_P` ASC) ,
   INDEX `fk_Administrador_Privilegios` (`Privilegios` ASC) ,
+  INDEX `fk_Administrador_Usuario` (`Usuario_P` ASC) ,
+  PRIMARY KEY (`AdministradorID`) ,
   UNIQUE INDEX `Usuario_P_UNIQUE` (`Usuario_P` ASC) ,
   UNIQUE INDEX `Rastreable_P_UNIQUE` (`Rastreable_P` ASC) ,
   CONSTRAINT `fk_Administrador_Estatus`
     FOREIGN KEY (`Estatus` )
     REFERENCES `Spuria`.`Estatus` (`Valor` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Administrador_Usuario`
-    FOREIGN KEY (`Usuario_P` )
-    REFERENCES `Spuria`.`Usuario` (`UsuarioID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Administrador_Rastreable`
@@ -1620,6 +1615,11 @@ CREATE  TABLE IF NOT EXISTS `Spuria`.`Administrador` (
   CONSTRAINT `fk_Administrador_Privilegios`
     FOREIGN KEY (`Privilegios` )
     REFERENCES `Spuria`.`Privilegios` (`Valor` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Administrador_Usuario`
+    FOREIGN KEY (`Usuario_P` )
+    REFERENCES `Spuria`.`Usuario` (`UsuarioID` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -2110,6 +2110,7 @@ BEGIN
         CAST(NEW.Rastreable_P AS CHAR),',',
         CAST(NEW.Describible_P AS CHAR),',',
         CAST(NEW.Usuario_P AS CHAR),',',
+        CAST(NEW.RIF AS CHAR),',',
         NEW.RIF,',',
         CAST(NEW.Categoria AS CHAR),',',
         NEW.Estatus,',',
@@ -2190,7 +2191,7 @@ BEGIN
     IF NEW.Estatus != OLD.Estatus THEN
         SELECT CONCAT(
             'Cliente(columna): ', 
-            CAST(NEW.RIF AS CHAR),'(Estatus)',
+            NEW.RIF,'(Estatus)',
             CAST(OLD.Estatus AS CHAR),' ahora es ',
             CAST(NEW.Estatus AS CHAR)
         ) INTO Parametros;
@@ -4234,7 +4235,7 @@ DELIMITER $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_TamanoCrear AFTER INSERT ON Tamano
+CREATE TRIGGER DespuesDeInsertarTamano AFTER INSERT ON Tamano
 FOR EACH ROW
 BEGIN
     DECLARE Parametros TEXT;
@@ -4252,7 +4253,7 @@ BEGIN
         CAST(NEW.FechaInicio AS CHAR),': ',
         CAST(NEW.NumeroTotalDeProductos AS CHAR),',',
         CAST(NEW.CantidadTotalDeProductos AS CHAR),',',
-        CAST(NEW.Tamano AS CHAR)
+        CAST(NEW.Valor AS CHAR)
     ) INTO Parametros;
     
     SELECT Cliente.Rastreable_P FROM Cliente, Tienda
@@ -4265,7 +4266,7 @@ END $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_TamanoModificarAntes BEFORE UPDATE ON Tamano
+CREATE TRIGGER AntesDeActualizarTamano BEFORE UPDATE ON Tamano
 FOR EACH ROW
 BEGIN
     IF NEW.TiendaID != OLD.TiendaID THEN
@@ -4279,7 +4280,7 @@ END $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_TamanoModificarDespues AFTER UPDATE ON Tamano
+CREATE TRIGGER DespuesDeActualizarTamano AFTER UPDATE ON Tamano
 FOR EACH ROW
 BEGIN
     DECLARE Parametros TEXT;
@@ -4301,7 +4302,7 @@ BEGIN
             CAST(NEW.TiendaID AS CHAR),'->',
             CAST(NEW.FechaInicio AS CHAR),'(FechaFin): ',
             CAST(OLD.FechaFin AS CHAR),' ahora es ',
-            CAST(NEW.Tamano AS CHAR)
+            CAST(NEW.FechaFin AS CHAR)
         ) INTO Parametros;
 
         SELECT RegistrarModificacion(Rastreable_P, Parametros) INTO bobo;
@@ -4333,14 +4334,14 @@ BEGIN
         SELECT RegistrarModificacion(Rastreable_P, Parametros) INTO bobo;
     END IF;
     
-    IF NEW.Tamano != OLD.Tamano THEN
+    IF NEW.Valor != OLD.Valor THEN
         SELECT CONCAT(
             'Cliente->Tienda->Tamano(columna): ',
             Cliente_P,'->',
             CAST(NEW.TiendaID AS CHAR),'->',
             CAST(NEW.FechaInicio AS CHAR),'(Tamano): ',
-            CAST(OLD.Tamano AS CHAR),' ahora es ',
-            CAST(NEW.Tamano AS CHAR)
+            CAST(OLD.Valor AS CHAR),' ahora es ',
+            CAST(NEW.Valor AS CHAR)
         ) INTO Parametros;
 
         SELECT RegistrarModificacion(Rastreable_P, Parametros) INTO bobo;
@@ -4354,7 +4355,7 @@ DELIMITER $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_TurnoCrear AFTER INSERT ON Turno
+CREATE TRIGGER DespuesDeInsertarTurno AFTER INSERT ON Turno
 FOR EACH ROW
 BEGIN
     DECLARE Parametros TEXT;
@@ -4384,7 +4385,7 @@ END $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_TurnoModificarAntes BEFORE UPDATE ON Turno
+CREATE TRIGGER AntesDeActualizarTurno BEFORE UPDATE ON Turno
 FOR EACH ROW
 BEGIN
     IF NEW.TiendaID != OLD.TiendaID THEN
@@ -4398,16 +4399,24 @@ END $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_TurnoModificarDespues AFTER UPDATE ON Turno
+CREATE TRIGGER DespuesDeActualizarTurno AFTER UPDATE ON Turno
 FOR EACH ROW
 BEGIN
     DECLARE Parametros TEXT;
     DECLARE Cliente_P CHAR(10);
     DECLARE Rastreable_P, bobo INT;
     
+    /*
     SELECT Tienda.Cliente_P FROM Tienda, Cliente
     WHERE TiendaID = NEW.TiendaID
     INTO Cliente_P, Rastreable_P;
+    */
+    
+    SELECT Tienda.Cliente_P FROM Tienda, Cliente
+    WHERE TiendaID = NEW.TiendaID
+    INTO Cliente_P;
+    
+    SELECT Cliente_P INTO Rastreable_P;
     
     SELECT Cliente.Rastreable_P FROM Cliente
     WHERE RIF = Cliente_P
@@ -4447,16 +4456,7 @@ DELIMITER $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_HorarioDeTrabajoEliminar BEFORE DELETE ON HorarioDeTrabajo
-FOR EACH ROW
-BEGIN
-    DELETE FROM Turno WHERE TiendaID = OLD.TiendaID;
-END $$
-
-USE `Spuria`$$
-
-
-CREATE TRIGGER t_HorarioDeTrabajoCrear AFTER INSERT ON HorarioDeTrabajo
+CREATE TRIGGER DespuesDeInsertarHorarioDeTrabajo AFTER INSERT ON HorarioDeTrabajo
 FOR EACH ROW
 BEGIN
     DECLARE Parametros TEXT;
@@ -4485,7 +4485,7 @@ END $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_HorarioDeTrabajoModificarAntes BEFORE UPDATE ON HorarioDeTrabajo
+CREATE TRIGGER AntesDeActualizarHorarioDeTrabajo BEFORE UPDATE ON HorarioDeTrabajo
 FOR EACH ROW
 BEGIN
     IF NEW.TiendaID != OLD.TiendaID THEN
@@ -4499,16 +4499,33 @@ END $$
 USE `Spuria`$$
 
 
-CREATE TRIGGER t_HorarioDeTrabajoModificarDespues AFTER UPDATE ON HorarioDeTrabajo
+CREATE TRIGGER AntesDeEliminarHorarioDeTrabajo BEFORE DELETE ON HorarioDeTrabajo
+FOR EACH ROW
+BEGIN
+    DELETE FROM Turno WHERE TiendaID = OLD.TiendaID;
+END $$
+
+USE `Spuria`$$
+
+
+CREATE TRIGGER DespuesDeActualizarHorarioDeTrabajo AFTER UPDATE ON HorarioDeTrabajo
 FOR EACH ROW
 BEGIN
     DECLARE Parametros TEXT;
     DECLARE Cliente_P CHAR(10);
     DECLARE Rastreable_P, bobo INT;
     
+    /*
     SELECT Tienda.Cliente_P FROM Tienda, Cliente
     WHERE TiendaID = NEW.TiendaID
     INTO Cliente_P, Rastreable_P;
+    */
+    
+    SELECT Tienda.Cliente_P FROM Tienda, Cliente
+    WHERE TiendaID = NEW.TiendaID
+    INTO Cliente_P;
+    
+    SELECT Cliente_P INTO Rastreable_P;
     
     SELECT Cliente.Rastreable_P FROM Cliente
     WHERE RIF = Cliente_P

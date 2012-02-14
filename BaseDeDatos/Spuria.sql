@@ -27,4 +27,7 @@ SOURCE D:\Netzuela\Spuria\BaseDeDatos\Funciones\LlamadasAlSistema.sql
 SOURCE D:\Netzuela\Spuria\BaseDeDatos\Inicializacion.sql
 
 CALL CrearUsuarioValeria();
+FLUSH PRIVILEGES;
+
 CALL CrearUsuarioParis();
+FLUSH PRIVILEGES;
