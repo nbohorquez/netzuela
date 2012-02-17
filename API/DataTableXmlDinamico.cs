@@ -13,7 +13,7 @@
     {
         #region Constantes
 
-        private const string Tipo = "Zuliaworks.Netzuela.Spuria.ApiPublica.DataTableXml";
+        private const string Tipo = "Zuliaworks.Netzuela.Spuria.Api.DataTableXml";
         private const string BaseDeDatosPropiedad = "BaseDeDatos";
         private const string NombreTablaPropiedad = "NombreTabla";
         private const string EsquemaXmlPropiedad = "EsquemaXml";

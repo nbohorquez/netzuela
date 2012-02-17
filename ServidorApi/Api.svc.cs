@@ -8,24 +8,17 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;                             // ConfigurationManager
-    using System.Data;                                      // DataSet
-    using System.IdentityModel.Selectors;                   // UserNamePasswordValidator
-    using System.IdentityModel.Tokens;                      // SecurityTokenException
-    using System.IO;                                        // MemoryStream
+    using System.Configuration;                     // ConfigurationManager
+    using System.Data;                              // DataTable
     using System.Linq;
     using System.Runtime.Serialization;
-    using System.Security;                                  // SecureString
-    using System.Security.Principal;                        // IIdentity
-    using System.ServiceModel;                              // FaultException
+    using System.Security.Principal;                // IIdentity
+    using System.ServiceModel;
     using System.ServiceModel.Web;
     using System.Text;
     
-    using Zuliaworks.Netzuela.Spuria.Api;                   // IApiPublica
-    using Zuliaworks.Netzuela.Spuria.Datos;                 // SpuriaEntities
-    //using Zuliaworks.Netzuela.Valeria.Comunes;              // ParametrosDeConexion
-    //using Zuliaworks.Netzuela.Valeria.Logica;               // Conexion
-    //using Zuliaworks.Netzuela.Valeria.Preferencias;         // ConexionesSection
+    using Zuliaworks.Netzuela.Spuria.Api;           // IApiPublica
+    using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
 
     /*
      * Para informacion sobre concurrencia ver: http://www.codeproject.com/KB/WCF/WCFConcurrency.aspx
@@ -36,17 +29,14 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
     /// </summary>
     [ServiceBehavior(
         Namespace = "http://netzuela.zuliaworks.com/spuria/api_publica",
-        ConcurrencyMode = ConcurrencyMode.Multiple, 
+        ConcurrencyMode = System.ServiceModel.ConcurrencyMode.Multiple, 
         InstanceContextMode = InstanceContextMode.PerSession)]
     public class Api : IApiPublica
     {
-        #region Variables
+        #region Variables y constantes
 
         private readonly int tiendaId;
-        private readonly SpuriaEntities datos;
-        //private ParametrosDeConexion parametros;
-        //private Conexion conexion;
-        
+                
         #endregion
 
         #region Constructores
@@ -56,31 +46,23 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         /// </summary>
         public Api()
         {
-            /*
-            this.parametros = CargarGuardar.CargarParametrosDeConexion("Local");
-            SecureString[] credenciales = CargarGuardar.CargarCredenciales("Local");
-
-            if (this.parametros == null || !(credenciales.Length > 0))
+            using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
-                throw new Exception("Error interno del servidor. Por favor inténtelo más tarde");
+                conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+
+                string sql = "SELECT Tienda.TiendaID FROM Tienda, Acceso, Cliente " +
+                             "WHERE Acceso.CorreoElectronico = '" + this.Cliente + "' AND Cliente.Usuario_P = Acceso.AccesoID " +
+                             "AND Tienda.Cliente_P = Cliente.RIF";
+                DataTable t = conexion.Consultar("spuria", sql);
+                this.tiendaId = (int)t.Rows[0][0];
             }
 
-            this.conexion = new Conexion(this.parametros);
-            this.conexion.Conectar(credenciales[0], credenciales[1]);
-
-            credenciales[0].Dispose();
-            credenciales[0] = null;
-
-            credenciales[1].Dispose();
-            credenciales[1] = null;
-            */
-
-            datos = Proveedor.Spuria;
-
-            acceso cuenta = datos.acceso.First(c => c.CorreoElectronico == Cliente);
+            /*
+            acceso cuenta = this.Datos.acceso.First(c => c.CorreoElectronico == this.Cliente);
             cliente cliente = cuenta.usuario.cliente.First(c => c.usuario.UsuarioID == cuenta.AccesoID);
             tienda tienda = cliente.tienda.First(t => t.cliente.RIF == cliente.RIF);
-            tiendaId = tienda.TiendaID;
+            this.tiendaId = tienda.TiendaID;
+             */
         }
 
         #endregion
@@ -91,7 +73,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         {
             get { return OperationContext.Current.ServiceSecurityContext.PrimaryIdentity.Name; }
         }
-
+        
         #endregion
 
         #region Implementacion de interfaces
@@ -103,21 +85,29 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         public string[] ListarBasesDeDatos()
         {
             List<string> resultadoFinal = new List<string>();
-            /*
+
             try
             {
-                string[] resultadoBruto = this.conexion.ListarBasesDeDatos();
-
-                foreach (string s in resultadoBruto)
+                using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
                 {
-                    resultadoFinal.Add(s);
+                    conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+                    string[] basesDeDatos = conexion.ListarBasesDeDatos();
+
+                    var basesDeDatosAMostrar = (from bd in basesDeDatos
+                                                where Permisos.EntidadesPermitidas.Keys.Any(k => string.Equals(k, bd, StringComparison.OrdinalIgnoreCase))
+                                                select bd).ToList();
+
+                    resultadoFinal = basesDeDatosAMostrar;
+                    /*
+                    resultadoFinal.Add(((EntityConnection)this.Datos.Connection).StoreConnection.Database);
+                        */
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception("SPURIA: Error de listado de base de datos", ex);
             }
-            */
+
             return resultadoFinal.ToArray();
         }
 
@@ -130,20 +120,40 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         {
             List<string> resultadoFinal = new List<string>();
             /*
+            if (baseDeDatos != ((EntityConnection)this.Datos.Connection).StoreConnection.Database)
+            {
+                throw new ArgumentOutOfRangeException("baseDeDatos");
+            }
+            */
             try
             {
-                string[] resultadoBruto = this.conexion.ListarTablas(baseDeDatos);
-
-                foreach (string s in resultadoBruto)
+                using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
                 {
-                    resultadoFinal.Add(s);
+                    conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+                    string[] tablas = conexion.ListarTablas(baseDeDatos);
+
+                    var tablasAMostrar = (from tabla in tablas
+                                          where Permisos.EntidadesPermitidas[baseDeDatos].Any(t => string.Equals(t.Nombre, tabla, StringComparison.OrdinalIgnoreCase))
+                                          select tabla).ToList();
+
+                    resultadoFinal = tablasAMostrar;
+
+                    /*
+                    var tablasDelModelo = this.Datos.MetadataWorkspace.GetItems<EntityType>(DataSpace.SSpace);
+
+                    var tablasAMostrar = (from tabla in tablasDelModelo
+                                          where this.tablasPermitidas.Any(t => t == tabla.Name)
+                                          select tabla.Name).ToList();
+
+                    resultadoFinal = tablasAMostrar;
+                     */
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception("SPURIA: Error de listado de tablas", ex);
             }
-            */
+
             return resultadoFinal.ToArray();
         }
 
@@ -157,16 +167,80 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         {
             DataTableXml datosAEnviar = null;
             /*
+            if (baseDeDatos != ((EntityConnection)this.Datos.Connection).StoreConnection.Database)
+            {
+                throw new ArgumentOutOfRangeException("baseDeDatos");
+            }
+
+            if (!this.tablasPermitidas.Any(t => t == tabla))
+            {
+                throw new ArgumentOutOfRangeException("tabla");
+            }
+            */
+             
+            /*
+             * Para convertir un LINQ en DataTable:
+             * http://msdn.microsoft.com/en-us/library/bb386921.aspx
+             * 
+             * Para sacar un DataTable de un EF:
+             * http://www.codeproject.com/Tips/171006/Convert-LINQ-to-Entity-Result-to-a-DataTable.aspx
+             */
+
+            if (!Permisos.EntidadesPermitidas.Keys.Contains(baseDeDatos))
+            {
+                throw new ArgumentOutOfRangeException("baseDeDatos");
+            }
+
+            if (!Permisos.EntidadesPermitidas[baseDeDatos].Any(e => string.Equals(e.Nombre, tabla, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new ArgumentOutOfRangeException("tabla");
+            }
+
             try
             {
-                DataTable t = this.conexion.LeerTabla(baseDeDatos, tabla);
-                datosAEnviar = t.DataTableAXml(baseDeDatos, tabla);
+                using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
+                {
+                    conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+                    
+                    string sql = "SELECT ";
+                    Permisos.DescriptorDeTabla descriptor = 
+                        Permisos.EntidadesPermitidas[baseDeDatos].First(e => string.Equals(e.Nombre, tabla, StringComparison.OrdinalIgnoreCase));
+
+                    for(int i = 0; i < descriptor.Columnas.Length; i++)
+                    {
+                        if(!string.Equals(descriptor.TiendaID, descriptor.Columnas[i], StringComparison.OrdinalIgnoreCase))
+                        {
+                            sql += descriptor.Columnas[i];
+
+                            if ((i + 1) < descriptor.Columnas.Length)
+                            {
+                                sql += ", ";
+                            }
+                        }
+                    }
+
+                    sql += " FROM " + tabla + " WHERE " + descriptor.TiendaID + " = " + tiendaId.ToString();
+
+                    DataTable t = conexion.Consultar(baseDeDatos, sql);
+                    List<DataColumn> cp = new List<DataColumn>();
+
+                    foreach (string columna in descriptor.ClavePrimaria)
+                    {
+                        if (!string.Equals(columna, descriptor.TiendaID, StringComparison.OrdinalIgnoreCase))
+                        {
+                            cp.Add(t.Columns[columna]);
+                        }
+                    }
+
+                    t.PrimaryKey = cp.ToArray();                    
+                    datosAEnviar = t.DataTableAXml(baseDeDatos, tabla);
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception("SPURIA: Error de lectura", ex);
             }
-            */
+
             return datosAEnviar;
         }
 
@@ -177,20 +251,47 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         /// <returns>Indica si la operación de escritura tuvo éxito.</returns>
         public bool EscribirTabla(DataTableXml tablaXml)
         {
+            if (!Permisos.EntidadesPermitidas.Keys.Contains(tablaXml.BaseDeDatos))
+            {
+                throw new ArgumentOutOfRangeException("tablaXml");
+            }
+
+            if (!Permisos.EntidadesPermitidas[tablaXml.BaseDeDatos].Any(e => string.Equals(e.Nombre, tablaXml.NombreTabla, StringComparison.OrdinalIgnoreCase)))
+            {
+                throw new ArgumentOutOfRangeException("tabla");
+            }
+
             bool resultado = false;
-            /*
+
             try
             {
-                DataTable tabla = tablaXml.XmlADataTable();
-                this.conexion.EscribirTabla(tablaXml.BaseDeDatos, tablaXml.NombreTabla, tabla);
+                using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
+                {
+                    conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+                    
+                    Permisos.DescriptorDeTabla descriptor = 
+                        Permisos.EntidadesPermitidas[tablaXml.BaseDeDatos].First(e => string.Equals(e.Nombre, tablaXml.NombreTabla, StringComparison.OrdinalIgnoreCase));
 
-                resultado = true;
+                    DataTable tabla = tablaXml.XmlADataTable();
+                    DataColumn col = new DataColumn(descriptor.TiendaID, this.tiendaId.GetType());
+
+                    tabla.Columns.Add(col);
+
+                    for (int i = 0; i < descriptor.Columnas.Length; i++)
+                    {
+                        tabla.Columns[descriptor.Columnas[i]].SetOrdinal(i);
+                    }
+
+                    conexion.EscribirTabla(tablaXml.BaseDeDatos, tablaXml.NombreTabla, tabla);
+
+                    resultado = true;
+                }
             }
             catch (Exception ex)
             {
                 throw new Exception("SPURIA: Error de escritura", ex);
             }
-            */
+
             return resultado;
         }
 

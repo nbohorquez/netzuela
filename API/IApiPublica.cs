@@ -39,9 +39,9 @@
         /// <summary>
         /// Escribe el contenido de la tabla en la base de datos.
         /// </summary>
-        /// <param name="tablaXml">Tabla a escribir.</param>
+        /// <param name="tabla">Tabla a escribir.</param>
         /// <returns>Indica si la operación de escritura tuvo éxito.</returns>
         [OperationContract]
-        bool EscribirTabla(DataTableXml tablas);
+        bool EscribirTabla(DataTableXml tabla);
     }
 }

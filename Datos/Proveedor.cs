@@ -4,13 +4,13 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    
+
     public class Proveedor
     {
         #region Variables
 
         private static SpuriaEntities spuria;
-
+       
         #endregion
 
         #region Constructores

@@ -8,13 +8,14 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
 {
     using System;
     using System.Collections.Generic;
-    using System.IdentityModel.Selectors;               // UserNamePasswordValidator
-    using System.IdentityModel.Tokens;                  // SecurityTokenException
+    using System.Data;                              // DataTable
+    using System.IdentityModel.Selectors;           // UserNamePasswordValidator
+    using System.IdentityModel.Tokens;              // SecurityTokenException
     using System.Linq;
-    using System.ServiceModel;                          // FaultException
+    using System.ServiceModel;                      // FaultException
     using System.Web;
 
-    using Zuliaworks.Netzuela.Spuria.Datos;             // Proveedor
+    using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
 
     /// <summary>
     /// Administra los credenciales enviados por el cliente.
@@ -28,22 +29,36 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         /// <param name="password">Contraseña de usuario.</param>
         public override void Validate(string userName, string password)
         {
-            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+            using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
-                throw new SecurityTokenException("Se requiere usuario y contraseña");
-            }
-            
-            SpuriaEntities Datos = Proveedor.Spuria;
-            acceso acceso = Datos.acceso.DefaultIfEmpty(null).FirstOrDefault(a => a.CorreoElectronico == userName);
+                conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
 
-            if (acceso == null)
-            {
-                throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
-            }
+                if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+                {
+                    throw new SecurityTokenException("Se requiere usuario y contraseña");
+                }
 
-            if (acceso.Contrasena != password)
-            {
-                throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
+                string sql = "SELECT AccesoID FROM Acceso WHERE CorreoElectronico = '" + userName + "' AND Contrasena = '" + password + "'";
+                DataTable t = conexion.Consultar("spuria", sql);
+
+                if (t.Rows.Count != 1)
+                {
+                    throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
+                }
+                
+                /*
+                acceso acceso = Proveedor.Spuria.acceso.DefaultIfEmpty(null).FirstOrDefault(a => a.CorreoElectronico == userName);
+
+                if (acceso == null)
+                {
+                    throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
+                }
+
+                if (acceso.Contrasena != password)
+                {
+                    throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
+                }
+                 */
             }
         }
     }

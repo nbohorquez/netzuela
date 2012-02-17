@@ -34,7 +34,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Comunes">
+      <HintPath>..\..\Valeria\Comunes\bin\Debug\Comunes.dll</HintPath>
+    </Reference>
+    <Reference Include="Datos, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Valeria\Datos\bin\Debug\Datos.dll</HintPath>
+    </Reference>
+    <Reference Include="Logica">
+      <HintPath>..\..\Valeria\Logica\bin\Debug\Logica.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Preferencias">
+      <HintPath>..\..\Valeria\Preferencias\bin\Debug\Preferencias.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.Security" />
@@ -73,6 +86,8 @@
     <Compile Include="Api.svc.cs">
       <DependentUpon>Api.svc</DependentUpon>
     </Compile>
+    <Compile Include="Sesion.cs" />
+    <Compile Include="Permisos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -82,10 +97,6 @@
     <ProjectReference Include="..\API\Api.csproj">
       <Project>{8DE4172C-BAE2-4320-A092-585077DBB33F}</Project>
       <Name>Api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Datos\Datos.csproj">
-      <Project>{CDADD4F4-9956-4015-9585-75E362AE7156}</Project>
-      <Name>Datos</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
