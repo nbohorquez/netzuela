@@ -1,21 +1,21 @@
-API/bin/
-API/obj/
-API/StyleCop.Cache
+src/Zuliaworks.Netzuela.Spuria.Api/bin/
+src/Zuliaworks.Netzuela.Spuria.Api/obj/
+src/Zuliaworks.Netzuela.Spuria.Api/StyleCop.Cache
 
-BaseDeDatos/ModeloDeDatosRelacional.mwb.bak
+src/BaseDeDatos/ModeloDeDatosRelacional.mwb.bak
 
-Datos/bin/
-Datos/obj/
-Datos/Entidades/
-Datos/_Proveedor.cs
+src/Zuliaworks.Netzuela.Spuria.Datos/bin/
+src/Zuliaworks.Netzuela.Spuria.Datos/obj/
+src/Zuliaworks.Netzuela.Spuria.Datos/Entidades/
+src/Zuliaworks.Netzuela.Spuria.Datos/_Proveedor.cs
 
-ServidorApi/bin/
-ServidorApi/obj/
-ServidorApi/StyleCop.Cache
-ServidorApi/ServidorApi.publish.xml
-ServidorApi/*.svclog
-ServidorApi/hibernate.cfg.xml
+src/Zuliaworks.Netzuela.Spuria.ServidorApi/bin/
+src/Zuliaworks.Netzuela.Spuria.ServidorApi/obj/
+src/Zuliaworks.Netzuela.Spuria.ServidorApi/StyleCop.Cache
+src/Zuliaworks.Netzuela.Spuria.ServidorApi/ServidorApi.publish.xml
+src/Zuliaworks.Netzuela.Spuria.ServidorApi/*.svclog
+src/Zuliaworks.Netzuela.Spuria.ServidorApi/hibernate.cfg.xml
 
-ServidorOAuth/bin/
-ServidorOAuth/obj/
-ServidorOAuth/StyleCop.Cache
+src/Zuliaworks.Netzuela.Spuria.ServidorOAuth/bin/
+src/Zuliaworks.Netzuela.Spuria.ServidorOAuth/obj/
+src/Zuliaworks.Netzuela.Spuria.ServidorOAuth/StyleCop.Cache

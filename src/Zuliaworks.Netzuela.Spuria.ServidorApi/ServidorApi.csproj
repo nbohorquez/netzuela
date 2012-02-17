@@ -94,7 +94,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\API\Api.csproj">
+    <ProjectReference Include="..\Zuliaworks.Netzuela.Spuria.Api\Api.csproj">
       <Project>{8DE4172C-BAE2-4320-A092-585077DBB33F}</Project>
       <Name>Api</Name>
     </ProjectReference>
