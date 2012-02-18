@@ -5,9 +5,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Zuliaworks.Netzuela.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Datos", "Zuliaworks.Netzuela.Spuria.Datos\Datos.csproj", "{CDADD4F4-9956-4015-9585-75E362AE7156}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServidorApi", "Zuliaworks.Netzuela.Spuria.ServidorApi\ServidorApi.csproj", "{055DD0CB-ECDB-4239-BF8A-18178CABFA06}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServidorOAuth", "Zuliaworks.Netzuela.Spuria.ServidorOAuth\ServidorOAuth.csproj", "{B9608D0B-AE2F-4099-8F8D-E5789913C3A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServidorApi", "Zuliaworks.Netzuela.Spuria.ServidorApi\ServidorApi.csproj", "{8BF0C892-2D11-4DBD-9EFB-E8EA38A2E290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,14 +23,14 @@ Global
 		{CDADD4F4-9956-4015-9585-75E362AE7156}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDADD4F4-9956-4015-9585-75E362AE7156}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDADD4F4-9956-4015-9585-75E362AE7156}.Release|Any CPU.Build.0 = Release|Any CPU
-		{055DD0CB-ECDB-4239-BF8A-18178CABFA06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{055DD0CB-ECDB-4239-BF8A-18178CABFA06}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{055DD0CB-ECDB-4239-BF8A-18178CABFA06}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{055DD0CB-ECDB-4239-BF8A-18178CABFA06}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B9608D0B-AE2F-4099-8F8D-E5789913C3A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B9608D0B-AE2F-4099-8F8D-E5789913C3A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B9608D0B-AE2F-4099-8F8D-E5789913C3A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B9608D0B-AE2F-4099-8F8D-E5789913C3A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8BF0C892-2D11-4DBD-9EFB-E8EA38A2E290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BF0C892-2D11-4DBD-9EFB-E8EA38A2E290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BF0C892-2D11-4DBD-9EFB-E8EA38A2E290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BF0C892-2D11-4DBD-9EFB-E8EA38A2E290}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

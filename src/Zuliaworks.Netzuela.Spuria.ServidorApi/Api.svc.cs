@@ -16,7 +16,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
     using System.ServiceModel;
     using System.ServiceModel.Web;
     using System.Text;
-    
+
     using Zuliaworks.Netzuela.Spuria.Api;           // IApiPublica
     using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
 
@@ -29,14 +29,14 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
     /// </summary>
     [ServiceBehavior(
         Namespace = "http://netzuela.zuliaworks.com/spuria/api_publica",
-        ConcurrencyMode = System.ServiceModel.ConcurrencyMode.Multiple, 
+        ConcurrencyMode = System.ServiceModel.ConcurrencyMode.Multiple,
         InstanceContextMode = InstanceContextMode.PerSession)]
     public class Api : IApiPublica
     {
         #region Variables y constantes
 
         private readonly int tiendaId;
-                
+
         #endregion
 
         #region Constructores
@@ -73,7 +73,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         {
             get { return OperationContext.Current.ServiceSecurityContext.PrimaryIdentity.Name; }
         }
-        
+
         #endregion
 
         #region Implementacion de interfaces
@@ -177,7 +177,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                 throw new ArgumentOutOfRangeException("tabla");
             }
             */
-             
+
             /*
              * Para convertir un LINQ en DataTable:
              * http://msdn.microsoft.com/en-us/library/bb386921.aspx
@@ -201,14 +201,14 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                 using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
                 {
                     conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
-                    
+
                     string sql = "SELECT ";
-                    Permisos.DescriptorDeTabla descriptor = 
+                    Permisos.DescriptorDeTabla descriptor =
                         Permisos.EntidadesPermitidas[baseDeDatos].First(e => string.Equals(e.Nombre, tabla, StringComparison.OrdinalIgnoreCase));
 
-                    for(int i = 0; i < descriptor.Columnas.Length; i++)
+                    for (int i = 0; i < descriptor.Columnas.Length; i++)
                     {
-                        if(!string.Equals(descriptor.TiendaID, descriptor.Columnas[i], StringComparison.OrdinalIgnoreCase))
+                        if (!string.Equals(descriptor.TiendaID, descriptor.Columnas[i], StringComparison.OrdinalIgnoreCase))
                         {
                             sql += descriptor.Columnas[i];
 
@@ -219,7 +219,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                         }
                     }
 
-                    sql += " FROM " + tabla + " WHERE " + descriptor.TiendaID + " = " + tiendaId.ToString();
+                    sql += " FROM " + tabla + " WHERE " + descriptor.TiendaID + " = " + this.tiendaId.ToString();
 
                     DataTable t = conexion.Consultar(baseDeDatos, sql);
                     List<DataColumn> cp = new List<DataColumn>();
@@ -232,7 +232,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                         }
                     }
 
-                    t.PrimaryKey = cp.ToArray();                    
+                    t.PrimaryKey = cp.ToArray();
                     datosAEnviar = t.DataTableAXml(baseDeDatos, tabla);
                 }
             }
@@ -268,8 +268,8 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                 using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
                 {
                     conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
-                    
-                    Permisos.DescriptorDeTabla descriptor = 
+
+                    Permisos.DescriptorDeTabla descriptor =
                         Permisos.EntidadesPermitidas[tablaXml.BaseDeDatos].First(e => string.Equals(e.Nombre, tablaXml.NombreTabla, StringComparison.OrdinalIgnoreCase));
 
                     DataTable tabla = tablaXml.XmlADataTable();

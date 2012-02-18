@@ -4,99 +4,170 @@ GO
 
 /*
 *************************************************************
+*						  Parametros				        *
+*************************************************************
+*/
+
+/* 
+ * Para poder usar una tabla temporal en varios SP hay que crearla primero
+ * http://manuals.sybase.com/onlinebooks/group-as/asg1250e/sqlug/@Generic__BookTextView/43597;pt=43674
+ */
+
+IF object_id('tempdb..#Parametros') IS NOT NULL 
+	DROP TABLE #Parametros;
+ELSE
+	CREATE TABLE #Parametros (
+		ID INT NOT NULL IDENTITY(1,1),
+		Valor VARCHAR(100) NOT NULL
+	);
+GO
+	
+/*
+*************************************************************
+*			            SepararString				        *
+*************************************************************
+*/
+
+/* 
+ * Codigo importado
+ * ================
+ * 
+ * Autor: Jay Pipes
+ * Titulo: Split a Delimited String in SQL
+ * Licencia: 
+ * Fuente: http://forge.mysql.com/tools/tool.php?id=4
+ * 
+ * Tipo de uso
+ * ===========
+ * 
+ * Textual                                              []
+ * Adaptado                                             [X]
+ * Solo se cambiaron los nombres de las variables       []
+ * 
+ */
+
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[SepararString]') AND type in (N'P', N'PC'))
+	DROP PROCEDURE [dbo].[SepararString]
+GO
+
+CREATE PROCEDURE [dbo].[SepararString]
+	@input VARCHAR(1000), 
+	@delimiter VARCHAR(10),
+	@returnvalue int OUTPUT	
+AS
+	BEGIN
+		DECLARE @cur_position int = 1;
+		DECLARE @remainder VARCHAR(1000);
+		DECLARE @cur_string VARCHAR(1000);
+		DECLARE @delimiter_length TINYINT;
+
+		SET @remainder = @input;
+		SET @delimiter_length = LEN(@delimiter);
+
+		WHILE (LEN(@remainder) > 0 AND @cur_position > 0)
+		BEGIN
+			SET @cur_position = CHARINDEX(@delimiter, @remainder);
+			
+			IF @cur_position = 0
+				SET @cur_string = @remainder;
+			ELSE
+				SET @cur_string = LEFT(@remainder, @cur_position - 1);
+			
+			IF RTRIM(LTRIM(@cur_string)) != ''
+				INSERT #Parametros (Valor) VALUES (@cur_string);
+
+			SET @remainder = SUBSTRING(@remainder, @cur_position + @delimiter_length, LEN(@remainder) - (@cur_position + @delimiter_length) + 1);			
+		END
+		
+		SET @returnvalue = 1;
+	END
+GO
+
+/*
+*************************************************************
+*						  ~Parametros				        *
+*************************************************************
+*/
+IF object_id('tempdb..#Parametros') IS NOT NULL 
+	DROP TABLE #Parametros;
+GO
+
+/*
+*************************************************************
 *							Insertar				        *
 *************************************************************
 */
 
-CREATE PROCEDURE [dbo].[Insertar]
-   @a_Creador int,
-   @a_Parroquia int,
-   @a_CorreoElectronico varchar(45),
-   @a_Contrasena varchar(45),
-   @a_Estatus char(9),
-   @a_Privilegios varchar(45),
-   @a_Nombre varchar(45),
-   @a_Apellido varchar(45),
-   @returnvalue int  OUTPUT
-AS 
-   BEGIN
-
-      SET  XACT_ABORT  ON
-      SET  NOCOUNT  ON
-      SET @returnvalue = NULL
-
-      DECLARE
-         @v_Rastreable_P int, 
-         @v_Usuario_P int, 
-         @AdministradorID int
-
-      DECLARE
-         @procedure_return_value int
-
-      EXECUTE dbo.InsertarUsuario$IMPL @a_Parroquia, @a_CorreoElectronico, @a_Contrasena, @returnvalue = @procedure_return_value  OUTPUT
-
-      SELECT @v_Usuario_P = @procedure_return_value
-
-      DECLARE
-         @procedure_return_value$2 int
-
-      EXECUTE dbo.InsertarRastreable$IMPL @a_Creador, @returnvalue = @procedure_return_value$2  OUTPUT
-
-      SELECT @v_Rastreable_P = @procedure_return_value$2
-
-      INSERT dbo.administrador(
-         dbo.administrador.Rastreable_P, 
-         dbo.administrador.Usuario_P, 
-         dbo.administrador.Estatus, 
-         dbo.administrador.Privilegios, 
-         dbo.administrador.Nombre, 
-         dbo.administrador.Apellido)
-         VALUES (
-            @v_Rastreable_P, 
-            @v_Usuario_P, 
-            @a_Estatus, 
-            @a_Privilegios, 
-            @a_Nombre, 
-            @a_Apellido)
-
-      SET @returnvalue = scope_identity()
-   END
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Insertar]') AND type in (N'P', N'PC'))
+	DROP PROCEDURE [dbo].[Insertar]
 GO
 
-CREATE PROCEDURE `Insertar` (a_Parametros TEXT)
-BEGIN
-    DECLARE TiendaID INT;
-    DECLARE Codigo CHAR(15);
-    DECLARE Descripcion VARCHAR(45);
-    DECLARE Precio DECIMAL(10,2);
-    DECLARE Cantidad INT;
+CREATE PROCEDURE [dbo].[Insertar]
+   @a_Funcion varchar(45),
+   @a_Parametros varchar(45),
+   @returnvalue int OUTPUT
+AS 
+	BEGIN
+		SET XACT_ABORT ON;
+		SET NOCOUNT ON;
+		SET @returnvalue = NULL;
 
-    DECLARE Creador INT;
-    DECLARE Resultado INT;
-    DECLARE PrecioViejo DECIMAL(10,2);
-    DECLARE CantidadVieja INT;
+		DECLARE @TiendaID int;
+		DECLARE @Codigo char(15);
+		DECLARE @Descripcion varchar(45);
+		DECLARE @Precio decimal(10,2);
+		DECLARE @Cantidad int;
 
-    /*START TRANSACTION;*/
+		DECLARE @Creador int;
+		DECLARE @Resultado int;
+		DECLARE @PrecioViejo decimal(10,2);
+		DECLARE @CantidadVieja int;
+		
+		DECLARE @resultadoOperacion int;
+		
+		IF @a_Funcion != N'InsertarInventario'
+			RETURN
 
-    CALL SepararString(`a_Parametros`, ",");
+		/* BEGIN TRANSACTION */
+		
+		CREATE TABLE #Parametros (
+			ID int NOT NULL IDENTITY(1,1),
+			Valor varchar(100) NOT NULL
+		);
+			
+		EXEC dbo.SepararString @input = @a_Parametros, @delimiter = N',', @returnvalue = @resultadoOperacion OUTPUT;
 
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 1 INTO TiendaID;
-    SELECT CONVERT(Valor, CHAR(15)) FROM Parametros WHERE ID = 2 INTO Codigo;
-    SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
-    SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
+		SET @TiendaID = (SELECT CAST(Valor AS CHAR) FROM #Parametros WHERE ID = 1);
+		SET @Codigo = (SELECT CAST(Valor as CHAR) FROM #Parametros WHERE ID = 2);
+		SET @Descripcion = (SELECT CAST(Valor as CHAR) FROM #Parametros WHERE ID = 3);
+		SET @Precio = (SELECT CAST(Valor as DECIMAL(10,2)) FROM #Parametros WHERE ID = 4);
+		SET @Cantidad = (SELECT CAST(Valor as INT) FROM #Parametros WHERE ID = 5);
+		
+		DROP TABLE #Parametros;
+
+		SET @Creador =
+		(
+			SELECT Cliente.Rastreable_P
+			FROM Cliente, Tienda
+			WHERE Tienda.TiendaID = @TiendaID AND Cliente.RIF = Tienda.Cliente_P
+		);
+
+		EXEC dbo.InsertarInventario$IMPL 
+			@a_Creador = @Creador, 
+			@a_TiendaID = @TiendaID, 
+			@a_Codigo = @Codigo, 
+			@a_Descripcion = @Descripcion, 
+			@a_Visibilidad = 'Ambos visibles', 
+			@a_ProductoID = NULL, 
+			@a_Precio = @Precio, 
+			@a_Cantidad = @Cantidad, 
+			@returnvalue = @resultadoOperacion OUTPUT;
 	
-    DROP TEMPORARY TABLE IF EXISTS Parametros;
-
-    SELECT Cliente.Rastreable_P
-    FROM Cliente, Tienda
-    WHERE Tienda.TiendaID = TiendaID AND Cliente.RIF = Tienda.Cliente_P
-    INTO Creador;
-
-    SELECT InsertarInventario(Creador, TiendaID, Codigo, Descripcion, 'Ambos visibles', NULL, Precio, Cantidad) INTO Resultado;
-
-    /* COMMIT; */
-END$$
+		SET @returnvalue = @resultadoOperacion;
+		
+		/* COMMIT TRANSACTION; */
+   END
+GO
 
 /*
 *************************************************************
@@ -104,87 +175,136 @@ END$$
 *************************************************************
 */
 
-DROP PROCEDURE IF EXISTS `Actualizar`;
-SELECT 'Actualizar';
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Actualizar]') AND type in (N'P', N'PC'))
+	DROP PROCEDURE [dbo].[Actualizar]
+GO
 
-DELIMITER $$
+CREATE PROCEDURE [dbo].[Actualizar]
+   @a_Funcion varchar(45),
+   @a_Parametros varchar(45),
+   @returnvalue int OUTPUT
+AS 
+	BEGIN
+		SET XACT_ABORT ON;
+		SET NOCOUNT ON;
+		SET @returnvalue = NULL;
+		
+		DECLARE @TiendaID CHAR;
+		DECLARE @Codigo CHAR(15);
+		DECLARE @Descripcion VARCHAR(45);
+		DECLARE @Precio DECIMAL(10,2);
+		DECLARE @Cantidad INT;
 
-CREATE PROCEDURE `Actualizar` (a_Parametros TEXT)
-BEGIN
-    DECLARE TiendaID INT;
-    DECLARE Codigo CHAR(15);
-    DECLARE Descripcion VARCHAR(45);
-    DECLARE Precio DECIMAL(10,2);
-    DECLARE Cantidad INT;
+		DECLARE @Resultado INT;
+		DECLARE @PrecioViejo DECIMAL(10,2);
+		DECLARE @CantidadVieja INT;
+		
+		DECLARE @resultadoOperacion int;
+		
+		IF @a_Funcion != N'ActualizarInventario'
+			RETURN
 
-    DECLARE Resultado INT;
-    DECLARE PrecioViejo DECIMAL(10,2);
-    DECLARE CantidadVieja INT;
+		/*BEGIN TRANSACTION;*/
+	    
+		CREATE TABLE #Parametros (
+			ID int NOT NULL IDENTITY(1,1),
+			Valor varchar(100) NOT NULL
+		);
+			
+		EXEC dbo.SepararString @input = @a_Parametros, @delimiter = N',', @returnvalue = @resultadoOperacion OUTPUT;
 
-    /*START TRANSACTION;*/
-    
-    CALL SepararString(`a_Parametros`, ",");
+		SET @TiendaID = (SELECT CAST(Valor AS CHAR) FROM #Parametros WHERE ID = 1);
+		SET @Codigo = (SELECT CAST(Valor as CHAR) FROM #Parametros WHERE ID = 2);
+		SET @Descripcion = (SELECT CAST(Valor as CHAR) FROM #Parametros WHERE ID = 3);
+		SET @Precio = (SELECT CAST(Valor as DECIMAL(10,2)) FROM #Parametros WHERE ID = 4);
+		SET @Cantidad = (SELECT CAST(Valor as INT) FROM #Parametros WHERE ID = 5);
+		
+		DROP TABLE #Parametros;
+		
+		DECLARE @t TABLE
+		(
+			Precio int,
+			Cantidad int
+		);
 
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 1 INTO TiendaID;
-    SELECT CONVERT(Valor, CHAR(15)) FROM Parametros WHERE ID = 2 INTO Codigo;
-    SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
-    SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
-	
-    DROP TEMPORARY TABLE IF EXISTS Parametros;
-	
-    SELECT PrecioCantidad.Precio, PrecioCantidad.Cantidad
-    FROM PrecioCantidad 
-    WHERE PrecioCantidad.TiendaID = TiendaID AND PrecioCantidad.Codigo = Codigo AND FechaFin IS NULL
-    INTO PrecioViejo, CantidadVieja;
+		INSERT @t
+		SELECT PrecioCantidad.Precio, PrecioCantidad.Cantidad
+		FROM PrecioCantidad 
+		WHERE PrecioCantidad.TiendaID = @TiendaID AND PrecioCantidad.Codigo = Codigo AND FechaFin IS NULL
+		
+		SET @PrecioViejo = (SELECT Precio FROM @t);
+		SET @CantidadVieja = (SELECT Cantidad FROM @t);
 
-    IF (PrecioViejo != Precio OR CantidadVieja != Cantidad) THEN 
-        SET Resultado = PrecioCantidadCrear(TiendaID, Codigo, Precio, Cantidad);
-    END IF;
+		IF (@PrecioViejo != @Precio OR @CantidadVieja != @Cantidad)
+			EXEC dbo.InsertarPrecioCantidad$IMPL 
+				@a_TiendaID = @TiendaID, 
+				@a_Codigo = @Codigo, 
+				@a_Precio = @Precio, 
+				@a_Cantidad = @Cantidad, 
+				@returnvalue = @Resultado OUTPUT;
 
-    UPDATE Inventario
-    SET Inventario.Descripcion = Descripcion
-    WHERE Inventario.TiendaID = TiendaID AND Inventario.Codigo = Codigo;
+		UPDATE Inventario
+		SET Inventario.Descripcion = Descripcion
+		WHERE Inventario.TiendaID = @TiendaID AND Inventario.Codigo = @Codigo;
 
-    /*COMMIT;*/
-END$$
+		SET @returnvalue = @Resultado;
+		
+		/*COMMIT TRANSACTION;*/
+	END
+GO
 
 /*
 *************************************************************
-*                           Borrar 				            *
+*                          Eliminar 				        *
 *************************************************************
 */
 
-DELIMITER ;
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[Actualizar]') AND type in (N'P', N'PC'))
+	DROP PROCEDURE [dbo].[Actualizar]
+GO
 
-DROP PROCEDURE IF EXISTS `Eliminar`;
-SELECT 'Eliminar';
+CREATE PROCEDURE [dbo].[Actualizar]
+   @a_Funcion varchar(45),
+   @a_Parametros varchar(45),
+   @returnvalue int OUTPUT
+AS
+	BEGIN
+		SET XACT_ABORT ON;
+		SET NOCOUNT ON;
+		SET @returnvalue = NULL;
+		
+		DECLARE @TiendaID INT;
+		DECLARE @Codigo CHAR(15);
+		DECLARE @Descripcion VARCHAR(45);
+		DECLARE @Precio DECIMAL(10,2);
+		DECLARE @Cantidad INT;
 
-DELIMITER $$
+		DECLARE @resultadoOperacion int;
+		
+		IF @a_Funcion != N'EliminarInventario'
+			RETURN
+			
+		/* BEGIN TRANSACTION;*/
 
-CREATE PROCEDURE `Eliminar` (a_Parametros TEXT)
-BEGIN   
-    DECLARE TiendaID INT;
-    DECLARE Codigo CHAR(15);
-    DECLARE Descripcion VARCHAR(45);
-    DECLARE Precio DECIMAL(10,2);
-    DECLARE Cantidad INT;
+		CREATE TABLE #Parametros (
+			ID int NOT NULL IDENTITY(1,1),
+			Valor varchar(100) NOT NULL
+		);
+			
+		EXEC dbo.SepararString @input = @a_Parametros, @delimiter = N',', @returnvalue = @resultadoOperacion OUTPUT;
 
-    /*START TRANSACTION;*/
+		SET @TiendaID = (SELECT CAST(Valor AS CHAR) FROM #Parametros WHERE ID = 1);
+		SET @Codigo = (SELECT CAST(Valor as CHAR) FROM #Parametros WHERE ID = 2);
+		SET @Descripcion = (SELECT CAST(Valor as CHAR) FROM #Parametros WHERE ID = 3);
+		SET @Precio = (SELECT CAST(Valor as DECIMAL(10,2)) FROM #Parametros WHERE ID = 4);
+		SET @Cantidad = (SELECT CAST(Valor as INT) FROM #Parametros WHERE ID = 5);
+		
+		DROP TABLE #Parametros;
+		
+		DELETE 
+		FROM Inventario
+		WHERE Inventario.TiendaID = @TiendaID AND Inventario.Codigo = @Codigo;
 
-    CALL SepararString(`a_Parametros`, ",");
-
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 1 INTO TiendaID;
-    SELECT CONVERT(Valor, CHAR(15)) FROM Parametros WHERE ID = 2 INTO Codigo;
-    SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
-    SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
-	
-    DROP TEMPORARY TABLE IF EXISTS Parametros;
-
-    DELETE 
-    FROM Inventario
-    WHERE Inventario.TiendaID = TiendaID AND Inventario.Codigo = Codigo;
-
-    /* COMMIT; */
-END$$
+		/* COMMIT TRANSACTION; */
+	END
+GO

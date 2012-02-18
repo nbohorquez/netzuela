@@ -42,8 +42,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="WcfSamples.DynamicProxy">
-      <HintPath>..\..\Valeria\Bibliotecas\WCFDynamicProxy\src\bin\Debug\WcfSamples.DynamicProxy.dll</HintPath>
+    <Reference Include="WcfSamples.DynamicProxy, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\WcfSamples.DynamicProxy.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

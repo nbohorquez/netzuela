@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada a un ensamblado.
-[assembly: AssemblyTitle("Servidor")]
-[assembly: AssemblyDescription("Interfaz de Netzuela para las tiendas y la aplicación web")]
+[assembly: AssemblyTitle("ServidorApi")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Zuliaworks")]
-[assembly: AssemblyProduct("Servidor")]
-[assembly: AssemblyCopyright("Copyright © Zuliaworks 2011")]
+[assembly: AssemblyProduct("ServidorApi")]
+[assembly: AssemblyCopyright("Copyright © Zuliaworks 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como identificador de la biblioteca de tipos si este proyecto se expone a COM
-[assembly: Guid("4a1e317f-f5f8-4b94-9169-a9a1762cd222")]
+[assembly: Guid("cd092a4e-3cce-41d2-a90f-8b39b7bcf1b0")]
 
 // La información de versión de un ensamblado consta de los siguientes cuatro valores:
 //

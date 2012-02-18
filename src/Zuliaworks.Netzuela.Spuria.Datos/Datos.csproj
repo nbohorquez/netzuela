@@ -31,12 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Comunes">
-      <HintPath>..\..\Valeria\Comunes\bin\Debug\Comunes.dll</HintPath>
-    </Reference>
-    <Reference Include="Logica">
-      <HintPath>..\..\Valeria\Logica\bin\Debug\Logica.dll</HintPath>
-    </Reference>
     <Reference Include="Preferencias">
       <HintPath>..\..\Valeria\Preferencias\bin\Debug\Preferencias.dll</HintPath>
     </Reference>
