@@ -1711,6 +1711,11 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioTienda` (`TiendaID` INT, `Codigo` INT, `Descripcion` INT, `Precio` INT, `Cantidad` INT);
 
 -- -----------------------------------------------------
+-- Placeholder table for view `Spuria`.`InventarioReciente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Spuria`.`InventarioReciente` (`TiendaID` INT, `ProductoID` INT, `Codigo` INT, `Descripcion` INT, `Precio` INT, `Cantidad` INT);
+
+-- -----------------------------------------------------
 -- View `Spuria`.`InventarioTienda`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `Spuria`.`InventarioTienda`;
@@ -1745,6 +1750,15 @@ CREATE VIEW `Spuria`.`InventarioTienda` AS
 SELECT Inventario.TiendaID TiendaID, Inventario.Codigo Codigo, Descripcion, Precio, Cantidad
 FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, Codigo) WHERE FechaFin IS NULL
 ;
+
+-- -----------------------------------------------------
+-- View `Spuria`.`InventarioReciente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Spuria`.`InventarioReciente`;
+USE `Spuria`;
+CREATE  OR REPLACE VIEW `Spuria`.`InventarioReciente` AS
+SELECT Inventario.TiendaID TiendaID, Inventario.ProductoID ProductoID, Inventario.Codigo Codigo, Descripcion, Precio, Cantidad
+FROM Inventario LEFT JOIN PrecioCantidad USING (TiendaID, Codigo) WHERE FechaFin IS NULL;
 USE `Spuria`;
 
 DELIMITER $$
