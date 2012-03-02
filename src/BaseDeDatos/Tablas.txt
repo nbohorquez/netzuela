@@ -41,6 +41,7 @@ idioma
 interlocutor
 inventario
 inventariotienda
+inventarioreciente
 mensaje
 municipio
 pais
