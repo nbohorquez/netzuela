@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Zuliaworks.Netzuela.Spuria.ServidorApi
+namespace Zuliaworks.Netzuela.Spuria.Api
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
     using System.ServiceModel.Web;
     using System.Text;
 
-    using Zuliaworks.Netzuela.Spuria.Api;           // IApiPublica
+    using Zuliaworks.Netzuela.Spuria.TiposApi;      // IApiPublica
     using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
 
     /*
@@ -28,10 +28,10 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
     /// Implementación de la API de Spuria.
     /// </summary>
     [ServiceBehavior(
-        Namespace = "http://netzuela.zuliaworks.com/spuria/api_publica",
+        Namespace = Constantes.Namespace,
         ConcurrencyMode = System.ServiceModel.ConcurrencyMode.Multiple,
         InstanceContextMode = InstanceContextMode.PerSession)]
-    public class Api : IApiPublica
+    public class Servidor : IApi
     {
         #region Variables y constantes
 
@@ -42,9 +42,9 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         #region Constructores
 
         /// <summary>
-        /// Inicializa una nueva instancia de la clase Api.
+        /// Inicializa una nueva instancia de la clase Servidor.
         /// </summary>
-        public Api()
+        public Servidor()
         {
             using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
@@ -56,13 +56,6 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                 DataTable t = conexion.Consultar("spuria", sql);
                 this.tiendaId = (int)t.Rows[0][0];
             }
-
-            /*
-            acceso cuenta = this.Datos.acceso.First(c => c.CorreoElectronico == this.Cliente);
-            cliente cliente = cuenta.usuario.cliente.First(c => c.usuario.UsuarioID == cuenta.AccesoID);
-            tienda tienda = cliente.tienda.First(t => t.cliente.RIF == cliente.RIF);
-            this.tiendaId = tienda.TiendaID;
-             */
         }
 
         #endregion
@@ -98,9 +91,6 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                                                 select bd).ToList();
 
                     resultadoFinal = basesDeDatosAMostrar;
-                    /*
-                    resultadoFinal.Add(((EntityConnection)this.Datos.Connection).StoreConnection.Database);
-                        */
                 }
             }
             catch (Exception ex)
@@ -119,13 +109,8 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         public string[] ListarTablas(string baseDeDatos)
         {
             List<string> resultadoFinal = new List<string>();
-            /*
-            if (baseDeDatos != ((EntityConnection)this.Datos.Connection).StoreConnection.Database)
-            {
-                throw new ArgumentOutOfRangeException("baseDeDatos");
-            }
-            */
-            try
+
+			try
             {
                 using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
                 {
@@ -137,16 +122,6 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
                                           select tabla).ToList();
 
                     resultadoFinal = tablasAMostrar;
-
-                    /*
-                    var tablasDelModelo = this.Datos.MetadataWorkspace.GetItems<EntityType>(DataSpace.SSpace);
-
-                    var tablasAMostrar = (from tabla in tablasDelModelo
-                                          where this.tablasPermitidas.Any(t => t == tabla.Name)
-                                          select tabla.Name).ToList();
-
-                    resultadoFinal = tablasAMostrar;
-                     */
                 }
             }
             catch (Exception ex)
@@ -166,17 +141,6 @@ namespace Zuliaworks.Netzuela.Spuria.ServidorApi
         public DataTableXml LeerTabla(string baseDeDatos, string tabla)
         {
             DataTableXml datosAEnviar = null;
-            /*
-            if (baseDeDatos != ((EntityConnection)this.Datos.Connection).StoreConnection.Database)
-            {
-                throw new ArgumentOutOfRangeException("baseDeDatos");
-            }
-
-            if (!this.tablasPermitidas.Any(t => t == tabla))
-            {
-                throw new ArgumentOutOfRangeException("tabla");
-            }
-            */
 
             /*
              * Para convertir un LINQ en DataTable:

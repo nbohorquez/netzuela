@@ -1,4 +1,4 @@
-﻿namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.TiposApi
 {
     using System;
     using System.Collections.Generic;
@@ -13,7 +13,7 @@
     {
         #region Constantes
 
-        private const string Tipo = "Zuliaworks.Netzuela.Spuria.Api.DataTableXml";
+        private const string Tipo = "Zuliaworks.Netzuela.Spuria.TiposApi.DataTableXml";
         private const string BaseDeDatosPropiedad = "BaseDeDatos";
         private const string NombreTablaPropiedad = "NombreTabla";
         private const string EsquemaXmlPropiedad = "EsquemaXml";

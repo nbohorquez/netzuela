@@ -1,4 +1,4 @@
-﻿namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.TiposApi
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@
     using System.ServiceModel.Web;
     using System.Text;
 
-    [DataContract]
+    [DataContract(Namespace = Constantes.Namespace)]
     public class DataTableXml
     {
         #region Constructores

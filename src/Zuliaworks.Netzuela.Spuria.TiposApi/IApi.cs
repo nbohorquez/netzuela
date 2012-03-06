@@ -1,4 +1,4 @@
-﻿namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.TiposApi
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +9,8 @@
     /// <summary>
     /// Definición de la API pública de Spuria.
     /// </summary>
-    [ServiceContract(Namespace = "http://netzuela.zuliaworks.com/spuria/api_publica")]    
-    public interface IApiPublica
+    [ServiceContract(Namespace = Constantes.Namespace)]    
+    public interface IApi
     {
         /// <summary>
         /// Lista las bases de datos disponibles en el servidor.

@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Zuliaworks.Netzuela.Spuria.ServidorApi
+namespace Zuliaworks.Netzuela.Spuria.Api
 {
     using System;
     using System.Collections.Generic;

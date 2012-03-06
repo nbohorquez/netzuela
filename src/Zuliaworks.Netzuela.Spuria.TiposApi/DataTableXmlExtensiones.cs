@@ -1,4 +1,4 @@
-﻿namespace Zuliaworks.Netzuela.Spuria.Api
+﻿namespace Zuliaworks.Netzuela.Spuria.TiposApi
 {
     using System;
     using System.Collections.Generic;

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // La información general sobre un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("Datos")]
-[assembly: AssemblyDescription("Puerta de acceso a la base de datos")]
+[assembly: AssemblyTitle("API Publica")]
+[assembly: AssemblyDescription("Conjunto de funciones expuestas a los clientes Valeria.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Zuliaworks")]
-[assembly: AssemblyProduct("Datos")]
-[assembly: AssemblyCopyright("Copyright © Zuliaworks 2012")]
+[assembly: AssemblyCompany("Zuliawork")]
+[assembly: AssemblyProduct("API Publica")]
+[assembly: AssemblyCopyright("Copyright © Zuliawork 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
-[assembly: Guid("4be1a542-d03d-4a7b-b512-bb63fa2a8b65")]
+[assembly: Guid("f521c702-da5d-4756-8aba-9979e6313a03")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //
