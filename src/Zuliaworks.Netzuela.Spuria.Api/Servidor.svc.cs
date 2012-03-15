@@ -17,8 +17,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
     using System.ServiceModel.Web;
     using System.Text;
 
-    using Zuliaworks.Netzuela.Spuria.TiposApi;      // IApiPublica
     using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
+	using Zuliaworks.Netzuela.Spuria.TiposApi;      // IApi
 
     /*
      * Para informacion sobre concurrencia ver: http://www.codeproject.com/KB/WCF/WCFConcurrency.aspx
@@ -46,7 +46,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         /// </summary>
         public Servidor()
         {
-            using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
+			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
                 conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
 

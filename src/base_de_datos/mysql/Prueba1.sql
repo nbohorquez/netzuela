@@ -129,7 +129,7 @@ SELECT InsertarTienda (
     NULL, NULL, NULL, 
     '3194', NULL,
     'Zulia',
-    'Delicias N.', 
+    'Delicias Nuevas', 
     NULL,
     'www.facebook.com/tienditadejose',
     NULL

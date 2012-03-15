@@ -156,13 +156,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 SELECT InsertarCategoria('Libros', @CategoriaRaiz) INTO @bobo;
 SELECT InsertarCategoria('Computadoras', @CategoriaRaiz) INTO @bobo;
 SELECT InsertarCategoria('Electronica', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Salud y farmacia', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Juguetes y niños', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Ropa y calzado', @CategoriaRaiz) INTO @bobo;
+SELECT InsertarCategoria('Salud - farmacia', @CategoriaRaiz) INTO @bobo;
+SELECT InsertarCategoria('Juguetes - ninos', @CategoriaRaiz) INTO @bobo;
+SELECT InsertarCategoria('Ropa - calzado', @CategoriaRaiz) INTO @bobo;
 SELECT InsertarCategoria('Joyas', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Deportes y entretenimiento', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Ferreterias y materiales', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Automotriz e industrial', @CategoriaRaiz) INTO @bobo;
+SELECT InsertarCategoria('Deportes - entretenimiento', @CategoriaRaiz) INTO @bobo;
+SELECT InsertarCategoria('Ferreterias - materiales', @CategoriaRaiz) INTO @bobo;
+SELECT InsertarCategoria('Automotriz - industrial', @CategoriaRaiz) INTO @bobo;
 SELECT InsertarCategoria('No asignada', @CategoriaRaiz) INTO @bobo;
 
 /*

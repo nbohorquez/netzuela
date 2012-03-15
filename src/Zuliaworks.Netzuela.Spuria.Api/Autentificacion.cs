@@ -45,20 +45,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                 {
                     throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
                 }
-                
-                /*
-                acceso acceso = Proveedor.Spuria.acceso.DefaultIfEmpty(null).FirstOrDefault(a => a.CorreoElectronico == userName);
-
-                if (acceso == null)
-                {
-                    throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
-                }
-
-                if (acceso.Contrasena != password)
-                {
-                    throw new FaultException(string.Format("Usuario ({0}) o contraseña incorrecta", userName));
-                }
-                 */
             }
         }
     }

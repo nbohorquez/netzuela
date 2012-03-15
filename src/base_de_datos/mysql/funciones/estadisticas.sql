@@ -1,5 +1,5 @@
-SELECT 'Funciones sobre estadisticas.sql';
-USE `Spuria`;
+SELECT 'estadisticas.sql';
+USE `spuria`;
 
 /*
 *************************************************************
@@ -33,17 +33,17 @@ BEGIN
         RETURN -1048;
     END; 
 
-    SELECT COUNT(*) FROM EstadisticasTemporales
-    WHERE EstadisticasID = a_EstadisticasID
+    SELECT COUNT(*) FROM estadisticas_temporales
+    WHERE estadisticas_id = a_EstadisticasID
     INTO C;
   
     IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
-        UPDATE EstadisticasTemporales
-        SET FechaFin = NOW() 
-        WHERE EstadisticasID = a_EstadisticasID AND FechaFin IS NULL;
+        UPDATE estadisticas_temporales
+        SET fecha_fin = NOW() 
+        WHERE estadisticas_id = a_EstadisticasID AND fecha_fin IS NULL;
     END IF;
 	
-    INSERT INTO EstadisticasTemporales VALUES (
+    INSERT INTO estadisticas_temporales VALUES (
         a_EstadisticasID,
         NOW(),
         NULL,
@@ -87,17 +87,17 @@ BEGIN
         RETURN -1048;
     END; 
 
-    SELECT COUNT(*) FROM ContadorDeExhibiciones
-    WHERE EstadisticasDeVisitasID = a_EstadisticasDeVisitasID
+    SELECT COUNT(*) FROM contador_de_exhibiciones
+    WHERE estadisticas_de_visitas_id = a_EstadisticasDeVisitasID
     INTO C;
 
     IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
-        UPDATE ContadorDeExhibiciones
-        SET FechaFin = NOW() 
-        WHERE EstadisticasDeVisitasID = a_EstadisticasDeVisitasID AND FechaFin IS NULL;
+        UPDATE contador_de_exhibiciones
+        SET fecha_fin = NOW() 
+        WHERE estadisticas_de_visitas_id = a_EstadisticasDeVisitasID AND fecha_fin IS NULL;
     END IF;
 	
-    INSERT INTO ContadorDeExhibiciones VALUES (
+    INSERT INTO contador_de_exhibiciones VALUES (
         a_EstadisticasDeVisitasID,
         NOW(),
         NULL,
@@ -148,7 +148,7 @@ BEGIN
 
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
 
-    INSERT INTO Estadisticas VALUES (
+    INSERT INTO estadisticas VALUES (
         Rastreable_P,
         NULL,
         a_RegionGeografica
@@ -201,7 +201,7 @@ BEGIN
 
     SELECT InsertarEstadisticas(a_Creador, a_RegionGeografica) INTO Estadisticas_P;
 	
-    INSERT INTO EstadisticasDeInfluencia VALUES (
+    INSERT INTO estadisticas_de_influencia VALUES (
         Estadisticas_P,
         NULL,
         a_Palabra,
@@ -252,7 +252,7 @@ BEGIN
 
     SELECT InsertarEstadisticas(a_Creador, a_RegionGeografica) INTO Estadisticas_P;
 	
-    INSERT INTO EstadisticasDePopularidad VALUES (
+    INSERT INTO estadisticas_de_popularidad VALUES (
         Estadisticas_P,
         NULL,
         a_CalificableSeguible,
@@ -303,7 +303,7 @@ BEGIN
 
     SELECT InsertarEstadisticas(a_Creador, a_RegionGeografica) INTO Estadisticas_P;
 
-    INSERT INTO EstadisticasDeVisitas VALUES (
+    INSERT INTO estadisticas_de_visitas VALUES (
         Estadisticas_P,
         NULL,
         a_Buscable
