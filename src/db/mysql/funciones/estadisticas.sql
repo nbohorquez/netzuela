@@ -18,6 +18,7 @@ CREATE FUNCTION `InsertarEstadisticasTemporales` (a_EstadisticasID INT, a_Contad
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE C INT;
+	DECLARE Ahora DECIMAL(17,3);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -36,16 +37,18 @@ BEGIN
     SELECT COUNT(*) FROM estadisticas_temporales
     WHERE estadisticas_id = a_EstadisticasID
     INTO C;
+
+	SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
   
     IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
         UPDATE estadisticas_temporales
-        SET fecha_fin = NOW() 
+        SET fecha_fin = Ahora
         WHERE estadisticas_id = a_EstadisticasID AND fecha_fin IS NULL;
     END IF;
 	
     INSERT INTO estadisticas_temporales VALUES (
         a_EstadisticasID,
-        NOW(),
+        Ahora,
         NULL,
         a_Contador,
         a_Ranking,
@@ -72,6 +75,7 @@ CREATE FUNCTION `InsertarContadorDeExhibiciones` (a_EstadisticasDeVisitasID INT,
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE C INT;
+    DECLARE Ahora DECIMAL(17,3);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -91,15 +95,17 @@ BEGIN
     WHERE estadisticas_de_visitas_id = a_EstadisticasDeVisitasID
     INTO C;
 
+    SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
+
     IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
         UPDATE contador_de_exhibiciones
-        SET fecha_fin = NOW() 
+        SET fecha_fin = Ahora 
         WHERE estadisticas_de_visitas_id = a_EstadisticasDeVisitasID AND fecha_fin IS NULL;
     END IF;
 	
     INSERT INTO contador_de_exhibiciones VALUES (
         a_EstadisticasDeVisitasID,
-        NOW(),
+        Ahora,
         NULL,
         a_ContadorDeExhibiciones
     );

@@ -1,5 +1,5 @@
-SELECT 'Busquedas.sql';
-USE `Spuria`;
+SELECT 'busquedas.sql';
+USE `spuria`;
 
 /*
 *************************************************************
@@ -17,7 +17,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarBuscable` ()
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    INSERT INTO Buscable VALUES (NULL);
+    INSERT INTO buscable VALUES (NULL);
     RETURN LAST_INSERT_ID();
 END$$
 
@@ -63,12 +63,12 @@ BEGIN
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
     SELECT InsertarEtiquetable() INTO Etiquetable_P;
 
-    INSERT INTO Busqueda VALUES (
+    INSERT INTO busqueda VALUES (
         Rastreable_P,
         Etiquetable_P,
         NULL,
         a_UsuarioID,
-        NOW(),
+        DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f'),
         a_Contenido
     );
 
@@ -112,7 +112,7 @@ BEGIN
         RETURN -1048;
     END; 
 
-    INSERT INTO ResultadoDeBusqueda VALUES (
+    INSERT INTO resultado_de_busqueda VALUES (
         a_BusquedaID,
         a_BuscableID,
         FALSE, 

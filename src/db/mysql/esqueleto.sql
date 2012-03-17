@@ -81,13 +81,13 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`rastreable` (
   `rastreable_id` INT NOT NULL AUTO_INCREMENT ,
-  `fecha_de_creacion` DATETIME NOT NULL ,
+  `fecha_de_creacion` DECIMAL(17,3) NOT NULL ,
   `creado_por` INT NOT NULL ,
-  `fecha_de_modificacion` DATETIME NOT NULL ,
+  `fecha_de_modificacion` DECIMAL(17,3) NOT NULL ,
   `modificado_por` INT NOT NULL ,
-  `fecha_de_eliminacion` DATETIME NULL ,
+  `fecha_de_eliminacion` DECIMAL(17,3) NULL ,
   `eliminado_por` INT NULL ,
-  `fecha_de_acceso` DATETIME NOT NULL ,
+  `fecha_de_acceso` DECIMAL(17,3) NOT NULL ,
   `accesado_por` INT NOT NULL ,
   PRIMARY KEY (`rastreable_id`) )
 ENGINE = InnoDB;
@@ -749,8 +749,8 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`acceso` (
   `conectado` TINYINT(1) NOT NULL ,
   `correo_electronico` VARCHAR(45) NOT NULL ,
   `contrasena` VARCHAR(45) NOT NULL ,
-  `fecha_de_registro` DATETIME NOT NULL ,
-  `fecha_de_ultimo_acceso` DATETIME NULL ,
+  `fecha_de_registro` DECIMAL(17,3) NOT NULL ,
+  `fecha_de_ultimo_acceso` DECIMAL(17,3) NULL ,
   `duracion_de_ultimo_acceso` TIME NOT NULL ,
   `numero_total_de_accesos` INT NOT NULL ,
   `tiempo_total_de_accesos` TIME NOT NULL ,
@@ -774,7 +774,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`busqueda` (
   `etiquetable_p` INT NOT NULL ,
   `busqueda_id` INT NOT NULL AUTO_INCREMENT ,
   `usuario` INT NOT NULL ,
-  `fecha_hora` DATETIME NOT NULL ,
+  `fecha_hora` DECIMAL(17,3) NOT NULL ,
   `contenido` TEXT NOT NULL ,
   PRIMARY KEY (`busqueda_id`) ,
   INDEX `fk_Busqueda_Usuario` (`usuario` ASC) ,
@@ -1171,7 +1171,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`registro` (
   `registro_id` INT NOT NULL AUTO_INCREMENT ,
-  `fecha_hora` DATETIME NULL ,
+  `fecha_hora` DECIMAL(17,3) NULL ,
   `actor_activo` INT NOT NULL ,
   `actor_pasivo` INT NULL ,
   `accion` CHAR(13) NOT NULL ,
@@ -1222,8 +1222,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`contador_de_exhibiciones` (
   `estadisticas_de_visitas_id` INT NOT NULL ,
-  `fecha_inicio` DATETIME NOT NULL ,
-  `fecha_fin` DATETIME NULL ,
+  `fecha_inicio` DECIMAL(17,3) NOT NULL ,
+  `fecha_fin` DECIMAL(17,3) NULL ,
   `valor` INT NOT NULL ,
   PRIMARY KEY (`estadisticas_de_visitas_id`, `fecha_inicio`) ,
   INDEX `fk_ContadorDeExhibiciones_EstadisticasDeVisitas` (`estadisticas_de_visitas_id` ASC) ,
@@ -1241,8 +1241,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`tamano` (
   `tienda_id` INT NOT NULL ,
-  `fecha_inicio` DATETIME NOT NULL ,
-  `fecha_fin` DATETIME NULL ,
+  `fecha_inicio` DECIMAL(17,3) NOT NULL ,
+  `fecha_fin` DECIMAL(17,3) NULL ,
   `numero_total_de_productos` INT NOT NULL ,
   `cantidad_total_de_productos` INT NULL ,
   `valor` INT NULL ,
@@ -1481,8 +1481,8 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`factura` (
   `rastreable_p` INT NOT NULL ,
   `factura_id` INT NOT NULL AUTO_INCREMENT ,
   `cliente` CHAR(10) NOT NULL ,
-  `inicio_de_medicion` DATETIME NOT NULL ,
-  `fin_de_medicion` DATETIME NOT NULL ,
+  `inicio_de_medicion` DECIMAL(17,3) NOT NULL ,
+  `fin_de_medicion` DECIMAL(17,3) NOT NULL ,
   `subtotal` DECIMAL NOT NULL ,
   `impuestos` DECIMAL NOT NULL ,
   `total` DECIMAL NOT NULL ,
@@ -1651,8 +1651,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`estadisticas_temporales` (
   `estadisticas_id` INT NOT NULL ,
-  `fecha_inicio` DATETIME NOT NULL ,
-  `fecha_fin` DATETIME NULL ,
+  `fecha_inicio` DECIMAL(17,3) NOT NULL ,
+  `fecha_fin` DECIMAL(17,3) NULL ,
   `contador` INT NOT NULL ,
   `ranking` INT NOT NULL ,
   `indice` INT NOT NULL ,
@@ -1672,8 +1672,8 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `spuria`.`precio_cantidad` (
   `tienda_id` INT NOT NULL COMMENT '	' ,
   `codigo` CHAR(15) NOT NULL ,
-  `fecha_inicio` DATETIME NOT NULL ,
-  `fecha_fin` DATETIME NULL ,
+  `fecha_inicio` DECIMAL(17,3) NOT NULL ,
+  `fecha_fin` DECIMAL(17,3) NULL ,
   `precio` DECIMAL(10,2) NOT NULL ,
   `cantidad` INT NOT NULL ,
   PRIMARY KEY (`tienda_id`, `codigo`, `fecha_inicio`) ,
@@ -1691,8 +1691,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`tiendas_consumidores` (
   `region_geografica_id` INT NOT NULL ,
-  `fecha_inicio` DATETIME NOT NULL ,
-  `fecha_fin` DATETIME NULL ,
+  `fecha_inicio` DECIMAL(17,3) NOT NULL ,
+  `fecha_fin` DECIMAL(17,3) NULL ,
   `numero_de_consumidores` INT UNSIGNED NOT NULL ,
   `numero_de_tiendas` INT UNSIGNED NOT NULL ,
   PRIMARY KEY (`region_geografica_id`, `fecha_inicio`) ,
@@ -1714,6 +1714,11 @@ CREATE TABLE IF NOT EXISTS `spuria`.`inventario_tienda` (`tienda_id` INT, `codig
 -- Placeholder table for view `spuria`.`inventario_reciente`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `spuria`.`inventario_reciente` (`tienda_id` INT, `producto_id` INT, `codigo` INT, `descripcion` INT, `precio` INT, `cantidad` INT);
+
+-- -----------------------------------------------------
+-- Placeholder table for view `spuria`.`tamano_reciente`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `spuria`.`tamano_reciente` (`tienda_id` INT, `fecha_inicio` INT, `numero_total_de_productos` INT, `cantidad_total_de_productos` INT, `valor` INT);
 
 -- -----------------------------------------------------
 -- View `spuria`.`inventario_tienda`
@@ -1759,6 +1764,15 @@ USE `spuria`;
 CREATE  OR REPLACE VIEW `spuria`.`inventario_reciente` AS
 SELECT inventario.tienda_id tienda_id, inventario.producto_id producto_id, inventario.codigo codigo, descripcion, precio, cantidad
 FROM inventario LEFT JOIN precio_cantidad USING (tienda_id, codigo) WHERE fecha_fin IS NULL;
+
+-- -----------------------------------------------------
+-- View `spuria`.`tamano_reciente`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `spuria`.`tamano_reciente`;
+USE `spuria`;
+CREATE  OR REPLACE VIEW `spuria`.`tamano_reciente` AS
+SELECT tienda_id, fecha_inicio, numero_total_de_productos, cantidad_total_de_productos, valor 
+FROM tamano WHERE fecha_fin IS NULL;
 USE `spuria`;
 
 DELIMITER $$
@@ -4263,7 +4277,7 @@ BEGIN
     ) INTO parametros;
     
     SELECT cliente.rastreable_p FROM cliente, tienda
-    WHERE tienda_id = NEW.tienda_id AND RIF = cliente_p
+    WHERE tienda_id = NEW.tienda_id AND rif = cliente_p
     INTO rastreable_p;
     
     SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
@@ -4298,7 +4312,7 @@ BEGIN
     INTO cliente_p;
         
     SELECT cliente.rastreable_p FROM cliente
-    WHERE RIF = cliente_p
+    WHERE rif = cliente_p
     INTO rastreable_p;
         
     IF NEW.fecha_fin != OLD.fecha_fin THEN

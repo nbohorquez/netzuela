@@ -1,14 +1,14 @@
-SELECT 'Prueba1.sql';
-USE `Spuria`;
+SELECT 'prueba_1.sql';
+USE `spuria`;
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-DELETE FROM Producto;
-DELETE FROM Tienda;
-DELETE FROM Patrocinante;
-DELETE FROM Consumidor;
+DELETE FROM producto;
+DELETE FROM tienda;
+DELETE FROM patrocinante;
+DELETE FROM consumidor;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -26,8 +26,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
    Se crea solo un producto para probar el funcionamiento de la base de datos
 */
 
-SELECT CategoriaID FROM Categoria 
-WHERE Nombre = 'Electronica' 
+SELECT categoria_id FROM categoria 
+WHERE nombre = 'Electronica' 
 INTO @CategoriaID;
 
 SELECT InsertarProducto (
@@ -111,8 +111,8 @@ Usuario --------> Administrador
 
 /* TIENDA 1 */
 
-SELECT ParroquiaID FROM Parroquia, RegionGeografica 
-WHERE RegionGeografica.Nombre = 'Ambrosio' AND Parroquia.RegionGeografica_P = RegionGeografica.RegionGeograficaID
+SELECT parroquia_id FROM parroquia, region_geografica 
+WHERE region_geografica.nombre = 'Ambrosio' AND parroquia.region_geografica_p = region_geografica.region_geografica_id
 INTO @ParroquiaID;
 
 SELECT InsertarTienda (
@@ -153,8 +153,8 @@ SELECT InsertarTurno(@TiendaID1, 'Domingo', '00:00:00', '00:00:00') INTO @HT7ID;
 
 /* TIENDA 2 */
 
-SELECT ParroquiaID FROM Parroquia, RegionGeografica 
-WHERE RegionGeografica.Nombre = 'La Rosa' AND Parroquia.RegionGeografica_P = RegionGeografica.RegionGeograficaID
+SELECT parroquia_id FROM parroquia, region_geografica 
+WHERE region_geografica.nombre = 'La Rosa' AND parroquia.region_geografica_p = region_geografica.region_geografica_id
 INTO @ParroquiaID;
 
 SELECT InsertarTienda (
@@ -201,16 +201,16 @@ SELECT InsertarTurno(@TiendaID2, 'Domingo', '11:00:00', '22:00:00') INTO @HT7ID;
 *******************************************************
 */
 
-SELECT Rastreable_P FROM Tienda, Cliente
-WHERE Tienda.TiendaID = @TiendaID1 AND Cliente.RIF = Tienda.Cliente_P
+SELECT rastreable_p FROM tienda, cliente
+WHERE tienda.tienda_id = @TiendaID1 AND cliente.rif = tienda.cliente_p
 INTO @TiendaRastreable;
 
 SELECT InsertarInventario(@TiendaRastreable, @TiendaID1, 'TD-015SC', 'Computadora SGI 02', 'Ambos visibles', @ProductoID1, 640.00, 12);
 SELECT InsertarInventario(@TiendaRastreable, @TiendaID1, 'TD-1841C', 'Celular N78 Ve', 'Ambos visibles', @ProductoID2, 104.00, 9);
 SELECT InsertarInventario(@TiendaRastreable, @TiendaID1, 'TD-99410', 'Control de N64 Gris', 'Ambos visibles', @ProductoID3, 8400.00, 2);
 
-SELECT Rastreable_P FROM Tienda, Cliente
-WHERE Tienda.TiendaID = @TiendaID2 AND Cliente.RIF = Tienda.Cliente_P
+SELECT rastreable_p FROM tienda, cliente
+WHERE tienda.tienda_id = @TiendaID2 AND cliente.rif = tienda.cliente_p
 INTO @TiendaRastreable;
 
 SELECT InsertarInventario(@TiendaRastreable, @TiendaID2, 'PSDC-41C', 'Microfono en vivo SM57 XLR', 'Ambos visibles', @ProductoID4, 1500.00, 4);
@@ -245,12 +245,12 @@ SELECT InsertarConsumidor (
 *******************************************************
 */
 
-SELECT Interlocutor_P, Rastreable_P FROM Consumidor 
-WHERE Nombre = 'Alberto' AND Apellido = 'Atkins' 
+SELECT interlocutor_p, rastreable_p FROM consumidor 
+WHERE nombre = 'Alberto' AND apellido = 'Atkins' 
 INTO @InterlocutorA, @ConsumidorRastreable;
 
-SELECT Interlocutor_P FROM Tienda 
-WHERE TiendaID = @TiendaID1
+SELECT interlocutor_p FROM tienda 
+WHERE tienda_id = @TiendaID1
 INTO @InterlocutorB;
 
 SELECT InsertarMensaje (
@@ -299,17 +299,17 @@ SELECT InsertarPatrocinante (
 *******************************************************
 */
 
-SELECT Cliente.Rastreable_P FROM Cliente, Patrocinante
-WHERE Patrocinante.PatrocinanteID = @PatrocinanteID AND Patrocinante.Cliente_P = Cliente.RIF
+SELECT cliente.rastreable_p FROM cliente, patrocinante
+WHERE patrocinante.patrocinante_id = @PatrocinanteID AND patrocinante.cliente_p = cliente.rif
 INTO @ClienteRastreable;
 
 SELECT InsertarPublicidad(@ClienteRastreable, @PatrocinanteID) INTO @PublicidadID;
 
-SELECT InsertarGrupoDeEdadObjetivo(@PublicidadID, 'Adultos jovenes') INTO @bobo;
-SELECT InsertarGradoDeInstruccionObjetivo(@PublicidadID, 'Universitaria') INTO @bobo;
-SELECT InsertarRegionGeograficaObjetivo(@PublicidadID, @ParroquiaID) INTO @bobo;
-SELECT InsertarSexoObjetivo(@PublicidadID, 'Hombre') INTO @bobo;
-SELECT InsertarConsumidorObjetivo(@PublicidadID, @ConsumidorID) INTO @bobo;
+SELECT InsertarGrupoDeEdadObjetivo(@PublicidadID, 'Adultos jovenes');
+SELECT InsertarGradoDeInstruccionObjetivo(@PublicidadID, 'Universitaria');
+SELECT InsertarRegionGeograficaObjetivo(@PublicidadID, @ParroquiaID);
+SELECT InsertarSexoObjetivo(@PublicidadID, 'Hombre');
+SELECT InsertarConsumidorObjetivo(@PublicidadID, @ConsumidorID);
 
 /*
 *******************************************************
@@ -319,16 +319,16 @@ SELECT InsertarConsumidorObjetivo(@PublicidadID, @ConsumidorID) INTO @bobo;
 *******************************************************
 */
 
-SELECT Usuario_P FROM Consumidor
-WHERE Rastreable_P = @ConsumidorRastreable
+SELECT usuario_p FROM consumidor
+WHERE rastreable_p = @ConsumidorRastreable
 INTO @UsuarioID;
 
-SELECT Buscable_P FROM Producto
-WHERE ProductoID = @ProductoID1
+SELECT buscable_p FROM producto
+WHERE producto_id = @ProductoID1
 INTO @BuscableID;
 
 SELECT InsertarBusqueda(@ConsumidorRastreable, @UsuarioID, 'Motor de aviones') INTO @BusquedaID;
-SELECT InsertarResultadoDeBusqueda(@BusquedaID, @BuscableID, 0.91) INTO @bobo;
+SELECT InsertarResultadoDeBusqueda(@BusquedaID, @BuscableID, 0.91);
 
 /*
 *******************************************************
@@ -338,11 +338,11 @@ SELECT InsertarResultadoDeBusqueda(@BusquedaID, @BuscableID, 0.91) INTO @bobo;
 *******************************************************
 */
 
-SELECT CalificableSeguible_P FROM Tienda
-WHERE TiendaID = @TiendaID2
+SELECT calificable_seguible_p FROM tienda
+WHERE tienda_id = @TiendaID2
 INTO @CalificableID;
 
-SELECT InsertarCalificacionResena(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'Mal', 'Mas mala quer cono...') INTO @bobo;
+SELECT InsertarCalificacionResena(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'Mal', 'Mas mala quer cono...');
 
 /*
 *******************************************************
@@ -352,7 +352,7 @@ SELECT InsertarCalificacionResena(@ConsumidorRastreable, @CalificableID, @Consum
 *******************************************************
 */
 
-SELECT InsertarSeguidor(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'TENEIS QUE REVISAR LO DE AVISARSI') INTO @bobo;
+SELECT InsertarSeguidor(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'TENEIS QUE REVISAR LO DE AVISARSI');
 
 /*
 *******************************************************
@@ -362,11 +362,16 @@ SELECT InsertarSeguidor(@ConsumidorRastreable, @CalificableID, @ConsumidorID, 'T
 *******************************************************
 */
 
-SELECT Describible_P FROM Producto
-WHERE ProductoID = @ProductoID1
+SELECT describible_p FROM producto
+WHERE producto_id = @ProductoID1
 INTO @ProductoDescribible;
 
-SELECT InsertarDescripcion(@ConsumidorRastreable, @ProductoDescribible, 'El motor aeroespacial PAE-1516 de 20kN de empuje...') INTO @bobo;
+SELECT describible_p FROM cliente, tienda
+WHERE tienda.tienda_id = @TiendaID1 AND cliente.rif = tienda.cliente_p
+INTO @Tienda1Describible;
+
+SELECT InsertarDescripcion(@ConsumidorRastreable, @ProductoDescribible, 'El motor aeroespacial PAE-1516 de 20kN de empuje...');
+SELECT InsertarDescripcion(@ConsumidorRastreable, @Tienda1Describible, 'Raw denim you probably haven\'t heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.');
 
 /*
 *******************************************************
@@ -376,20 +381,20 @@ SELECT InsertarDescripcion(@ConsumidorRastreable, @ProductoDescribible, 'El moto
 *******************************************************
 */
 
-SELECT Cobrable_P FROM Publicidad
-WHERE PublicidadID = @PublicidadID
+SELECT cobrable_p FROM publicidad
+WHERE publicidad_id = @PublicidadID
 INTO @CobrableID;
 
-SELECT Cliente_P FROM Patrocinante
-WHERE PatrocinanteID = @PatrocinanteID
+SELECT cliente_p FROM patrocinante
+WHERE patrocinante_id = @PatrocinanteID
 INTO @ClienteID;
 
-SELECT InsertarFactura(@Creador, @ClienteID, NOW(), '2011-07-29 21:00:00') INTO @FacturaID;
-SELECT InsertarServicioVendido(@FacturaID, @CobrableID) INTO @bobo;
+SELECT InsertarFactura(@Creador, @ClienteID, DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f'), '2011-07-29 21:00:00') INTO @FacturaID;
+SELECT InsertarServicioVendido(@FacturaID, @CobrableID);
 
-UPDATE ServicioVendido
-SET Acumulado = 45454
-WHERE FacturaID = @FacturaID AND CobrableID = @CobrableID;
+UPDATE servicio_vendido
+SET acumulado = 45454
+WHERE factura_id = @FacturaID AND cobrable_id = @CobrableID;
 
 /*
 *******************************************************
@@ -399,13 +404,13 @@ WHERE FacturaID = @FacturaID AND CobrableID = @CobrableID;
 *******************************************************
 */
 
-SELECT Dibujable_P FROM Tienda
-WHERE TiendaID = @TiendaID2
+SELECT dibujable_p FROM tienda
+WHERE tienda_id = @TiendaID2
 INTO @DibujableID;
 
 SELECT InsertarCroquis(@Creador, @DibujableID) INTO @CroquisID;
 SELECT InsertarPunto(10.411534, -71.454783) INTO @PuntoID;
-SELECT InsertarPuntoDeCroquis(@CroquisID, @PuntoID) INTO @bobo;
+SELECT InsertarPuntoDeCroquis(@CroquisID, @PuntoID);
 
 /*
 *******************************************************
@@ -425,10 +430,10 @@ SELECT InsertarPalabra('Avion') INTO @PalabraID;
 *******************************************************
 */
 
-SELECT Buscable_P FROM Tienda
-WHERE TiendaID = @TiendaID1
+SELECT buscable_P FROM tienda
+WHERE tienda_id = @TiendaID1
 INTO @BuscableID;
 
-SELECT InsertarEstadisticasDeVisitas(@Creador, @BuscableID, @ParroquiaID) INTO @bobo;
-SELECT InsertarEstadisticasDePopularidad(@Creador, @CalificableID, @ParroquiaID) INTO @bobo;
-SELECT InsertarEstadisticasDeInfluencia(@Creador, @PalabraID, @ParroquiaID) INTO @bobo;
+SELECT InsertarEstadisticasDeVisitas(@Creador, @BuscableID, @ParroquiaID);
+SELECT InsertarEstadisticasDePopularidad(@Creador, @CalificableID, @ParroquiaID);
+SELECT InsertarEstadisticasDeInfluencia(@Creador, @PalabraID, @ParroquiaID);

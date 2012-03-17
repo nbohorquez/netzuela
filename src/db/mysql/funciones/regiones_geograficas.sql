@@ -18,6 +18,7 @@ CREATE FUNCTION `InsertarTiendasConsumidores` (a_RegionGeograficaID INT, a_Numer
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE C, Pob INT;
+	DECLARE Ahora DECIMAL(17,3);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -37,15 +38,17 @@ BEGIN
     WHERE region_geografica_id = a_RegionGeograficaID
     INTO C;
 
+	SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
+
     IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
         UPDATE tiendas_consumidores
-        SET fecha_fin = NOW() 
+        SET fecha_fin = Ahora
         WHERE region_geografica_id = a_RegionGeograficaID AND fecha_fin IS NULL;
     END IF;
 
     INSERT INTO tiendas_consumidores VALUES (
         a_RegionGeograficaID,
-        NOW(),
+        Ahora,
         NULL,
         a_NumeroDeConsumidores,
         a_NumeroDeTiendas

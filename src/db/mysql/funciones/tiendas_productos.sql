@@ -1,5 +1,5 @@
-SELECT 'TiendasProductos.sql';
-USE `Spuria`;
+SELECT 'tiendas_productos.sql';
+USE `spuria`;
 
 /*
 *************************************************************
@@ -74,7 +74,7 @@ BEGIN
     SELECT InsertarInterlocutor() INTO Interlocutor_P;
     SELECT InsertarDibujable() INTO Dibujable_P;
 
-    INSERT INTO Tienda VALUES (
+    INSERT INTO tienda VALUES (
         Buscable_P,
         Cliente_P,
         CalificableSeguible_P,
@@ -127,7 +127,7 @@ BEGIN
         RETURN -1062;
     END;
 
-    INSERT INTO HorarioDeTrabajo VALUES (
+    INSERT INTO horario_de_trabajo VALUES (
         a_TiendaID, 
         a_Dia,
         a_Laborable
@@ -173,7 +173,7 @@ BEGIN
         RETURN -1062;
     END;
 
-    INSERT INTO Turno VALUES (  
+    INSERT INTO turno VALUES (  
         a_TiendaID,
         a_Dia,
         a_HoraDeApertura,
@@ -200,6 +200,7 @@ CREATE FUNCTION `InsertarTamano` (a_TiendaID INT, a_NumeroTotalDeProductos INT, 
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE C INT;
+	DECLARE Ahora DECIMAL(17,3);
 
     DECLARE EXIT HANDLER FOR 1048   
     BEGIN
@@ -223,19 +224,21 @@ BEGIN
     END;
 
     /* Vemos si ya existe un registro "Tamano" ya asociado a la tabla */    	
-    SELECT COUNT(*) FROM Tamano
-    WHERE TiendaID = a_TiendaID
+    SELECT COUNT(*) FROM tamano
+    WHERE tienda_id = a_TiendaID
     INTO C;
+
+    SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
 		
     IF C > 0 THEN
-        UPDATE Tamano
-        SET FechaFin = NOW()
-        WHERE TiendaID = a_TiendaID AND FechaFin IS NULL;
+        UPDATE tamano
+        SET fecha_fin = Ahora
+        WHERE tienda_id = a_TiendaID AND fecha_fin IS NULL;
     END IF;
 		
-    INSERT INTO Tamano VALUES (
+    INSERT INTO tamano VALUES (
         a_TiendaID,
-        NOW(),
+        Ahora,
         NULL,
         a_NumeroTotalDeProductos,
         a_CantidadTotalDeProductos,
@@ -292,7 +295,7 @@ BEGIN
     SELECT InsertarBuscable() INTO Buscable_P;
     SELECT InsertarCalificableSeguible() INTO CalificableSeguible_P;
 
-    INSERT INTO Producto VALUES (
+    INSERT INTO producto VALUES (
         Rastreable_P,
         Describible_P,
         Buscable_P,
@@ -333,7 +336,7 @@ CREATE FUNCTION `InsertarInventario` (a_Creador INT, a_TiendaID INT, a_Codigo CH
 						a_Visibilidad CHAR(16), a_ProductoID INT, a_Precio DECIMAL(10,2), a_Cantidad INT)
 RETURNS INT DETERMINISTIC
 BEGIN
-    DECLARE Rastreable_P, Cobrable_P, Resultado, ResultadoSecundario INT;
+    DECLARE Rastreable_P, Cobrable_P, Resultado, ResultadoSecundario, Numero, Cantidad, Tamano INT;
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -359,7 +362,7 @@ BEGIN
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
     SELECT InsertarCobrable() INTO Cobrable_P;
 
-    INSERT INTO Inventario VALUES (
+    INSERT INTO inventario VALUES (
         Rastreable_P,
         Cobrable_P,
         a_TiendaID,
@@ -371,6 +374,14 @@ BEGIN
 
     SELECT LAST_INSERT_ID() INTO Resultado;
     SELECT InsertarPrecioCantidad(a_TiendaID, a_Codigo, a_Precio, a_Cantidad) INTO ResultadoSecundario;
+
+    SELECT numero_total_de_productos + 1, cantidad_total_de_productos + a_Cantidad
+    FROM tamano
+    WHERE tienda_id = a_TiendaID AND fecha_fin IS NULL
+    INTO Numero, Cantidad;
+
+    SELECT Numero * Cantidad INTO Tamano;
+    SELECT InsertarTamano(a_TiendaID, Numero, Cantidad, Tamano) INTO ResultadoSecundario;
 
     RETURN TRUE;
 END$$
@@ -392,6 +403,7 @@ CREATE FUNCTION `InsertarPrecioCantidad` (a_TiendaID INT, a_Codigo CHAR(15), a_P
 RETURNS INT DETERMINISTIC
 BEGIN
     DECLARE C INT;
+	DECLARE Ahora DECIMAL(17,3);
 
     DECLARE EXIT HANDLER FOR 1452   
     BEGIN
@@ -408,20 +420,22 @@ BEGIN
     END;
 
     /* Vemos si ya existe un registro "PrecioCantidad" ya asociado al inventario */
-    SELECT COUNT(*) FROM PrecioCantidad
-    WHERE TiendaID = a_TiendaID AND Codigo = a_Codigo
+    SELECT COUNT(*) FROM precio_cantidad
+    WHERE tienda_id = a_TiendaID AND codigo = a_Codigo
     INTO C;
+
+	SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
 		
     IF C > 0 THEN
-        UPDATE PrecioCantidad
-        SET FechaFin = NOW()
-     		WHERE TiendaID = a_TiendaID AND Codigo = a_Codigo AND FechaFin IS NULL;
+        UPDATE precio_cantidad
+        SET fecha_fin = Ahora
+   		WHERE tienda_id = a_TiendaID AND codigo = a_Codigo AND fecha_fin IS NULL;
     END IF;
 
-    INSERT INTO PrecioCantidad VALUES (
+    INSERT INTO precio_cantidad VALUES (
         a_TiendaID,
         a_Codigo,
-        NOW(),
+        Ahora,
         NULL,
         a_Precio,
         a_Cantidad

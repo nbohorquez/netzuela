@@ -52,7 +52,7 @@ BEGIN
         FALSE,
         a_CorreoElectronico,
         a_Contrasena,
-        NOW(),
+        DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f'),
         NULL,
         MAKETIME(0,0,0),
         0, MAKETIME(0,0,0), MAKETIME(0,0,0)

@@ -33,7 +33,7 @@ BEGIN
         
     INSERT INTO registro VALUES (
         NULL,
-        NOW(),
+        DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f'),
         a_ActorActivo,
         a_ActorPasivo,
         a_Accion,

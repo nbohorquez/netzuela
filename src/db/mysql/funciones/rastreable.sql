@@ -15,12 +15,15 @@ DELIMITER $$
 CREATE FUNCTION `InsertarRastreable` (a_Creador INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
+    DECLARE Ahora DECIMAL(17,3);
+    SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
+
     INSERT INTO rastreable VALUES ( 
         NULL,
-        NOW(), a_Creador,
-        NOW(), a_Creador,
+        Ahora, a_Creador,
+        Ahora, a_Creador,
         NULL, NULL,
-        NOW(), a_Creador
+        Ahora, a_Creador
     );	
 
     RETURN LAST_INSERT_ID();
