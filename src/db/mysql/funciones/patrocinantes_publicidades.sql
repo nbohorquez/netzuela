@@ -19,7 +19,7 @@ CREATE FUNCTION `InsertarPatrocinante` (a_Creador INT, a_Parroquia INT, a_Correo
                                         a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
                                         a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
                                         a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
-                                        a_Facebook CHAR(80), a_Twitter CHAR(80))
+                                        a_Facebook CHAR(80), a_Twitter CHAR(80), a_CorreoElectronicoPublico VARCHAR(45))
 RETURNS INT DETERMINISTIC
 BEGIN
     DECLARE Cliente_P CHAR(10);
@@ -65,7 +65,8 @@ BEGIN
         a_Sector_Urb_Barrio, 
         a_PaginaWeb, 
         a_Facebook, 
-        a_Twitter
+        a_Twitter,
+		a_CorreoElectronicoPublico
     ) INTO Cliente_P;
         
     INSERT INTO patrocinante VALUES (
@@ -89,10 +90,10 @@ SELECT 'InsertarPublicidad';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarPublicidad` (a_Creador INT, a_Patrocinante INT)
+CREATE FUNCTION `InsertarPublicidad` (a_Patrocinante INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE Buscable_P, Describible_P, Rastreable_P, Etiquetable_P, Cobrable_P INT;
+    DECLARE buscable, describible, rastreable, etiquetable, cobrable, creador INT;
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -108,18 +109,24 @@ BEGIN
         RETURN -1048;
     END;
 
-    SELECT InsertarBuscable() INTO Buscable_P;
-    SELECT InsertarDescribible() INTO Describible_P;
-    SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
-    SELECT InsertarEtiquetable() INTO Etiquetable_P;
-    SELECT InsertarCobrable() INTO Cobrable_P;
+	SELECT rastreable_p
+	FROM cliente JOIN patrocinante
+	ON cliente.rif = patrocinante.cliente_p 
+	WHERE patrocinante.patrocinante_id = @PatrocinanteID
+	INTO creador;
+
+    SELECT InsertarBuscable() INTO buscable;
+    SELECT InsertarDescribible() INTO describible;
+    SELECT InsertarRastreable(creador) INTO rastreable;
+    SELECT InsertarEtiquetable() INTO etiquetable;
+    SELECT InsertarCobrable() INTO cobrable;
 
     INSERT INTO publicidad VALUES (
-        Buscable_P,
-        Describible_P,
-        Rastreable_P,
-        Etiquetable_P,
-        Cobrable_P,
+        buscable,
+        describible,
+        rastreable,
+        etiquetable,
+        cobrable,
         NULL,
         a_Patrocinante, 
         NULL

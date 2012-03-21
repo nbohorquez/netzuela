@@ -34,10 +34,10 @@ SELECT 'InsertarCalificacionResena';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarCalificacionResena` (a_Creador INT, a_CalificableSeguibleID INT, a_ConsumidorID INT, a_Calificacion CHAR(4), a_Resena TEXT)
+CREATE FUNCTION `InsertarCalificacionResena` (a_CalificableSeguibleID INT, a_ConsumidorID INT, a_Calificacion CHAR(4), a_Resena TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE Etiquetable_P, Rastreable_P INT;
+    DECLARE etiquetable, rastreable, creador INT;
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -60,12 +60,16 @@ BEGIN
         RETURN -1048;
     END;
 
-    SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
-    SELECT InsertarEtiquetable() INTO Etiquetable_P;
+	SELECT rastreable_p FROM consumidor 
+	WHERE consumidor_id = a_ConsumidorID 
+	INTO creador;
+
+    SELECT InsertarRastreable(creador) INTO rastreable;
+    SELECT InsertarEtiquetable() INTO etiquetable;
 
     INSERT INTO calificacion_resena VALUES (
-        Rastreable_P,
-        Etiquetable_P,
+		rastreable,
+        etiquetable,
         a_CalificableSeguibleID,
         a_ConsumidorID,
         a_Calificacion,

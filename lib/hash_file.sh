@@ -24,9 +24,12 @@ done
 dir1=${ARREGLO[0]:0:2}
 dir2=${ARREGLO[0]:2:2}
 archivo=${ARREGLO[0]:4}
+indice_punto=$(expr index "${ARREGLO[1]}" . )
+extension=$( echo ${ARREGLO[1]:$indice_punto} | tr '[A-Z]' '[a-z]')
 
-echo ${ARREGLO[0]}
-echo $dir1 $dir2 $archivo
+echo $extension
+# echo ${ARREGLO[0]}
+# echo $dir1 $dir2 $archivo
 
 # Comprobamos que el directorio de salida existe
 if [ ! $2 ];
@@ -54,7 +57,7 @@ then
 fi
 
 # Copiamos el archivo "hasheado" al directorio de salida
-cp $1 "$base"/"$dir1"/"$dir2"/"$archivo"
-echo 'El archivo' $1 'fue copiado a la ubicacion: ' $base'/'$dir1'/'$dir2'/'$archivo
+cp $1 "$base"/"$dir1"/"$dir2"/"$archivo"."$extension"
+echo 'El archivo' $1 'fue copiado a la ubicacion: ' $base'/'$dir1'/'$dir2'/'$archivo.$extension
 
 exit 1

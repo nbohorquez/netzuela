@@ -19,7 +19,7 @@ CREATE FUNCTION `InsertarTienda` (a_Creador INT, a_Parroquia INT, a_CorreoElectr
                                   a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
                                   a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
                                   a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
-                                  a_Facebook CHAR(80), a_Twitter CHAR(80))
+                                  a_Facebook CHAR(80), a_Twitter CHAR(80), a_CorreoElectronicoPublico VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Buscable_P, CalificableSeguible_P, Interlocutor_P, Dibujable_P, Resultado, T INT;
@@ -66,7 +66,8 @@ BEGIN
         a_Sector_Urb_Barrio, 
         a_PaginaWeb, 
         a_Facebook, 
-        a_Twitter
+        a_Twitter,
+		a_CorreoElectronicoPublico
     ) INTO Cliente_P;
     
     SELECT InsertarBuscable() INTO Buscable_P;
@@ -138,7 +139,7 @@ END$$
 
 /*
 *************************************************************
-*				                InsertarTurno					              *
+*						InsertarTurno						*
 *************************************************************
 */
 
@@ -185,7 +186,7 @@ END$$
 
 /*
 *************************************************************
-*                       InsertarTamano					            *
+*                       InsertarTamano					    *
 *************************************************************
 */
 
@@ -250,7 +251,7 @@ END$$
 
 /*
 *************************************************************
-*				              InsertarProducto				              *
+*						InsertarProducto					*
 *************************************************************
 */
 
@@ -332,12 +333,12 @@ SELECT 'InsertarInventario';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarInventario` (a_Creador INT, a_TiendaID INT, a_Codigo CHAR(15), a_Descripcion VARCHAR(45), 
+CREATE FUNCTION `InsertarInventario` (a_TiendaID INT, a_Codigo CHAR(15), a_Descripcion VARCHAR(45), 
 						a_Visibilidad CHAR(16), a_ProductoID INT, a_Precio DECIMAL(10,2), a_Cantidad INT)
-RETURNS INT DETERMINISTIC
+RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE Rastreable_P, Cobrable_P, Resultado, ResultadoSecundario, Numero, Cantidad, Tamano INT;
-
+    DECLARE rastreable_p, cobrable_p, resultado, numero, cantidad, tamano INT;
+	
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
         SET @MensajeDeError = 'Error de clave externa en InsertarInventario()';
@@ -359,12 +360,18 @@ BEGIN
         RETURN -1062;
     END;
 
-    SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
-    SELECT InsertarCobrable() INTO Cobrable_P;
+	SELECT cliente.rastreable_p 
+	FROM cliente JOIN tienda
+	ON cliente.rif = tienda.cliente_p
+	WHERE tienda.tienda_id = a_TiendaID
+	INTO resultado;
+
+	SELECT InsertarRastreable(resultado) INTO rastreable_p;
+    SELECT InsertarCobrable() INTO cobrable_p;
 
     INSERT INTO inventario VALUES (
-        Rastreable_P,
-        Cobrable_P,
+        rastreable_p,
+        cobrable_p,
         a_TiendaID,
         a_Codigo,
         a_Descripcion,
@@ -372,16 +379,16 @@ BEGIN
         a_ProductoID
     );
 
-    SELECT LAST_INSERT_ID() INTO Resultado;
-    SELECT InsertarPrecioCantidad(a_TiendaID, a_Codigo, a_Precio, a_Cantidad) INTO ResultadoSecundario;
+    SELECT LAST_INSERT_ID() INTO resultado;
+    SELECT InsertarPrecioCantidad(a_TiendaID, a_Codigo, a_Precio, a_Cantidad) INTO resultado;
 
     SELECT numero_total_de_productos + 1, cantidad_total_de_productos + a_Cantidad
     FROM tamano
     WHERE tienda_id = a_TiendaID AND fecha_fin IS NULL
-    INTO Numero, Cantidad;
+    INTO numero, cantidad;
 
-    SELECT Numero * Cantidad INTO Tamano;
-    SELECT InsertarTamano(a_TiendaID, Numero, Cantidad, Tamano) INTO ResultadoSecundario;
+    SELECT numero * cantidad INTO tamano;
+    SELECT InsertarTamano(a_TiendaID, numero, cantidad, tamano) INTO resultado;
 
     RETURN TRUE;
 END$$

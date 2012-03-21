@@ -359,6 +359,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`cliente` (
   `pagina_web` CHAR(40) NULL ,
   `facebook` CHAR(80) NULL ,
   `twitter` CHAR(80) NULL ,
+  `correo_electronico` VARCHAR(45) NULL ,
   INDEX `fk_Cliente_Categoria` (`categoria` ASC) ,
   INDEX `fk_Cliente_Describible` (`describible_p` ASC) ,
   INDEX `fk_Cliente_Estatus` (`estatus` ASC) ,
@@ -2329,6 +2330,17 @@ BEGIN
             NEW.rif,'(twitter)',
             CAST(OLD.twitter AS CHAR),' ahora es ',
             CAST(NEW.twitter AS CHAR)
+        ) INTO parametros;
+    
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF;
+
+    IF NEW.correo_electronico != OLD.correo_electronico THEN
+        SELECT CONCAT(
+            'cliente(columna): ', 
+            NEW.rif,'(correo_electronico)',
+            CAST(OLD.correo_electronico AS CHAR),' ahora es ',
+            CAST(NEW.correo_electronico AS CHAR)
         ) INTO parametros;
     
         SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;

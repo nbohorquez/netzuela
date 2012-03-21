@@ -133,7 +133,7 @@ CREATE FUNCTION `InsertarCliente` (a_Creador INT, a_Parroquia INT, a_CorreoElect
                                    a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
                                    a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
                                    a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
-                                   a_Facebook CHAR(80), a_Twitter CHAR(80))
+                                   a_Facebook CHAR(80), a_Twitter CHAR(80), a_CorreoElectronicoPublico VARCHAR(45))
 RETURNS CHAR(10) NOT DETERMINISTIC
 BEGIN
     DECLARE Rastreable_P, Describible_P, UsuarioID INT;
@@ -162,7 +162,8 @@ BEGIN
 
     SELECT InsertarUsuario (
         a_Parroquia, 
-        a_CorreoElectronico, a_Contrasena
+        a_CorreoElectronico, 
+		a_Contrasena
     ) INTO UsuarioID;
     
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
@@ -187,7 +188,8 @@ BEGIN
         a_Sector_Urb_Barrio,
         a_PaginaWeb,
         a_Facebook,
-        a_Twitter
+        a_Twitter,
+		a_CorreoElectronicoPublico
     );  
         
     RETURN a_RIF;
