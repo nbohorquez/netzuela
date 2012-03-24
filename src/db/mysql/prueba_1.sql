@@ -26,10 +26,6 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
    Se crea solo un producto para probar el funcionamiento de la base de datos
 */
 
-SELECT categoria_id FROM categoria 
-WHERE nombre = 'Electronica' 
-INTO @CategoriaID;
-
 SELECT InsertarProducto (
     @Creador,
     'GTIN-13', 
@@ -38,7 +34,7 @@ SELECT InsertarProducto (
     'Silicon Graphics', 
     'CMN B014ANT300', 
     'O2', 
-    @CategoriaID, 
+    @CategoriaElectronica, 
     '2001/02/20', 
     3.64, 2.18, 
     2.18, 3.94, 
@@ -53,7 +49,7 @@ SELECT InsertarProducto (
     'Nokia', 
     'N78', 
     'Nokia N78', 
-    @CategoriaID, 
+    @CategoriaAutomotrizIndustrial, 
     '1994/08/15', 
     3.64, 2.18, 
     2.18, 0.14, 
@@ -68,7 +64,7 @@ SELECT InsertarProducto (
     'Nintendo', 
     'NUS-001', 
     'Nintendo 64 Control', 
-    @CategoriaID, 
+    @CategoriaElectronica, 
     '1996/09/23', 
     3.64, 2.18, 
     2.18, 0.21, 
@@ -83,7 +79,7 @@ SELECT InsertarProducto (
     'Shure', 
     'SM57', 
     'Microfono SM57', 
-    @CategoriaID, 
+    @CategoriaRopaCalzado, 
     '1996/09/23', 
     3.64, 2.18, 
     2.18, 0.45, 
@@ -123,15 +119,15 @@ SELECT InsertarTienda (
     'molleja@abc.com', 
     '41ssdas#ASX',
     'V180638080', 
-    @CategoriaID, 
+    @CategoriaSaludFarmacia, 
     'Activo', 
     'TiendaABC C.A.', 
     'La Tiendita', 
     '0264-2415497', 
     NULL, NULL, NULL, 
-    '3194', NULL,
-    'Zulia',
-    'Delicias Nuevas', 
+    NULL, NULL,
+    'La Estrella con Jose Maria Vargas',
+    'Bello Monte', 
     NULL,
     'http://www.facebook.com/tienditadejose',
     NULL,
@@ -168,7 +164,7 @@ SELECT InsertarTienda (
     'tca7410nb@gmail.com', 
     '444544sd54sd4sd4s4548494s',
     'J-1515151D', 
-    @CategoriaID, 
+    @CategoriaJoyas, 
     'Activo', 
     'FRALNECA C.A.', 
     'Subway La Rosa', 
@@ -331,7 +327,7 @@ SELECT InsertarPatrocinante (
     'hola@comoestais.com', 
     'pAA101D54Om_4aidf18',
     'V195445890', 
-    @CategoriaID, 
+    @CategoriaLibros, 
     'Activo', 
     'Yordonal C.A.', 
     'Yordonal', 
@@ -511,6 +507,7 @@ SELECT InsertarFoto ('img/e4/71/0923ec6527e7546eccc6f1e984eae96d7d24.jpg', @Prod
 SELECT InsertarFoto ('img/fe/4f/84ca1019e0dbf638fe8589969ef6438841ec.jpg', @Producto3Describible);
 SELECT InsertarFoto ('img/bb/b9/5f60c4299607a49411be2d555ca21265186d.jpg', @Producto4Describible);
 SELECT InsertarFoto ('img/7f/55/0ef228ae58fcf572fe099c2aaf75f40950c2.jpg', @Tienda1Describible);
+SELECT InsertarFoto ('img/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda1Describible);
 SELECT InsertarFoto ('img/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda2Describible);
 
 /*
@@ -545,12 +542,26 @@ WHERE factura_id = @FacturaID AND cobrable_id = @CobrableID;
 */
 
 SELECT dibujable_p FROM tienda
-WHERE tienda_id = @TiendaID2
-INTO @DibujableID;
+WHERE tienda_id = @TiendaID1
+INTO @Tienda1Dibujable;
 
-SELECT InsertarCroquis(@Creador, @DibujableID) INTO @CroquisID;
-SELECT InsertarPunto(10.411534, -71.454783) INTO @PuntoID;
-SELECT InsertarPuntoDeCroquis(@CroquisID, @PuntoID);
+SELECT InsertarCroquis(@Tienda1Rastreable, @Tienda1Dibujable) INTO @Tienda1Croquis;
+SELECT InsertarPunto(10.420891,-71.461491) INTO @PuntoID1;
+SELECT InsertarPuntoDeCroquis(@Tienda1Croquis, @PuntoID1);
+
+SELECT rastreable_p 
+FROM cliente JOIN tienda
+ON cliente.rif = tienda.cliente_p
+WHERE tienda.tienda_id = @TiendaID2
+INTO @Tienda2Rastreable;
+
+SELECT dibujable_p FROM tienda
+WHERE tienda_id = @TiendaID2
+INTO @Tienda2Dibujable;
+
+SELECT InsertarCroquis(@Tienda2Rastreable, @Tienda2Dibujable) INTO @Tienda2Croquis;
+SELECT InsertarPunto(10.401457,-71.470045) INTO @PuntoID1;
+SELECT InsertarPuntoDeCroquis(@Tienda2Croquis, @PuntoID1);
 
 /*
 *********************************************************

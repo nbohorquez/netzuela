@@ -145,25 +145,25 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 /* La categoria 'Inicio' es hija de ella misma */
-SELECT InsertarCategoria('Inicio', -1) INTO @CategoriaRaiz;
-UPDATE categoria SET hijo_de_categoria = @CategoriaRaiz WHERE categoria_id = @CategoriaRaiz;
+SELECT InsertarCategoria('Inicio', -1) INTO @CategoriaInicio;
+UPDATE categoria SET hijo_de_categoria = @CategoriaInicio WHERE categoria_id = @CategoriaInicio;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 /* Hay que agregarle las subdivisiones (mas adelante) */
-SELECT InsertarCategoria('Libros', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Computadoras', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Electronica', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Salud - farmacia', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Juguetes - ninos', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Ropa - calzado', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Joyas', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Deportes - entretenimiento', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Ferreterias - materiales', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('Automotriz - industrial', @CategoriaRaiz) INTO @bobo;
-SELECT InsertarCategoria('No asignada', @CategoriaRaiz) INTO @bobo;
+SELECT InsertarCategoria('Libros', @CategoriaInicio) INTO @CategoriaLibros;
+SELECT InsertarCategoria('Computadoras', @CategoriaInicio) INTO @CategoriaComputadoras;
+SELECT InsertarCategoria('Electronica', @CategoriaInicio) INTO @CategoriaElectronica;
+SELECT InsertarCategoria('Salud - farmacia', @CategoriaInicio) INTO @CategoriaSaludFarmacia;
+SELECT InsertarCategoria('Juguetes - ninos', @CategoriaInicio) INTO @CategoriaJuguetesNinos;
+SELECT InsertarCategoria('Ropa - calzado', @CategoriaInicio) INTO @CategoriaRopaCalzado;
+SELECT InsertarCategoria('Joyas', @CategoriaInicio) INTO @CategoriaJoyas;
+SELECT InsertarCategoria('Deportes - entretenimiento', @CategoriaInicio) INTO @CategoriaDeportesEntretenimiento;
+SELECT InsertarCategoria('Ferreterias - materiales', @CategoriaInicio) INTO @CategoriaFerreteriasMateriales;
+SELECT InsertarCategoria('Automotriz - industrial', @CategoriaInicio) INTO @CategoriaAutomotrizIndustrial;
+SELECT InsertarCategoria('No asignada', @CategoriaRaiz) INTO @CategoriaNoAsignada;
 
 /*
 *************************************************************
