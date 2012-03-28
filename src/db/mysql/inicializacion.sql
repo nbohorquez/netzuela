@@ -163,7 +163,7 @@ SELECT InsertarCategoria('Joyas', @CategoriaInicio) INTO @CategoriaJoyas;
 SELECT InsertarCategoria('Deportes - entretenimiento', @CategoriaInicio) INTO @CategoriaDeportesEntretenimiento;
 SELECT InsertarCategoria('Ferreterias - materiales', @CategoriaInicio) INTO @CategoriaFerreteriasMateriales;
 SELECT InsertarCategoria('Automotriz - industrial', @CategoriaInicio) INTO @CategoriaAutomotrizIndustrial;
-SELECT InsertarCategoria('No asignada', @CategoriaRaiz) INTO @CategoriaNoAsignada;
+SELECT InsertarCategoria('No asignada', @CategoriaInicio) INTO @CategoriaNoAsignada;
 
 /*
 *************************************************************

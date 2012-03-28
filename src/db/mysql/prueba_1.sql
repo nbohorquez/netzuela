@@ -502,13 +502,33 @@ SELECT describible_p FROM cliente, tienda
 WHERE tienda.tienda_id = @TiendaID2 AND cliente.rif = tienda.cliente_p
 INTO @Tienda2Describible;
 
-SELECT InsertarFoto ('img/ca/b7/fedd1d4a20b1437e8c99e84afdbf5dba5975.jpg', @Producto1Describible);
-SELECT InsertarFoto ('img/e4/71/0923ec6527e7546eccc6f1e984eae96d7d24.jpg', @Producto2Describible);
-SELECT InsertarFoto ('img/fe/4f/84ca1019e0dbf638fe8589969ef6438841ec.jpg', @Producto3Describible);
-SELECT InsertarFoto ('img/bb/b9/5f60c4299607a49411be2d555ca21265186d.jpg', @Producto4Describible);
-SELECT InsertarFoto ('img/7f/55/0ef228ae58fcf572fe099c2aaf75f40950c2.jpg', @Tienda1Describible);
-SELECT InsertarFoto ('img/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda1Describible);
-SELECT InsertarFoto ('img/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda2Describible);
+SELECT InsertarFoto ('img/grandes/ca/b7/fedd1d4a20b1437e8c99e84afdbf5dba5975.jpg', @Producto1Describible);
+SELECT InsertarFoto ('img/medianas/ca/b7/fedd1d4a20b1437e8c99e84afdbf5dba5975.jpg', @Producto1Describible);
+SELECT InsertarFoto ('img/pequenas/ca/b7/fedd1d4a20b1437e8c99e84afdbf5dba5975.jpg', @Producto1Describible);
+
+SELECT InsertarFoto ('img/grandes/e4/71/0923ec6527e7546eccc6f1e984eae96d7d24.jpg', @Producto2Describible);
+SELECT InsertarFoto ('img/medianas/e4/71/0923ec6527e7546eccc6f1e984eae96d7d24.jpg', @Producto2Describible);
+SELECT InsertarFoto ('img/pequenas/e4/71/0923ec6527e7546eccc6f1e984eae96d7d24.jpg', @Producto2Describible);
+
+SELECT InsertarFoto ('img/grandes/fe/4f/84ca1019e0dbf638fe8589969ef6438841ec.jpg', @Producto3Describible);
+SELECT InsertarFoto ('img/medianas/fe/4f/84ca1019e0dbf638fe8589969ef6438841ec.jpg', @Producto3Describible);
+SELECT InsertarFoto ('img/pequenas/fe/4f/84ca1019e0dbf638fe8589969ef6438841ec.jpg', @Producto3Describible);
+
+SELECT InsertarFoto ('img/grandes/bb/b9/5f60c4299607a49411be2d555ca21265186d.jpg', @Producto4Describible);
+SELECT InsertarFoto ('img/medianas/bb/b9/5f60c4299607a49411be2d555ca21265186d.jpg', @Producto4Describible);
+SELECT InsertarFoto ('img/pequenas/bb/b9/5f60c4299607a49411be2d555ca21265186d.jpg', @Producto4Describible);
+
+SELECT InsertarFoto ('img/grandes/7f/55/0ef228ae58fcf572fe099c2aaf75f40950c2.jpg', @Tienda1Describible);
+SELECT InsertarFoto ('img/medianas/7f/55/0ef228ae58fcf572fe099c2aaf75f40950c2.jpg', @Tienda1Describible);
+SELECT InsertarFoto ('img/pequenas/7f/55/0ef228ae58fcf572fe099c2aaf75f40950c2.jpg', @Tienda1Describible);
+
+SELECT InsertarFoto ('img/grandes/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda1Describible);
+SELECT InsertarFoto ('img/medianas/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda1Describible);
+SELECT InsertarFoto ('img/pequenas/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda1Describible);
+
+SELECT InsertarFoto ('img/grandes/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda2Describible);
+SELECT InsertarFoto ('img/medianas/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda2Describible);
+SELECT InsertarFoto ('img/pequenas/5a/ae/c182e3c94f7c40774bbdc0d97ff4cfaa776a.jpg', @Tienda2Describible);
 
 /*
 *********************************************************

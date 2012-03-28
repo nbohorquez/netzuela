@@ -1,4 +1,6 @@
 #!/bin/bash
+declare -A TAMANOS=(["grandes"]="500" ["medianas"]="300" ["pequenas"]="160")
+
 # Hacemos las comprobaciones necesarias sobre el primer argumento
 if [ ! $1 ];
 then
@@ -10,7 +12,7 @@ then
 	exit 0
 fi
 
-#Llamamos a sha1sum para que calcule el hash SHA-1 sobre el archivo encomendado
+# Llamamos a sha1sum para que calcule el hash SHA-1 sobre el archivo encomendado
 HASH=`sha1sum $1`
 declare -a ARREGLO
 
@@ -24,12 +26,8 @@ done
 dir1=${ARREGLO[0]:0:2}
 dir2=${ARREGLO[0]:2:2}
 archivo=${ARREGLO[0]:4}
-indice_punto=$(expr index "${ARREGLO[1]}" . )
+indice_punto=$( expr index "${ARREGLO[1]}" . )
 extension=$( echo ${ARREGLO[1]:$indice_punto} | tr '[A-Z]' '[a-z]')
-
-echo $extension
-# echo ${ARREGLO[0]}
-# echo $dir1 $dir2 $archivo
 
 # Comprobamos que el directorio de salida existe
 if [ ! $2 ];
@@ -44,20 +42,43 @@ else
 	base=$2
 fi
 
-# Chequeamos que el primer directorio exista
-if [ ! -d "$base"/"$dir1" ];
-then
-	mkdir "$base"/"$dir1"
-fi
+for i in "${!TAMANOS[@]}"
+do
+	# Chequeamos que el primer directorio exista
+	if [ ! -d "$base"/"$i" ];
+	then
+		mkdir "$base"/"$i"
+	fi
 
-# Chequeamos que el segundo directorio exista
-if [ ! -d "$base"/"$dir1"/"$dir2" ];
-then
-	mkdir "$base"/"$dir1"/"$dir2"
-fi
+	# Chequeamos que el segundo directorio exista
+	if [ ! -d "$base"/"$i"/"$dir1" ];
+	then
+		mkdir "$base"/"$i"/"$dir1"
+	fi
 
-# Copiamos el archivo "hasheado" al directorio de salida
-cp $1 "$base"/"$dir1"/"$dir2"/"$archivo"."$extension"
-echo 'El archivo' $1 'fue copiado a la ubicacion: ' $base'/'$dir1'/'$dir2'/'$archivo.$extension
+	# Chequeamos que el tercer directorio exista
+	if [ ! -d "$base"/"$i"/"$dir1"/"$dir2" ];
+	then
+		mkdir "$base"/"$i"/"$dir1"/"$dir2"
+	fi
+
+	ancho=`identify -format '%w' $1`
+	alto=`identify -format '%h' $1`
+	ruta_archivo="$base"/"$i"/"$dir1"/"$dir2"/"$archivo"."$extension"
+
+	if [ $ancho -gt $alto -a $i = 'pequenas' ];
+	then
+		convert "$1" -resize x"${TAMANOS[$i]}" "$ruta_archivo"
+		ancho=`identify -format '%w' $ruta_archivo`
+		alto=`identify -format '%h' $ruta_archivo`
+		marco=$( echo "($ancho - $alto) / 2" | bc )
+		convert "$ruta_archivo" -shave "$marco"x0 "$ruta_archivo"
+	else
+		convert -resize "${TAMANOS[$i]}" "$1" "$ruta_archivo"
+	fi
+
+	# Convertimos la imagen a los tamanos especificados en TAMANOS
+	echo 'El archivo' $1 'fue copiado a la ubicacion: ' "$ruta_archivo"
+done
 
 exit 1
