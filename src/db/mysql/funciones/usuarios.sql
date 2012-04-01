@@ -14,10 +14,10 @@ SELECT 'InsertarUsuario';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarUsuario` (a_Parroquia INT, a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
+CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE AccesoID INT;
+    DECLARE AccesoID, Rastreable_P INT;
 
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -40,7 +40,10 @@ BEGIN
         RETURN -1452;
     END;
 
-    INSERT INTO usuario VALUES (    
+	SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
+
+    INSERT INTO usuario VALUES ( 
+		Rastreable_P,   
         NULL,
         a_Parroquia
     );
@@ -79,7 +82,7 @@ CREATE FUNCTION `InsertarAdministrador` (a_Creador INT, a_Parroquia INT, a_Corre
                                          a_Nombre VARCHAR(45), a_Apellido VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE Rastreable_P, UsuarioID, AdministradorID INT;
+    DECLARE UsuarioID INT;
     
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -96,14 +99,12 @@ BEGIN
     END;
                                    
     SELECT InsertarUsuario (
+		a_Creador,
         a_Parroquia, 
         a_CorreoElectronico, a_Contrasena
     ) INTO UsuarioID;
 
-    SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
-
     INSERT INTO administrador VALUES (
-        Rastreable_P,
         UsuarioID,
         NULL,
         a_Estatus,
@@ -136,8 +137,7 @@ CREATE FUNCTION `InsertarCliente` (a_Creador INT, a_Parroquia INT, a_CorreoElect
                                    a_Facebook CHAR(80), a_Twitter CHAR(80), a_CorreoElectronicoPublico VARCHAR(45))
 RETURNS CHAR(10) NOT DETERMINISTIC
 BEGIN
-    DECLARE Rastreable_P, Describible_P, UsuarioID INT;
-    DECLARE RIF CHAR(10);
+    DECLARE Describible_P, UsuarioID INT;
 
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -161,16 +161,15 @@ BEGIN
     END;
 
     SELECT InsertarUsuario (
+		a_Creador,
         a_Parroquia, 
         a_CorreoElectronico, 
 		a_Contrasena
     ) INTO UsuarioID;
     
-    SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
     SELECT InsertarDescribible() INTO Describible_P;
         
     INSERT INTO cliente VALUES (
-        Rastreable_P,
         Describible_P,
         UsuarioID,
         a_RIF,

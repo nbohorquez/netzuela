@@ -360,10 +360,11 @@ BEGIN
         RETURN -1062;
     END;
 
-	SELECT cliente.rastreable_p 
-	FROM cliente JOIN tienda
-	ON cliente.rif = tienda.cliente_p
-	WHERE tienda.tienda_id = a_TiendaID
+	SELECT u.rastreable_p
+	FROM usuario AS u
+	LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+	LEFT JOIN tienda AS t ON c.rif = t.cliente_p
+	WHERE t.tienda_id = a_TiendaID
 	INTO resultado;
 
 	SELECT InsertarRastreable(resultado) INTO rastreable_p;

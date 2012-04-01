@@ -53,15 +53,17 @@ BEGIN
         RETURN -1048;
     END; 
 
-	SELECT consumidor.rastreable_p 
-	FROM consumidor
-	WHERE consumidor.interlocutor_p = a_Remitente
+	SELECT u.rastreable_p 
+	FROM usuario AS u
+	LEFT JOIN consumidor AS c ON u.usuario_id = c.usuario_p
+	WHERE c.interlocutor_p = a_Remitente
 	INTO consumidor_rastreable;
 
-	SELECT cliente.rastreable_p
-	FROM cliente JOIN tienda
-	ON cliente.rif = tienda.cliente_p
-	WHERE tienda.interlocutor_p = a_Remitente
+	SELECT u.rastreable_p 
+	FROM usuario AS u
+	LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+	LEfT JOIN tienda AS t ON c.rif = t.cliente_p
+	WHERE t.interlocutor_p = a_Remitente
 	INTO tienda_rastreable;
 
 	SELECT IF(consumidor_rastreable IS NULL, tienda_rastreable, consumidor_rastreable) INTO creador;

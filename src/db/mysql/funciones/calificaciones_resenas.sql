@@ -60,8 +60,10 @@ BEGIN
         RETURN -1048;
     END;
 
-	SELECT rastreable_p FROM consumidor 
-	WHERE consumidor_id = a_ConsumidorID 
+	SELECT u.rastreable_p
+	FROM usuario AS u
+	LEFT JOIN consumidor AS c ON u.usuario_id = c.usuario_p
+	WHERE c.consumidor_id = a_ConsumidorID 
 	INTO creador;
 
     SELECT InsertarRastreable(creador) INTO rastreable;

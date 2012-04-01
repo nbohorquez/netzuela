@@ -37,7 +37,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarBusqueda` (a_UsuarioID INT, a_Contenido TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE etiquetable, rastreable, cliente_rastreable, consumidor_rastreable, creador INT;
+    DECLARE etiquetable, rastreable, creador INT;
     
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -60,24 +60,10 @@ BEGIN
         RETURN -1048;
     END; 
 
-	SELECT cliente.rastreable_p
-	FROM cliente
-	WHERE cliente.usuario_p = a_UsuarioID
-	INTO cliente_rastreable;
-
-	SELECT consumidor.rastreable_p
-	FROM consumidor
-	WHERE consumidor.usuario_p = a_UsuarioID
-	INTO consumidor_rastreable;
-
-	IF cliente_rastreable OR consumidor_rastreable THEN
-		SELECT IF (cliente_rastreable IS NULL, consumidor_rastreable, cliente_rastreable) INTO creador;
-	ELSE
-		SELECT administrador.rastreable_p
-		FROM administrador
-		WHERE administrador.usuario_p = a_UsuarioID
-		INTO creador;
-	END IF;
+	SELECT usuario.rastreable_p
+	FROM usuario
+	WHERE usuario.usuario_id = a_UsuarioID
+	INTO creador;
 	
     SELECT InsertarRastreable(creador) INTO rastreable;
     SELECT InsertarEtiquetable() INTO etiquetable;

@@ -17,7 +17,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarSeguidor` (a_CalificableSeguibleID INT, a_ConsumidorID INT, a_AvisarSi CHAR(40))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE rastreable, creador INT;
+    DECLARE rastreable_p, creador INT;
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -40,15 +40,16 @@ BEGIN
         RETURN -1048;
     END; 
 
-	SELECT rastreable_p
-	FROM consumidor
-	WHERE consumidor_id = a_ConsumidorID
+	SELECT u.rastreable_p
+	FROM usuario AS u
+	LEFT JOIN consumidor AS c ON u.usuario_id = c.usuario_p
+	WHERE c.consumidor_id = a_ConsumidorID
 	INTO creador;
 
-    SELECT InsertarRastreable(creador) INTO rastreable;
+    SELECT InsertarRastreable(creador) INTO rastreable_p;
 
     INSERT INTO seguidor VALUES (
-        rastreable,
+        rastreable_p,
         a_ConsumidorID,
         a_CalificableSeguibleID,
         a_AvisarSi
@@ -76,7 +77,7 @@ CREATE FUNCTION `InsertarConsumidor` (a_Creador INT, a_Nombre VARCHAR(45), a_Ape
                                       a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE Rastreable_P, Interlocutor_P, UsuarioID, ConsumidorID, Creador INT;
+    DECLARE Interlocutor_P, UsuarioID INT;
         
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -93,16 +94,15 @@ BEGIN
     END;
 
     SELECT InsertarUsuario (
+		a_Creador,
         a_Parroquia, 
         a_CorreoElectronico, 
 		a_Contrasena
     ) INTO UsuarioID;
-
-    SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;    
+  
     SELECT InsertarInterlocutor() INTO Interlocutor_P;
 
     INSERT INTO consumidor VALUES (
-        Rastreable_P,
         Interlocutor_P,
         UsuarioID,
         NULL,
