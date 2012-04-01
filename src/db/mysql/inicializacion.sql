@@ -3,9 +3,9 @@ USE `spuria`;
 
 /*
 *************************************************************
-*							  			                                      *
-*			                TABLAS DE BUSQUEDA				            *
-*										                                        *
+*							  			                    *
+*						TABLAS DE BUSQUEDA					*
+*										                    *
 *************************************************************
 */
 
@@ -131,11 +131,11 @@ INSERT INTO huso_horario VALUES("13:00");
 INSERT INTO huso_horario VALUES("14:00");
 
 /*
-*******************************************************
-*							  		                                  *
-*				                CATEGORIAS 				            *
-*									                                    *
-*******************************************************
+*********************************************************
+*														*
+*						CATEGORIAS						*
+*														*
+*********************************************************
 */
 
 SELECT 'categorias';
@@ -145,31 +145,86 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 /* La categoria 'Inicio' es hija de ella misma */
-SELECT InsertarCategoria('Inicio', -1) INTO @CategoriaInicio;
-UPDATE categoria SET hijo_de_categoria = @CategoriaInicio WHERE categoria_id = @CategoriaInicio;
+SELECT InsertarCategoria('Inicio', -1) INTO @Cat_0000;
+UPDATE categoria SET hijo_de_categoria = @Cat_0000 WHERE categoria_id = @Cat_0000;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 /* Hay que agregarle las subdivisiones (mas adelante) */
-SELECT InsertarCategoria('Libros', @CategoriaInicio) INTO @CategoriaLibros;
-SELECT InsertarCategoria('Computadoras', @CategoriaInicio) INTO @CategoriaComputadoras;
-SELECT InsertarCategoria('Electronica', @CategoriaInicio) INTO @CategoriaElectronica;
-SELECT InsertarCategoria('Salud - farmacia', @CategoriaInicio) INTO @CategoriaSaludFarmacia;
-SELECT InsertarCategoria('Juguetes - ninos', @CategoriaInicio) INTO @CategoriaJuguetesNinos;
-SELECT InsertarCategoria('Ropa - calzado', @CategoriaInicio) INTO @CategoriaRopaCalzado;
-SELECT InsertarCategoria('Joyas', @CategoriaInicio) INTO @CategoriaJoyas;
-SELECT InsertarCategoria('Deportes - entretenimiento', @CategoriaInicio) INTO @CategoriaDeportesEntretenimiento;
-SELECT InsertarCategoria('Ferreterias - materiales', @CategoriaInicio) INTO @CategoriaFerreteriasMateriales;
-SELECT InsertarCategoria('Automotriz - industrial', @CategoriaInicio) INTO @CategoriaAutomotrizIndustrial;
-SELECT InsertarCategoria('No asignada', @CategoriaInicio) INTO @CategoriaNoAsignada;
+SELECT InsertarCategoria('Libros', @Cat_0000) INTO @Cat_1000;
+SELECT InsertarCategoria('Novelas', @Cat_1000) INTO @Cat_1100;
+SELECT InsertarCategoria('Poesia', @Cat_1000) INTO @Cat_1200;
+SELECT InsertarCategoria('Tecnicos', @Cat_1000) INTO @Cat_1300;
+SELECT InsertarCategoria('Negocios', @Cat_1000) INTO @Cat_1400;
+SELECT InsertarCategoria('Cocina', @Cat_1000) INTO @Cat_1500;
+
+SELECT InsertarCategoria('Computacion - Electronica', @Cat_0000) INTO @Cat_2000;
+SELECT InsertarCategoria('Instrumentos musicales', @Cat_2000) INTO @Cat_2100;
+SELECT InsertarCategoria('Consolas de videojuegos', @Cat_2000) INTO @Cat_2200;
+SELECT InsertarCategoria('Juegos de video', @Cat_2000) INTO @Cat_2300;
+SELECT InsertarCategoria('Procesadores', @Cat_2000) INTO @Cat_2400;
+SELECT InsertarCategoria('Tarjetas madres', @Cat_2000) INTO @Cat_2500;
+SELECT InsertarCategoria('Memorias', @Cat_2000) INTO @Cat_2600;
+SELECT InsertarCategoria('Discos duros', @Cat_2000) INTO @Cat_2700;
+SELECT InsertarCategoria('Camaras fotograficas', @Cat_2000) INTO @Cat_2800;
+SELECT InsertarCategoria('Camaras de video', @Cat_2000) INTO @Cat_2900;
+SELECT InsertarCategoria('Telefonos celulares', @Cat_2000) INTO @Cat_2A00;
+SELECT InsertarCategoria('Computadoras de escritorio', @Cat_2000) INTO @Cat_2B00;
+SELECT InsertarCategoria('Computadoras portatiles', @Cat_2000) INTO @Cat_2C00;
+
+SELECT InsertarCategoria('Alimentos - Hogar', @Cat_0000) INTO @Cat_3000;
+SELECT InsertarCategoria('Canasta basica', @Cat_3000) INTO @Cat_3100;
+SELECT InsertarCategoria('Limpieza', @Cat_3000) INTO @Cat_3200;
+SELECT InsertarCategoria('Aseo personal', @Cat_3000) INTO @Cat_3300;
+SELECT InsertarCategoria('Viveres', @Cat_3000) INTO @Cat_3400;
+SELECT InsertarCategoria('Carnes', @Cat_3000) INTO @Cat_3500;
+SELECT InsertarCategoria('Enlatados', @Cat_3000) INTO @Cat_3600;
+
+SELECT InsertarCategoria('Juguetes - Ninos', @Cat_0000) INTO @Cat_4000;
+SELECT InsertarCategoria('Peluches', @Cat_4000) INTO @Cat_4100;
+SELECT InsertarCategoria('Figuras de accion', @Cat_4000) INTO @Cat_4200;
+SELECT InsertarCategoria('Munecas', @Cat_4000) INTO @Cat_4300;
+SELECT InsertarCategoria('Trenes', @Cat_4000) INTO @Cat_4400;
+SELECT InsertarCategoria('Aviones', @Cat_4000) INTO @Cat_4500;
+
+SELECT InsertarCategoria('Ropa - Calzado', @Cat_0000) INTO @Cat_5000;
+SELECT InsertarCategoria('Ropa para damas', @Cat_5000) INTO @Cat_5100;
+SELECT InsertarCategoria('Ropa para caballeros', @Cat_5000) INTO @Cat_5200;
+SELECT InsertarCategoria('Calzado para damas', @Cat_5000) INTO @Cat_5300;
+SELECT InsertarCategoria('Calzado para caballeros', @Cat_5000) INTO @Cat_5400;
+
+SELECT InsertarCategoria('Deportes - Aire libre', @Cat_0000) INTO @Cat_6000;
+SELECT InsertarCategoria('Futbol', @Cat_6000) INTO @Cat_6100;
+SELECT InsertarCategoria('Baloncesto', @Cat_6000) INTO @Cat_6200;
+SELECT InsertarCategoria('Tenis', @Cat_6000) INTO @Cat_6300;
+SELECT InsertarCategoria('Rugby', @Cat_6000) INTO @Cat_6400;
+SELECT InsertarCategoria('Beisbol', @Cat_6000) INTO @Cat_6500;
+SELECT InsertarCategoria('Rapel', @Cat_6000) INTO @Cat_6600;
+SELECT InsertarCategoria('Montanismo', @Cat_6000) INTO @Cat_6700;
+
+SELECT InsertarCategoria('Ferreterias', @Cat_0000) INTO @Cat_7000;
+SELECT InsertarCategoria('Herramientas electricas', @Cat_7000) INTO @Cat_7100;
+SELECT InsertarCategoria('Construccion', @Cat_7000) INTO @Cat_7200;
+SELECT InsertarCategoria('Herramientas manuales', @Cat_7000) INTO @Cat_7300;
+SELECT InsertarCategoria('Pinturas', @Cat_7000) INTO @Cat_7400;
+SELECT InsertarCategoria('Lamparas', @Cat_7000) INTO @Cat_7500;
+SELECT InsertarCategoria('Electricidad', @Cat_7000) INTO @Cat_7600;
+
+SELECT InsertarCategoria('Automotriz - Industrial', @Cat_0000) INTO @Cat_8000;
+SELECT InsertarCategoria('Motores', @Cat_8000) INTO @Cat_8100;
+SELECT InsertarCategoria('Alternadores', @Cat_8000) INTO @Cat_8200;
+SELECT InsertarCategoria('Autoperiquitos', @Cat_8000) INTO @Cat_8300;
+SELECT InsertarCategoria('Baterias', @Cat_8000) INTO @Cat_8400;
+
+SELECT InsertarCategoria('No asignada', @Cat_0000) INTO @CategoriaNoAsignada;
 
 /*
 *************************************************************
-*							  			                                      *
-*				                ADMINISTRADOR				                *
-*										                                        *
+*							  								*
+*						ADMINISTRADOR		                *
+*															*
 *************************************************************
 */
 
@@ -202,11 +257,11 @@ SELECT InsertarAdministrador (
 
 SELECT 'continentes';
 /* Continentes del mundo */
-SELECT InsertarContinente(@Creador, 'Africa', 1000000000) INTO @bobo;
+SELECT InsertarContinente(@Creador, 'Africa', 1000000000);
 SELECT InsertarContinente(@Creador, 'America', 910717000) INTO @AmericaID;
-SELECT InsertarContinente(@Creador, 'Asia', 3879000000) INTO @bobo;
-SELECT InsertarContinente(@Creador, 'Europa', 739000000) INTO @bobo;
-SELECT InsertarContinente(@Creador, 'Oceania', 33000000) INTO @bobo;
+SELECT InsertarContinente(@Creador, 'Asia', 3879000000);
+SELECT InsertarContinente(@Creador, 'Europa', 739000000);
+SELECT InsertarContinente(@Creador, 'Oceania', 33000000);
 
 SELECT 'ciudades';
 /* Es necesario crear Caracas D.C. para poder definir a Venezuela */
@@ -230,43 +285,43 @@ SELECT InsertarEstado(@Creador, 'Zulia', 3887171, @VenezuelaID, '-04:30', NULL) 
 
 SELECT 'municipios';
 /* Municipios del Zulia */
-SELECT InsertarMunicipio(@Creador, 'Almirante Padilla',         9030,       @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Baralt',                    80000,      @ZuliaID, NULL) INTO @bobo;
+SELECT InsertarMunicipio(@Creador, 'Almirante Padilla',         9030,       @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Baralt',                    80000,      @ZuliaID, NULL);
 SELECT InsertarMunicipio(@Creador, 'Cabimas',                   273183,     @ZuliaID, NULL) INTO @CabimasID;
-SELECT InsertarMunicipio(@Creador, 'Catatumbo',                 31780,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Colon',                     107821,     @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Francisco Javier Pulgar',   29208,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Jesus Enrique Lossada',     83458,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Jesus Maria Semprun', 	    23972,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'La Canada de Urdaneta',     61527, 	    @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Lagunillas',                169400,     @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Machiques de Perija', 	    93154, 	    @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Mara',                      155918,     @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Maracaibo',                 1495199,    @ZuliaID, @MaracaiboID) INTO @bobo;	/* <-- Forma parte de la ciudad de Maracaibo */
-SELECT InsertarMunicipio(@Creador, 'Miranda', 			            82500, 	    @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Guajira', 			            105000,     @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Rosario de Perija',         67172,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'San Francisco',             424314,     @ZuliaID, @MaracaiboID) INTO @bobo;	/* <-- Forma parte de la ciudad de Maracaibo */
-SELECT InsertarMunicipio(@Creador, 'Santa Rita',                76304,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Simon Bolivar',             50000,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Sucre',                     57396,      @ZuliaID, NULL) INTO @bobo;
-SELECT InsertarMunicipio(@Creador, 'Valmore Rodriguez',         55000,      @ZuliaID, NULL) INTO @bobo;
+SELECT InsertarMunicipio(@Creador, 'Catatumbo',                 31780,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Colon',                     107821,     @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Francisco Javier Pulgar',   29208,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Jesus Enrique Lossada',     83458,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Jesus Maria Semprun', 	    23972,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'La Canada de Urdaneta',     61527, 	    @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Lagunillas',                169400,     @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Machiques de Perija', 	    93154, 	    @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Mara',                      155918,     @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Maracaibo',                 1495199,    @ZuliaID, @MaracaiboID);	/* <-- Forma parte de la ciudad de Maracaibo */
+SELECT InsertarMunicipio(@Creador, 'Miranda', 			            82500, 	    @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Guajira', 			            105000,     @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Rosario de Perija',         67172,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'San Francisco',             424314,     @ZuliaID, @MaracaiboID);	/* <-- Forma parte de la ciudad de Maracaibo */
+SELECT InsertarMunicipio(@Creador, 'Santa Rita',                76304,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Simon Bolivar',             50000,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Sucre',                     57396,      @ZuliaID, NULL);
+SELECT InsertarMunicipio(@Creador, 'Valmore Rodriguez',         55000,      @ZuliaID, NULL);
 
 SELECT 'parroquias';
 /* Parroquias de Cabimas */
-SELECT InsertarParroquia(@Creador, 'Ambrosio',              40768, @CabimasID, '4013') INTO @bobo;
+SELECT InsertarParroquia(@Creador, 'Ambrosio',              40768, @CabimasID, '4013') INTO @Ambrosio;
 
 /* ¡El Administrador es de Ambrosio! */
 UPDATE usuario
-SET usuario.parroquia = @bobo
+SET usuario.parroquia = @Ambrosio
 WHERE usuario_id = 1;
 
-SELECT InsertarParroquia(@Creador, 'Aristides Calvani', 		40768, @CabimasID, '4013') INTO @bobo;
-SELECT InsertarParroquia(@Creador, 'Carmen Herrera',        27194, @CabimasID, '4013') INTO @bobo;
-SELECT InsertarParroquia(@Creador, 'German Rios Linares', 	44155, @CabimasID, '4013') INTO @bobo;
-SELECT InsertarParroquia(@Creador, 'Jorge Hernandez',       27559, @CabimasID, '4013') INTO @bobo;
-SELECT InsertarParroquia(@Creador, 'La Rosa', 			        25128, @CabimasID, '4013') INTO @bobo;
-SELECT InsertarParroquia(@Creador, 'Punta Gorda', 			    10224, @CabimasID, '4013') INTO @bobo;
-SELECT InsertarParroquia(@Creador, 'Romulo Betancourt', 		25225, @CabimasID, '4013') INTO @bobo;
-SELECT InsertarParroquia(@Creador, 'San Benito',            51501, @CabimasID, '4013') INTO @bobo;
+SELECT InsertarParroquia(@Creador, 'Aristides Calvani', 		40768, @CabimasID, '4013');
+SELECT InsertarParroquia(@Creador, 'Carmen Herrera',        27194, @CabimasID, '4013');
+SELECT InsertarParroquia(@Creador, 'German Rios Linares', 	44155, @CabimasID, '4013');
+SELECT InsertarParroquia(@Creador, 'Jorge Hernandez',       27559, @CabimasID, '4013');
+SELECT InsertarParroquia(@Creador, 'La Rosa', 			        25128, @CabimasID, '4013');
+SELECT InsertarParroquia(@Creador, 'Punta Gorda', 			    10224, @CabimasID, '4013');
+SELECT InsertarParroquia(@Creador, 'Romulo Betancourt', 		25225, @CabimasID, '4013');
+SELECT InsertarParroquia(@Creador, 'San Benito',            51501, @CabimasID, '4013');
 
