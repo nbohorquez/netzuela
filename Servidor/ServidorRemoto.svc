@@ -1,1 +1,0 @@
-<%@ ServiceHost Language="C#" Debug="true" Service="Zuliaworks.Netzuela.Spuria.Servidor.ServidorRemoto" CodeBehind="ServidorRemoto.svc.cs" %>
