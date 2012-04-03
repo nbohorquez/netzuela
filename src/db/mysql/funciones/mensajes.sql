@@ -37,7 +37,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarMensaje` (a_Remitente INT, a_Destinatario INT, a_Contenido TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE rastreable, etiquetable, tienda_rastreable, consumidor_rastreable, creador INT;
+    DECLARE rastreable, etiquetable, creador INT;
 
     DECLARE EXIT HANDLER FOR 1452   
     BEGIN
@@ -53,20 +53,13 @@ BEGIN
         RETURN -1048;
     END; 
 
-	SELECT u.rastreable_p 
+	SELECT u.rastreable_p
 	FROM usuario AS u
-	LEFT JOIN consumidor AS c ON u.usuario_id = c.usuario_p
-	WHERE c.interlocutor_p = a_Remitente
-	INTO consumidor_rastreable;
-
-	SELECT u.rastreable_p 
-	FROM usuario AS u
-	LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
-	LEfT JOIN tienda AS t ON c.rif = t.cliente_p
-	WHERE t.interlocutor_p = a_Remitente
-	INTO tienda_rastreable;
-
-	SELECT IF(consumidor_rastreable IS NULL, tienda_rastreable, consumidor_rastreable) INTO creador;
+	LEFT JOIN consumidor AS co ON u.usuario_id = co.usuario_p
+	LEFT JOIN cliente AS cl ON u.usuario_id = cl.usuario_p
+	LEFT JOIN tienda AS ti ON cl.rif = ti.cliente_p
+	WHERE co.interlocutor_p = a_Remitente OR ti.interlocutor_p = a_Remitente
+	INTO creador;
 
     SELECT InsertarRastreable(creador) INTO rastreable;
     SELECT InsertarEtiquetable() INTO etiquetable;

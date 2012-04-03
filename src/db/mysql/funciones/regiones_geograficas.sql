@@ -34,17 +34,11 @@ BEGIN
         RETURN -1048;
     END;
 
-    SELECT COUNT(*) FROM tiendas_consumidores
-    WHERE region_geografica_id = a_RegionGeograficaID
-    INTO C;
-
 	SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
 
-    IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
-        UPDATE tiendas_consumidores
-        SET fecha_fin = Ahora
-        WHERE region_geografica_id = a_RegionGeograficaID AND fecha_fin IS NULL;
-    END IF;
+    UPDATE tiendas_consumidores
+    SET fecha_fin = IF ((SELECT COUNT(*) FROM (SELECT * FROM tiendas_consumidores) AS c) > 0, Ahora, fecha_fin)
+    WHERE region_geografica_id = a_RegionGeograficaID AND fecha_fin IS NULL;
 
     INSERT INTO tiendas_consumidores VALUES (
         a_RegionGeograficaID,
@@ -56,13 +50,18 @@ BEGIN
 
     SELECT poblacion FROM region_geografica 
     WHERE region_geografica_id = a_RegionGeograficaID INTO Pob;
-
+/*
     UPDATE region_geografica 
     SET consumidores_poblacion = IF(Pob > 0, a_NumeroDeConsumidores/Pob, 0), tiendas_poblacion = IF(Pob > 0, a_NumeroDeTiendas/Pob, 0)
     WHERE region_geografica_id = a_RegionGeograficaID;
         
     UPDATE region_geografica 
     SET tiendas_consumidores = IF(a_NumeroDeConsumidores > 0, a_NumeroDeTiendas/a_NumeroDeConsumidores, NULL)
+    WHERE region_geografica_id = a_RegionGeograficaID;
+*/
+	UPDATE region_geografica 
+    SET consumidores_poblacion = IF(Pob > 0, a_NumeroDeConsumidores/Pob, 0), tiendas_poblacion = IF(Pob > 0, a_NumeroDeTiendas/Pob, 0),
+	tiendas_consumidores = IF(a_NumeroDeConsumidores > 0, a_NumeroDeTiendas/a_NumeroDeConsumidores, NULL)
     WHERE region_geografica_id = a_RegionGeograficaID;
 
     RETURN TRUE;
@@ -137,10 +136,15 @@ BEGIN
     END; 
 
     /* Comprobamos que no haya otro continente en el mundo con el mismo nombre */
+	SELECT COUNT(*) FROM continente AS c
+	JOIN region_geografica AS r ON c.region_geografica_p = r.region_geografica_id
+    WHERE r.nombre = a_Nombre
+    INTO C;
+/*
     SELECT COUNT(*) FROM continente, region_geografica
     WHERE nombre = a_Nombre AND region_geografica_id = continente.region_geografica_p
     INTO C;
-
+*/
     IF C = 0 THEN
         SELECT InsertarRegionGeografica(a_Creador, a_Nombre, a_Poblacion) INTO RegionGeografica_P;
         INSERT INTO continente VALUES(RegionGeografica_P, NULL);
@@ -183,9 +187,16 @@ BEGIN
     END;
 
     /* Comprobamos que no haya otro subcontinente en el continente con el mismo nombre */
-    SELECT COUNT(*) FROM subcontinente, region_geografica
+	SELECT COUNT(*) FROM subcontinente AS s
+	JOIN region_geografica AS r ON s.region_geografica_p = r.region_geografica_id
+    WHERE r.nombre = a_Nombre AND s.continente = a_Continente
+    INTO C;
+
+/*    
+	SELECT COUNT(*) FROM subcontinente, region_geografica
     WHERE nombre = a_Nombre AND continente = a_Continente
     INTO C;
+*/
 
     IF C = 0 THEN
         SELECT InsertarRegionGeografica(a_Creador, a_Nombre, a_Poblacion) INTO RegionGeografica_P;
@@ -238,10 +249,15 @@ BEGIN
     END;
         
     /* Comprobamos que no haya otro pais en el mundo con el mismo nombre */
+	SELECT COUNT(*) FROM pais AS p
+	JOIN region_geografica AS r ON p.region_geografica_p = r.region_geografica_id
+    WHERE r.nombre = a_Nombre
+    INTO C;
+/*
     SELECT COUNT(*) FROM pais, region_geografica
     WHERE nombre = a_Nombre AND region_geografica_id = pais.region_geografica_p
     INTO C;
-
+*/
     IF C = 0 THEN
         SELECT InsertarRegionGeografica(a_Creador, a_Nombre, a_Poblacion) INTO RegionGeografica_P;
 	
@@ -340,10 +356,15 @@ BEGIN
     END;
         
     /* Comprobamos que no haya otro estado hermano con el mismo nombre */
+	SELECT COUNT(*) FROM estado AS e
+	JOIN region_geografica AS r ON e.region_geografica_p = r.region_geografica_id
+    WHERE r.nombre = a_Nombre AND e.pais = a_Pais
+    INTO C;
+/*
     SELECT COUNT(*) FROM estado, region_geografica
     WHERE nombre = a_Nombre AND pais = a_Pais
     INTO C;
-
+*/
     IF C = 0 THEN
         SELECT InsertarRegionGeografica(a_Creador, a_Nombre, a_Poblacion) INTO RegionGeografica_P;
 
@@ -435,8 +456,9 @@ BEGIN
     END;
 
 	/* Comprobamos que no haya otro municipio hermano con el mismo nombre */    	
-    SELECT COUNT(*) FROM municipio, region_geografica
-    WHERE nombre = a_Nombre AND estado = a_Estado
+    SELECT COUNT(*) FROM municipio AS m
+	JOIN region_geografica AS r ON m.region_geografica_p = r.region_geografica_id
+    WHERE r.nombre = a_Nombre AND m.estado = a_Estado
     INTO C;
 
     IF C = 0 THEN
@@ -487,11 +509,16 @@ BEGIN
         RETURN -1048;
     END;
 
-    /* Comprobamos que no haya otra parroquia hermana con el mismo nombre */    
+    /* Comprobamos que no haya otra parroquia hermana con el mismo nombre */
+	SELECT COUNT(*) FROM parroquia AS p
+	JOIN region_geografica AS r ON p.region_geografica_p = r.region_geografica_id
+    WHERE r.nombre = a_Nombre AND p.municipio = a_Municipio
+    INTO C;
+/*
     SELECT COUNT(*) FROM parroquia, region_geografica
     WHERE nombre = a_Nombre AND municipio = a_Municipio
     INTO C;
-
+*/
     IF C = 0 THEN
         SELECT InsertarRegionGeografica(a_Creador, a_Nombre, a_Poblacion) INTO RegionGeografica_P;
 

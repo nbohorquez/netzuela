@@ -3,7 +3,7 @@ USE `spuria`;
 
 /*
 *************************************************************
-*			             InsertarCalificableSeguible			        *
+*				InsertarCalificableSeguible			        *
 *************************************************************
 */
 
@@ -23,7 +23,7 @@ END$$
 
 /*
 *************************************************************
-*			             InsertarCalificacionResena				        *
+*				InsertarCalificacionResena			        *
 *************************************************************
 */
 
@@ -62,7 +62,7 @@ BEGIN
 
 	SELECT u.rastreable_p
 	FROM usuario AS u
-	LEFT JOIN consumidor AS c ON u.usuario_id = c.usuario_p
+	JOIN consumidor AS c ON u.usuario_id = c.usuario_p
 	WHERE c.consumidor_id = a_ConsumidorID 
 	INTO creador;
 

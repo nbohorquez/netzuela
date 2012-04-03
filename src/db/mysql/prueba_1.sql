@@ -38,7 +38,7 @@ SELECT InsertarProducto (
     '2001/02/20', 
     3.64, 2.18, 
     2.18, 3.94, 
-    @VenezuelaID
+    @pyVenezuela
 ) INTO @ProductoID1;
 
 SELECT InsertarProducto (
@@ -53,7 +53,7 @@ SELECT InsertarProducto (
     '1994/08/15', 
     3.64, 2.18, 
     2.18, 0.14, 
-    @VenezuelaID
+    @pyVenezuela
 ) INTO @ProductoID2;
 
 SELECT InsertarProducto (
@@ -68,7 +68,7 @@ SELECT InsertarProducto (
     '1996/09/23', 
     3.64, 2.18, 
     2.18, 0.21, 
-    @VenezuelaID
+    @pyVenezuela
 ) INTO @ProductoID3;
 
 SELECT InsertarProducto (
@@ -83,7 +83,7 @@ SELECT InsertarProducto (
     '1996/09/23', 
     3.64, 2.18, 
     2.18, 0.45, 
-    @VenezuelaID
+    @pyVenezuela
 ) INTO @ProductoID4;
 
 /*
@@ -107,15 +107,16 @@ Usuario --------> Administrador
 
 /* TIENDA 1 */
 
+/*
 SELECT parroquia_id 
 FROM parroquia JOIN region_geografica 
 ON parroquia.region_geografica_p = region_geografica.region_geografica_id
 WHERE region_geografica.nombre = 'Ambrosio'
-INTO @AmbrosioID;
-
+INTO @paAmbrosio;
+*/
 SELECT InsertarTienda (
     @Creador, 
-    @AmbrosioID, 
+    @paAmbrosio, 
     'molleja@abc.com', 
     '41ssdas#ASX',
     'V180638080', 
@@ -151,16 +152,16 @@ SELECT InsertarTurno(@TiendaID1, 'Sabado', '00:00:00', '00:00:00') INTO @HT6ID;
 SELECT InsertarTurno(@TiendaID1, 'Domingo', '00:00:00', '00:00:00') INTO @HT7ID;
 
 /* TIENDA 2 */
-
+/*
 SELECT parroquia_id 
 FROM parroquia JOIN region_geografica 
 ON parroquia.region_geografica_p = region_geografica.region_geografica_id
 WHERE region_geografica.nombre = 'La Rosa'
 INTO @LaRosaID;
-
+*/
 SELECT InsertarTienda (
     @Creador, 
-    @LaRosaID, 
+    @paLaRosa, 
     'tca7410nb@gmail.com', 
     '444544sd54sd4sd4s4548494s',
     'J-1515151D', 
@@ -223,7 +224,7 @@ SELECT InsertarInventario(@TiendaID2, 'PSDC-41C', 'Microfono en vivo SM57 XLR', 
 *														*
 *********************************************************
 */
-
+/*
 SELECT p.parroquia_id 
 FROM parroquia AS p
 LEFT JOIN region_geografica AS r ON p.region_geografica_p = r.region_geografica_id
@@ -235,7 +236,7 @@ FROM parroquia AS p
 LEFT JOIN region_geografica AS r ON p.region_geografica_p = r.region_geografica_id
 WHERE r.nombre = 'San Benito'
 INTO @SanBenitoID;
-
+*/
 SELECT InsertarConsumidor (
     @Creador, 
     'Alberto',
@@ -245,7 +246,7 @@ SELECT InsertarConsumidor (
     '1988-06-09',
     'Adultos jovenes',
     'Universitaria',
-    @AmbrosioID, 
+    @paPtaGorda, 
     'mandoca@merey.com', 
     'AceFoD_591dS'
 ) INTO @ConsumidorID1;
@@ -259,7 +260,7 @@ SELECT InsertarConsumidor (
     '1992-02-20',
     'Adultos jovenes',
     'Universitaria',
-    @LaRosaID, 
+    @paSBenito, 
     'asdfijnsad@dalepues.com', 
     '14a1c5a1sc5as1c'
 ) INTO @ConsumidorID2;
@@ -273,7 +274,7 @@ SELECT InsertarConsumidor (
     '1987-05-28',
     'Adultos jovenes',
     'Universitaria',
-    @PuntaGordaID, 
+    @paAmbrosio, 
     '41dx_asde@osdae.com', 
     '51asc011.as'
 ) INTO @ConsumidorID3;
@@ -287,7 +288,7 @@ SELECT InsertarConsumidor (
     '1987-09-14',
     'Adultos jovenes',
     'Universitaria',
-    @SanBenitoID, 
+    @paLaRosa, 
     'quefuemarico@comoestais.com', 
     'AceFoD_591dS'
 ) INTO @ConsumidorID4;
@@ -324,7 +325,7 @@ SELECT InsertarMensaje (
 
 SELECT InsertarPatrocinante (
     @Creador, 
-    @AmbrosioID, 
+    @paAmbrosio, 
     'hola@comoestais.com', 
     'pAA101D54Om_4aidf18',
     'V195445890', 
@@ -608,6 +609,6 @@ SELECT buscable_P FROM tienda
 WHERE tienda_id = @TiendaID1
 INTO @BuscableID;
 
-SELECT InsertarEstadisticasDeVisitas(@Creador, @BuscableID, @AmbrosioID);
-SELECT InsertarEstadisticasDePopularidad(@Creador, @Producto4Calificable, @AmbrosioID);
-SELECT InsertarEstadisticasDeInfluencia(@Creador, @PalabraID, @AmbrosioID);
+SELECT InsertarEstadisticasDeVisitas(@Creador, @BuscableID, @paAmbrosio);
+SELECT InsertarEstadisticasDePopularidad(@Creador, @Producto4Calificable, @paAmbrosio);
+SELECT InsertarEstadisticasDeInfluencia(@Creador, @PalabraID, @paAmbrosio);

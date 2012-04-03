@@ -34,18 +34,12 @@ BEGIN
         RETURN -1048;
     END; 
 
-    SELECT COUNT(*) FROM estadisticas_temporales
-    WHERE estadisticas_id = a_EstadisticasID
-    INTO C;
-
 	SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
   
-    IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
-        UPDATE estadisticas_temporales
-        SET fecha_fin = Ahora
-        WHERE estadisticas_id = a_EstadisticasID AND fecha_fin IS NULL;
-    END IF;
-	
+	UPDATE estadisticas_temporales
+    SET fecha_fin = IF ((SELECT COUNT(*) FROM (SELECT * FROM estadisticas_temporales) AS c) > 0, Ahora, fecha_fin)
+    WHERE estadisticas_id = a_EstadisticasID AND fecha_fin IS NULL;
+
     INSERT INTO estadisticas_temporales VALUES (
         a_EstadisticasID,
         Ahora,
@@ -91,17 +85,11 @@ BEGIN
         RETURN -1048;
     END; 
 
-    SELECT COUNT(*) FROM contador_de_exhibiciones
-    WHERE estadisticas_de_visitas_id = a_EstadisticasDeVisitasID
-    INTO C;
+	SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
 
-    SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
-
-    IF C > 0 THEN /* Hay ya por lo menos un valor historico almacenado; hay que sustituirlo */
-        UPDATE contador_de_exhibiciones
-        SET fecha_fin = Ahora 
-        WHERE estadisticas_de_visitas_id = a_EstadisticasDeVisitasID AND fecha_fin IS NULL;
-    END IF;
+    UPDATE contador_de_exhibiciones
+    SET fecha_fin = IF ((SELECT COUNT(*) FROM (SELECT * FROM contador_de_exhibiciones) AS c) > 0, Ahora, fecha_fin)
+    WHERE estadisticas_de_visitas_id = a_EstadisticasDeVisitasID AND fecha_fin IS NULL;
 	
     INSERT INTO contador_de_exhibiciones VALUES (
         a_EstadisticasDeVisitasID,

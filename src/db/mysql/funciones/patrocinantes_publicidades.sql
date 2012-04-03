@@ -111,8 +111,8 @@ BEGIN
 
 	SELECT u.rastreable_p
 	FROM usuario AS u
-	LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
-	LEFT JOIN patrocinante AS p ON c.rif = p.cliente_p
+	JOIN cliente AS c ON u.usuario_id = c.usuario_p
+	JOIN patrocinante AS p ON c.rif = p.cliente_p
 	WHERE p.patrocinante_id = a_Patrocinante
 	INTO creador;
 

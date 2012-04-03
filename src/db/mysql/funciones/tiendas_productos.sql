@@ -224,19 +224,12 @@ BEGIN
         RETURN -1062;
     END;
 
-    /* Vemos si ya existe un registro "Tamano" ya asociado a la tabla */    	
-    SELECT COUNT(*) FROM tamano
-    WHERE tienda_id = a_TiendaID
-    INTO C;
-
     SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
-		
-    IF C > 0 THEN
-        UPDATE tamano
-        SET fecha_fin = Ahora
-        WHERE tienda_id = a_TiendaID AND fecha_fin IS NULL;
-    END IF;
-		
+
+	UPDATE tamano
+    SET fecha_fin = IF ((SELECT COUNT(*) FROM (SELECT * FROM tamano) AS c) > 0, Ahora, fecha_fin)
+    WHERE tienda_id = a_TiendaID AND fecha_fin IS NULL;
+
     INSERT INTO tamano VALUES (
         a_TiendaID,
         Ahora,
@@ -362,8 +355,8 @@ BEGIN
 
 	SELECT u.rastreable_p
 	FROM usuario AS u
-	LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
-	LEFT JOIN tienda AS t ON c.rif = t.cliente_p
+	JOIN cliente AS c ON u.usuario_id = c.usuario_p
+	JOIN tienda AS t ON c.rif = t.cliente_p
 	WHERE t.tienda_id = a_TiendaID
 	INTO resultado;
 
@@ -427,18 +420,11 @@ BEGIN
         RETURN -1048;
     END;
 
-    /* Vemos si ya existe un registro "PrecioCantidad" ya asociado al inventario */
-    SELECT COUNT(*) FROM precio_cantidad
-    WHERE tienda_id = a_TiendaID AND codigo = a_Codigo
-    INTO C;
-
 	SELECT DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f') INTO Ahora;
-		
-    IF C > 0 THEN
-        UPDATE precio_cantidad
-        SET fecha_fin = Ahora
-   		WHERE tienda_id = a_TiendaID AND codigo = a_Codigo AND fecha_fin IS NULL;
-    END IF;
+
+    UPDATE precio_cantidad
+    SET fecha_fin = IF ((SELECT COUNT(*) FROM (SELECT * FROM precio_cantidad) AS c) > 0, Ahora, fecha_fin)
+	WHERE tienda_id = a_TiendaID AND codigo = a_Codigo AND fecha_fin IS NULL;
 
     INSERT INTO precio_cantidad VALUES (
         a_TiendaID,
