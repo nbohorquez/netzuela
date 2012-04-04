@@ -114,6 +114,7 @@ ON parroquia.region_geografica_p = region_geografica.region_geografica_id
 WHERE region_geografica.nombre = 'Ambrosio'
 INTO @paAmbrosio;
 */
+
 SELECT InsertarTienda (
     @Creador, 
     @paAmbrosio, 

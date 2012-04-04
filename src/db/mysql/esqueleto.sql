@@ -77,15 +77,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `spuria`.`dibujable`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`dibujable` (
-  `dibujable_id` INT NOT NULL AUTO_INCREMENT ,
-  PRIMARY KEY (`dibujable_id`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `spuria`.`rastreable`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`rastreable` (
@@ -103,66 +94,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `spuria`.`region_geografica`
+-- Table `spuria`.`dibujable`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`region_geografica` (
-  `rastreable_p` INT NOT NULL ,
-  `dibujable_p` INT NOT NULL ,
-  `region_geografica_id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `poblacion` INT UNSIGNED NOT NULL ,
-  `consumidores_poblacion` FLOAT NOT NULL ,
-  `tiendas_poblacion` FLOAT NOT NULL ,
-  `tiendas_consumidores` FLOAT NULL ,
-  PRIMARY KEY (`region_geografica_id`) ,
-  INDEX `fk_RegionGeografica_Dibujable` (`dibujable_p` ASC) ,
-  INDEX `fk_RegionGeografica_Rastreable` (`rastreable_p` ASC) ,
-  UNIQUE INDEX `Dibujable_P_UNIQUE` (`dibujable_p` ASC) ,
-  UNIQUE INDEX `Rastreable_P_UNIQUE` (`rastreable_p` ASC) ,
-  CONSTRAINT `fk_RegionGeografica_Dibujable`
-    FOREIGN KEY (`dibujable_p` )
-    REFERENCES `spuria`.`dibujable` (`dibujable_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_RegionGeografica_Rastreable`
-    FOREIGN KEY (`rastreable_p` )
-    REFERENCES `spuria`.`rastreable` (`rastreable_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `spuria`.`continente`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`continente` (
-  `region_geografica_p` INT NOT NULL ,
-  `continente_id` INT NOT NULL AUTO_INCREMENT ,
-  PRIMARY KEY (`continente_id`) ,
-  INDEX `fk_Continente_RegionGeografica` (`region_geografica_p` ASC) ,
-  UNIQUE INDEX `RegionGeografica_P_UNIQUE` (`region_geografica_p` ASC) ,
-  CONSTRAINT `fk_Continente_RegionGeografica`
-    FOREIGN KEY (`region_geografica_p` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `spuria`.`ciudad`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`ciudad` (
-  `region_geografica_p` INT NOT NULL ,
-  `ciudad_id` INT NOT NULL AUTO_INCREMENT ,
-  PRIMARY KEY (`ciudad_id`) ,
-  INDEX `fk_Ciudad_RegionGeografica` (`region_geografica_p` ASC) ,
-  UNIQUE INDEX `RegionGeografica_P_UNIQUE` (`region_geografica_p` ASC) ,
-  CONSTRAINT `fk_Ciudad_RegionGeografica`
-    FOREIGN KEY (`region_geografica_p` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+CREATE  TABLE IF NOT EXISTS `spuria`.`dibujable` (
+  `dibujable_id` INT NOT NULL AUTO_INCREMENT ,
+  PRIMARY KEY (`dibujable_id`) )
 ENGINE = InnoDB;
 
 
@@ -176,145 +112,47 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `spuria`.`pais`
+-- Table `spuria`.`territorio`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`pais` (
-  `region_geografica_p` INT NOT NULL ,
-  `pais_id` INT NOT NULL AUTO_INCREMENT ,
-  `continente` INT NOT NULL ,
-  `capital` INT NOT NULL ,
-  `idioma` CHAR(10) NOT NULL ,
-  `moneda_local` VARCHAR(45) NULL ,
-  `moneda_local_dolar` DECIMAL(10,2) NULL ,
+CREATE  TABLE IF NOT EXISTS `spuria`.`territorio` (
+  `rastreable_p` INT NOT NULL ,
+  `dibujable_p` INT NOT NULL ,
+  `territorio_id` INT NOT NULL AUTO_INCREMENT ,
+  `nombre` VARCHAR(45) NOT NULL ,
+  `poblacion` INT UNSIGNED NOT NULL ,
+  `idioma` CHAR(10) NULL ,
+  `nivel` INT NULL ,
+  `territorio_padre` INT NOT NULL ,
+  `consumidores_poblacion` FLOAT NOT NULL ,
+  `tiendas_poblacion` FLOAT NOT NULL ,
+  `tiendas_consumidores` FLOAT NULL ,
+  `codigo_postal` CHAR(10) NULL ,
   `pib` DECIMAL(15,0) NULL ,
-  PRIMARY KEY (`pais_id`) ,
-  INDEX `fk_Pais_RegionGeografica` (`region_geografica_p` ASC) ,
-  INDEX `fk_Pais_Continente` (`continente` ASC) ,
-  INDEX `fk_Pais_Ciudad` (`capital` ASC) ,
-  UNIQUE INDEX `Capital_UNIQUE` (`capital` ASC) ,
-  UNIQUE INDEX `RegionGeografica_P_UNIQUE` (`region_geografica_p` ASC) ,
-  INDEX `fk_Pais_Idioma` (`idioma` ASC) ,
-  CONSTRAINT `fk_Pais_RegionGeografica`
-    FOREIGN KEY (`region_geografica_p` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
+  PRIMARY KEY (`territorio_id`) ,
+  INDEX `fk_Territorio_Dibujable` (`dibujable_p` ASC) ,
+  INDEX `fk_Territorio_Rastreable` (`rastreable_p` ASC) ,
+  UNIQUE INDEX `Dibujable_P_UNIQUE` (`dibujable_p` ASC) ,
+  UNIQUE INDEX `Rastreable_P_UNIQUE` (`rastreable_p` ASC) ,
+  INDEX `fk_Territorio_Territorio` (`territorio_padre` ASC) ,
+  INDEX `fk_Territorio_Idioma` (`idioma` ASC) ,
+  CONSTRAINT `fk_Territorio_Dibujable`
+    FOREIGN KEY (`dibujable_p` )
+    REFERENCES `spuria`.`dibujable` (`dibujable_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Pais_Continente`
-    FOREIGN KEY (`continente` )
-    REFERENCES `spuria`.`continente` (`continente_id` )
+  CONSTRAINT `fk_Territorio_Rastreable`
+    FOREIGN KEY (`rastreable_p` )
+    REFERENCES `spuria`.`rastreable` (`rastreable_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Pais_Ciudad`
-    FOREIGN KEY (`capital` )
-    REFERENCES `spuria`.`ciudad` (`ciudad_id` )
+  CONSTRAINT `fk_Territorio_Territorio`
+    FOREIGN KEY (`territorio_padre` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Pais_Idioma`
+  CONSTRAINT `fk_Territorio_Idioma`
     FOREIGN KEY (`idioma` )
     REFERENCES `spuria`.`idioma` (`valor` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `spuria`.`huso_horario`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`huso_horario` (
-  `valor` TIME NOT NULL ,
-  PRIMARY KEY (`valor`) )
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `spuria`.`estado`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`estado` (
-  `region_geografica_p` INT NOT NULL ,
-  `estado_id` INT NOT NULL AUTO_INCREMENT ,
-  `pais` INT NOT NULL ,
-  `huso_horario_normal` TIME NOT NULL ,
-  `huso_horario_verano` TIME NULL ,
-  PRIMARY KEY (`estado_id`) ,
-  INDEX `fk_Estado_Pais` (`pais` ASC) ,
-  INDEX `fk_Estado_RegionGeografica` (`region_geografica_p` ASC) ,
-  INDEX `fk_Estado_HusoHorarioNormal` (`huso_horario_normal` ASC) ,
-  INDEX `fk_Estado_HusoHorarioVerano` (`huso_horario_verano` ASC) ,
-  UNIQUE INDEX `RegionGeografica_P_UNIQUE` (`region_geografica_p` ASC) ,
-  CONSTRAINT `fk_Estado_Pais`
-    FOREIGN KEY (`pais` )
-    REFERENCES `spuria`.`pais` (`pais_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Estado_RegionGeografica`
-    FOREIGN KEY (`region_geografica_p` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Estado_HusoHorarioNormal`
-    FOREIGN KEY (`huso_horario_normal` )
-    REFERENCES `spuria`.`huso_horario` (`valor` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Estado_HusoHorarioVerano`
-    FOREIGN KEY (`huso_horario_verano` )
-    REFERENCES `spuria`.`huso_horario` (`valor` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `spuria`.`municipio`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`municipio` (
-  `region_geografica_p` INT NOT NULL ,
-  `municipio_id` INT NOT NULL AUTO_INCREMENT ,
-  `estado` INT NOT NULL ,
-  `ciudad` INT NULL ,
-  PRIMARY KEY (`municipio_id`) ,
-  INDEX `fk_Municipio_RegionGeografica` (`region_geografica_p` ASC) ,
-  INDEX `fk_Municipio_Estado` (`estado` ASC) ,
-  INDEX `fk_Municipio_Ciudad` (`ciudad` ASC) ,
-  UNIQUE INDEX `RegionGeografica_P_UNIQUE` (`region_geografica_p` ASC) ,
-  CONSTRAINT `fk_Municipio_RegionGeografica`
-    FOREIGN KEY (`region_geografica_p` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Municipio_Estado`
-    FOREIGN KEY (`estado` )
-    REFERENCES `spuria`.`estado` (`estado_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Municipio_Ciudad`
-    FOREIGN KEY (`ciudad` )
-    REFERENCES `spuria`.`ciudad` (`ciudad_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `spuria`.`parroquia`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`parroquia` (
-  `region_geografica_p` INT NOT NULL ,
-  `parroquia_id` INT NOT NULL AUTO_INCREMENT ,
-  `codigo_postal` CHAR(10) NOT NULL ,
-  `municipio` INT NOT NULL ,
-  PRIMARY KEY (`parroquia_id`) ,
-  INDEX `fk_Parroquia_RegionGeografica` (`region_geografica_p` ASC) ,
-  INDEX `fk_Parroquia_Municipio` (`municipio` ASC) ,
-  UNIQUE INDEX `RegionGeografica_P_UNIQUE` (`region_geografica_p` ASC) ,
-  CONSTRAINT `fk_Parroquia_RegionGeografica`
-    FOREIGN KEY (`region_geografica_p` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Parroquia_Municipio`
-    FOREIGN KEY (`municipio` )
-    REFERENCES `spuria`.`municipio` (`municipio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -326,19 +164,19 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `spuria`.`usuario` (
   `rastreable_p` INT NOT NULL ,
   `usuario_id` INT NOT NULL AUTO_INCREMENT ,
-  `parroquia` INT NULL ,
+  `ubicacion` INT NULL ,
   PRIMARY KEY (`usuario_id`) ,
-  INDEX `fk_Usuario_Parroquia` (`parroquia` ASC) ,
-  INDEX `fk_usuario_rastreable1` (`rastreable_p` ASC) ,
+  INDEX `fk_Usuario_Rastreable` (`rastreable_p` ASC) ,
   UNIQUE INDEX `rastreable_p_UNIQUE` (`rastreable_p` ASC) ,
-  CONSTRAINT `fk_Usuario_Parroquia`
-    FOREIGN KEY (`parroquia` )
-    REFERENCES `spuria`.`parroquia` (`parroquia_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_usuario_rastreable1`
+  INDEX `fk_Usuario_Territorio` (`ubicacion` ASC) ,
+  CONSTRAINT `fk_Usuario_Rastreable`
     FOREIGN KEY (`rastreable_p` )
     REFERENCES `spuria`.`rastreable` (`rastreable_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Usuario_Territorio`
+    FOREIGN KEY (`ubicacion` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -492,7 +330,6 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`producto` (
   PRIMARY KEY (`producto_id`) ,
   INDEX `fk_Producto_Categoria` (`categoria` ASC) ,
   INDEX `fk_Producto_Estatus` (`estatus` ASC) ,
-  INDEX `fk_Producto_Pais` (`pais_de_origen` ASC) ,
   INDEX `fk_Producto_CalificableSeguible` (`calificable_seguible_p` ASC) ,
   INDEX `fk_Producto_Describible` (`describible_p` ASC) ,
   INDEX `fk_Producto_Rastreable` (`rastreable_p` ASC) ,
@@ -503,6 +340,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`producto` (
   UNIQUE INDEX `Buscable_P_UNIQUE` (`buscable_p` ASC) ,
   UNIQUE INDEX `CalificableSeguible_P_UNIQUE` (`calificable_seguible_p` ASC) ,
   INDEX `fk_Producto_TipoDeCodigo` (`tipo_de_codigo` ASC) ,
+  INDEX `fk_Producto_Territorio` (`pais_de_origen` ASC) ,
   CONSTRAINT `fk_Producto_Categoria`
     FOREIGN KEY (`categoria` )
     REFERENCES `spuria`.`categoria` (`categoria_id` )
@@ -511,11 +349,6 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`producto` (
   CONSTRAINT `fk_Producto_Estatus`
     FOREIGN KEY (`estatus` )
     REFERENCES `spuria`.`estatus` (`valor` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Producto_Pais`
-    FOREIGN KEY (`pais_de_origen` )
-    REFERENCES `spuria`.`pais` (`pais_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Producto_CalificableSeguible`
@@ -541,6 +374,11 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`producto` (
   CONSTRAINT `fk_Producto_TipoDeCodigo`
     FOREIGN KEY (`tipo_de_codigo` )
     REFERENCES `spuria`.`tipo_de_codigo` (`valor` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Producto_Territorio`
+    FOREIGN KEY (`pais_de_origen` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -832,14 +670,14 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `spuria`.`estadisticas` (
   `rastreable_p` INT NOT NULL ,
   `estadisticas_id` INT NOT NULL AUTO_INCREMENT ,
-  `region_geografica` INT NOT NULL ,
+  `territorio` INT NOT NULL ,
   PRIMARY KEY (`estadisticas_id`) ,
-  INDEX `fk_Estadisticas_RegionGeografica` (`region_geografica` ASC) ,
+  INDEX `fk_Estadisticas_Territorio` (`territorio` ASC) ,
   INDEX `fk_Estadisticas_Rastreable` (`rastreable_p` ASC) ,
   UNIQUE INDEX `Rastreable_P_UNIQUE` (`rastreable_p` ASC) ,
-  CONSTRAINT `fk_Estadisticas_RegionGeografica`
-    FOREIGN KEY (`region_geografica` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
+  CONSTRAINT `fk_Estadisticas_Territorio`
+    FOREIGN KEY (`territorio` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Estadisticas_Rastreable`
@@ -1366,22 +1204,22 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `spuria`.`region_geografica_objetivo`
+-- Table `spuria`.`territorio_objetivo`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`region_geografica_objetivo` (
+CREATE  TABLE IF NOT EXISTS `spuria`.`territorio_objetivo` (
   `publicidad_id` INT NOT NULL ,
-  `region_geografica_id` INT NOT NULL ,
-  PRIMARY KEY (`publicidad_id`, `region_geografica_id`) ,
-  INDEX `fk_RegionGeograficaObjetivo_RegionGeografica` (`region_geografica_id` ASC) ,
-  INDEX `fk_RegionGeograficaObjetivo_Publicidad` (`publicidad_id` ASC) ,
-  CONSTRAINT `fk_RegionGeograficaObjetivo_Publicidad`
+  `territorio_id` INT NOT NULL ,
+  PRIMARY KEY (`publicidad_id`, `territorio_id`) ,
+  INDEX `fk_TerritorioObjetivo_RegionGeografica` (`territorio_id` ASC) ,
+  INDEX `fk_TerritorioObjetivo_Publicidad` (`publicidad_id` ASC) ,
+  CONSTRAINT `fk_TerritorioObjetivo_Publicidad`
     FOREIGN KEY (`publicidad_id` )
     REFERENCES `spuria`.`publicidad` (`publicidad_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_RegionGeograficaObjetivo_RegionGeografica`
-    FOREIGN KEY (`region_geografica_id` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
+  CONSTRAINT `fk_TerritorioObjetivo_RegionGeografica`
+    FOREIGN KEY (`territorio_id` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1520,52 +1358,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `spuria`.`subcontinente`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`subcontinente` (
-  `region_geografica_p` INT NOT NULL ,
-  `subcontinente_id` INT NOT NULL AUTO_INCREMENT ,
-  `continente` INT NOT NULL ,
-  PRIMARY KEY (`subcontinente_id`) ,
-  INDEX `fk_Subcontinente_Continente` (`continente` ASC) ,
-  INDEX `fk_Subcontinente_RegionGeografica` (`region_geografica_p` ASC) ,
-  UNIQUE INDEX `RegionGeografica_P_UNIQUE` (`region_geografica_p` ASC) ,
-  CONSTRAINT `fk_Subcontinente_Continente`
-    FOREIGN KEY (`continente` )
-    REFERENCES `spuria`.`continente` (`continente_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Subcontinente_RegionGeografica`
-    FOREIGN KEY (`region_geografica_p` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `spuria`.`pais_subcontinente`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `spuria`.`pais_subcontinente` (
-  `subcontinente_id` INT NOT NULL ,
-  `pais_id` INT NOT NULL ,
-  PRIMARY KEY (`subcontinente_id`, `pais_id`) ,
-  INDEX `fk_PaisSubcontinente_Pais` (`pais_id` ASC) ,
-  INDEX `fk_PaisSubcontinente_Subcontinente` (`subcontinente_id` ASC) ,
-  CONSTRAINT `fk_PaisSubcontinente_Subcontinente`
-    FOREIGN KEY (`subcontinente_id` )
-    REFERENCES `spuria`.`subcontinente` (`subcontinente_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_PaisSubcontinente_Pais`
-    FOREIGN KEY (`pais_id` )
-    REFERENCES `spuria`.`pais` (`pais_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `spuria`.`privilegios`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`privilegios` (
@@ -1675,16 +1467,49 @@ ENGINE = InnoDB;
 -- Table `spuria`.`tiendas_consumidores`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`tiendas_consumidores` (
-  `region_geografica_id` INT NOT NULL ,
+  `territorio_id` INT NOT NULL ,
   `fecha_inicio` DECIMAL(17,3) NOT NULL ,
   `fecha_fin` DECIMAL(17,3) NULL ,
   `numero_de_consumidores` INT UNSIGNED NOT NULL ,
   `numero_de_tiendas` INT UNSIGNED NOT NULL ,
-  PRIMARY KEY (`region_geografica_id`, `fecha_inicio`) ,
-  INDEX `fk_TiendasConsumidores_RegionGeografica` (`region_geografica_id` ASC) ,
-  CONSTRAINT `fk_TiendasConsumidores_RegionGeografica`
-    FOREIGN KEY (`region_geografica_id` )
-    REFERENCES `spuria`.`region_geografica` (`region_geografica_id` )
+  PRIMARY KEY (`territorio_id`, `fecha_inicio`) ,
+  INDEX `fk_TiendasConsumidores_Territorio` (`territorio_id` ASC) ,
+  CONSTRAINT `fk_TiendasConsumidores_Territorio`
+    FOREIGN KEY (`territorio_id` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `spuria`.`region`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `spuria`.`region` (
+  `region_id` INT NOT NULL ,
+  `nombre` VARCHAR(45) NOT NULL ,
+  `nivel` VARCHAR(45) NOT NULL ,
+  PRIMARY KEY (`region_id`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `spuria`.`region_territorio`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `spuria`.`region_territorio` (
+  `region_id` INT NOT NULL ,
+  `territorio_id` INT NOT NULL ,
+  PRIMARY KEY (`region_id`, `territorio_id`) ,
+  INDEX `fk_Region_Territorio_Territorio` (`territorio_id` ASC) ,
+  INDEX `fk_Region_Territorio_Region` (`region_id` ASC) ,
+  CONSTRAINT `fk_Region_Territorio_Region`
+    FOREIGN KEY (`region_id` )
+    REFERENCES `spuria`.`region` (`region_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Region_Territorio_Territorio`
+    FOREIGN KEY (`territorio_id` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -2772,7 +2597,7 @@ BEGIN
     DECLARE cliente CHAR(10);
     DECLARE cl, ad, co, rastreable_p, bobo INT;
     
-    IF NEW.parroquia != OLD.parroquia THEN
+    IF NEW.ubicacion != OLD.ubicacion THEN
         SELECT COUNT(*) FROM cliente
         WHERE usuario_p = NEW.usuario_id
         INTO cl;
@@ -2811,9 +2636,9 @@ BEGIN
         
         SELECT CONCAT(
             parametros,
-            CAST(NEW.usuario_id AS CHAR),'(parroquia): ',
-            CAST(OLD.parroquia AS CHAR),' ahora es ',
-            CAST(NEW.parroquia AS CHAR)
+            CAST(NEW.usuario_id AS CHAR),'(ubicacion): ',
+            CAST(OLD.ubicacion AS CHAR),' ahora es ',
+            CAST(NEW.ubicacion AS CHAR)
         ) INTO parametros;
                 
         SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
@@ -2886,97 +2711,6 @@ BEGIN
     DELETE FROM resultado_de_busqueda WHERE busqueda_id = OLD.busqueda_id;
     /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
     DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_parroquia AFTER INSERT ON parroquia
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-
-    SELECT CONCAT(
-        'region_geografica->parroquia: ',
-        CAST(NEW.region_geografica_p AS CHAR),'->',
-        CAST(NEW.parroquia_id AS CHAR),',',
-        CAST(NEW.municipio AS CHAR),',',
-        NEW.codigo_postal
-    ) INTO parametros;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_parroquia BEFORE UPDATE ON parroquia
-FOR EACH ROW
-BEGIN
-    IF NEW.region_geografica_p != OLD.region_geografica_p THEN
-        SET NEW.region_geografica_p = OLD.region_geografica_p;
-    END IF;
-    IF NEW.parroquia_id != OLD.parroquia_id THEN
-        SET NEW.parroquia_id = OLD.parroquia_id;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_actualizar_parroquia AFTER UPDATE ON parroquia
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE NEW.region_geografica_p = region_geografica_id
-    INTO rastreable_p;
-    
-    IF NEW.codigo_postal != OLD.codigo_postal THEN
-        SELECT CONCAT(
-            'region_geografica->parroquia(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.parroquia_id AS CHAR),'(codigo_postal):',
-            CAST(OLD.codigo_postal AS CHAR),' ahora es ',
-            CAST(NEW.codigo_postal AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-
-    IF NEW.municipio != OLD.municipio THEN
-        SELECT CONCAT(
-            'region_geografica->parroquia(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.parroquia_id AS CHAR),'(municipio):',
-            CAST(OLD.municipio AS CHAR),' ahora es ',
-            CAST(NEW.municipio AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
- END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_parroquia BEFORE DELETE ON parroquia
-FOR EACH ROW
-BEGIN
-    /* ¡Vergacion! ¡La instruccion comentada abajo es demasiado peligrosa! */
-    /* DELETE FROM usuario WHERE parroquia = OLD.parroquia_id; */
-    DELETE FROM region_geografica WHERE region_geografica_id = OLD.region_geografica_p;
 END $$
 
 
@@ -3158,120 +2892,6 @@ CREATE TRIGGER antes_de_eliminar_estadisticas_de_influencia BEFORE DELETE ON est
 FOR EACH ROW
 BEGIN
     DELETE FROM estadisticas WHERE estadisticas_id = OLD.estadisticas_p;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_pais AFTER INSERT ON pais
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-
-    SELECT CONCAT(
-        'region_geografica->pais: ',
-        CAST(NEW.region_geografica_p AS CHAR),'->',
-        CAST(NEW.pais_id AS CHAR),',',
-        CAST(NEW.continente AS CHAR),',',
-        CAST(NEW.capital AS CHAR),',',
-        NEW.idioma
-    ) INTO parametros;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_pais BEFORE UPDATE ON pais
-FOR EACH ROW
-BEGIN
-    IF NEW.region_geografica_p != OLD.region_geografica_p THEN
-        SET NEW.region_geografica_p = OLD.region_geografica_p;
-    END IF;
-    IF NEW.pais_id != OLD.pais_id THEN
-        SET NEW.pais_id = OLD.pais_id;
-    END IF;
-    IF NEW.continente != OLD.continente THEN
-        SET NEW.continente = OLD.continente;
-    END IF;
-    IF NEW.capital != OLD.capital THEN
-        SET NEW.capital = OLD.capital;
-    END IF;
-    IF NEW.idioma != OLD.idioma THEN
-        SET NEW.idioma = OLD.idioma;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_actualizar_pais AFTER UPDATE ON pais
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE NEW.region_geografica_p = region_geografica_id
-    INTO rastreable_p;
-    
-    IF NEW.moneda_local != OLD.moneda_local THEN
-        SELECT CONCAT(
-            'region_geografica->pais(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.pais_id AS CHAR),'(moneda_local):',
-            CAST(OLD.moneda_local AS CHAR),' ahora es ',
-            CAST(NEW.moneda_local AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-
-    IF NEW.moneda_local_dolar != OLD.moneda_local_dolar THEN
-        SELECT CONCAT(
-            'region_geografica->pais(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.pais_id AS CHAR),'(moneda_local_dolar):',
-            CAST(OLD.moneda_local_dolar AS CHAR),' ahora es ',
-            CAST(NEW.moneda_local_dolar AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-    
-    IF NEW.pib != OLD.pib THEN
-        SELECT CONCAT(
-            'region_geografica->pais(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.pais_id AS CHAR),'(pib):',
-            CAST(OLD.pib AS CHAR),' ahora es ',
-            CAST(NEW.pib AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_pais BEFORE DELETE ON pais
-FOR EACH ROW
-BEGIN
-    DELETE FROM estado WHERE pais = OLD.pais_id;
-    DELETE FROM ciudad WHERE ciudad_id = OLD.capital;
-    DELETE FROM pais_subcontinente WHERE pais_id = OLD.pais_id;
-    DELETE FROM region_geografica WHERE region_geografica_id = OLD.region_geografica_p;
 END $$
 
 
@@ -4019,7 +3639,7 @@ BEGIN
             'estadisticas: ', 
             CAST(NEW.rastreable_p AS CHAR), ',',
             CAST(NEW.estadisticas_id AS CHAR), ',',
-            CAST(NEW.region_geografica AS CHAR)
+            CAST(NEW.territorio AS CHAR)
         )
     ) INTO bobo;
 END $$
@@ -4036,8 +3656,8 @@ BEGIN
     IF NEW.estadisticas_id != OLD.estadisticas_id THEN
         SET NEW.estadisticas_id = OLD.estadisticas_id;
     END IF;
-    IF NEW.region_geografica != OLD.region_geografica THEN
-        SET NEW.estadisticas_id = OLD.region_geografica;
+    IF NEW.territorio != OLD.territorio THEN
+        SET NEW.territorio = OLD.territorio;
     END IF;
 END $$
 
@@ -4147,28 +3767,7 @@ DELIMITER $$
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_insertar_region_geografica AFTER INSERT ON region_geografica
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE bobo INT;
-    
-    SELECT CONCAT(
-        'region_geografica: ',
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.dibujable_p AS CHAR),',' ,
-        CAST(NEW.region_geografica_id AS CHAR),',' ,
-        NEW.nombre,',',
-        CAST(NEW.poblacion AS CHAR)
-    ) INTO parametros;
-    
-    SELECT RegistrarCreacion(NEW.rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_region_geografica BEFORE UPDATE ON region_geografica
+CREATE TRIGGER antes_de_actualizar_territorio BEFORE UPDATE ON territorio
 FOR EACH ROW
 BEGIN
     IF NEW.rastreable_p != OLD.rastreable_p THEN
@@ -4177,26 +3776,26 @@ BEGIN
     IF NEW.dibujable_p != OLD.dibujable_p THEN
         SET NEW.dibujable_p = OLD.dibujable_p;
     END IF;
-    IF NEW.region_geografica_id != OLD.region_geografica_id THEN
-        SET NEW.region_geografica_id = OLD.region_geografica_id;
+    IF NEW.territorio_id != OLD.territorio_id THEN
+        SET NEW.territorio_id = OLD.territorio_id;
     END IF;
 END $$
 
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_actualizar_region_geografica AFTER UPDATE ON region_geografica
+CREATE TRIGGER despues_de_actualizar_territorio AFTER UPDATE ON territorio
 FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
     DECLARE bobo INT;
     
-    SELECT CONCAT('region_geografica(columna): ', CAST(NEW.region_geografica_id AS CHAR),'(') INTO parametros;
+    SELECT CONCAT('territorio(columna): ', CAST(NEW.territorio_id AS CHAR),'(') INTO parametros;
     
     IF NEW.nombre != OLD.nombre THEN
         SELECT CONCAT(
             parametros,
-            'nombre): ',
+            '(nombre): ',
             OLD.nombre,' ahora es ',
             NEW.nombre
         ) INTO parametros;
@@ -4207,9 +3806,31 @@ BEGIN
     IF NEW.poblacion != OLD.poblacion THEN
         SELECT CONCAT(
             parametros,
-            'poblacion): ',
+            '(poblacion): ',
             OLD.poblacion,' ahora es ',
             NEW.poblacion
+        ) INTO parametros;
+    
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF;
+
+    IF NEW.nivel != OLD.nivel THEN
+        SELECT CONCAT(
+            parametros,
+            '(nivel): ',
+            OLD.nivel,' ahora es ',
+            NEW.nivel
+        ) INTO parametros;
+    
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF;
+
+    IF NEW.territorio_padre != OLD.territorio_padre THEN
+        SELECT CONCAT(
+            parametros,
+            '(territorio_padre): ',
+            OLD.territorio_padre,' ahora es ',
+            NEW.territorio_padre
         ) INTO parametros;
     
         SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
@@ -4218,7 +3839,7 @@ BEGIN
     IF NEW.consumidores_poblacion != OLD.consumidores_poblacion THEN
         SELECT CONCAT(
             parametros,
-            'consumidores_poblacion): ',
+            '(consumidores_poblacion): ',
             OLD.consumidores_poblacion,' ahora es ',
             NEW.consumidores_poblacion
         ) INTO parametros;
@@ -4240,29 +3861,74 @@ BEGIN
     IF NEW.tiendas_consumidores != OLD.tiendas_consumidores THEN
         SELECT CONCAT(
             parametros,
-            'tiendas_consumidores): ',
+            '(tiendas_consumidores): ',
             OLD.tiendas_consumidores,' ahora es ',
             NEW.tiendas_consumidores
         ) INTO parametros;
     
         SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
-    END IF;    
+    END IF;
+
+    IF NEW.codigo_postal != OLD.codigo_postal THEN
+        SELECT CONCAT(
+            parametros,
+            '(codigo_postal): ',
+            OLD.codigo_postal,' ahora es ',
+            NEW.codigo_postal
+        ) INTO parametros;
+    
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF; 
+
+    IF NEW.pib != OLD.pib THEN
+        SELECT CONCAT(
+            parametros,
+            '(pib): ',
+            OLD.pib,' ahora es ',
+            NEW.pib
+        ) INTO parametros;
+    
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF; 
 END $$
 
 USE `spuria`$$
 
 
-CREATE TRIGGER antes_de_eliminar_region_geografica BEFORE DELETE ON region_geografica
+CREATE TRIGGER despues_de_insertar_territorio AFTER INSERT ON territorio
+FOR EACH ROW
+BEGIN
+    DECLARE parametros TEXT;
+    DECLARE bobo INT;
+    
+    SELECT CONCAT(
+        'territorio: ',
+        CAST(NEW.rastreable_p AS CHAR),',',
+        CAST(NEW.dibujable_p AS CHAR),',' ,
+        CAST(NEW.territorio_id AS CHAR),',' ,
+        NEW.nombre,',',
+        CAST(NEW.poblacion AS CHAR),',',
+        CAST(NEW.territorio_padre AS CHAR)
+    ) INTO parametros;
+    
+    SELECT RegistrarCreacion(NEW.rastreable_p, parametros) INTO bobo;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER antes_de_eliminar_territorio BEFORE DELETE ON territorio
 FOR EACH ROW
 BEGIN
     DECLARE bobo INT;
 
-    SELECT RegistrarEliminacion(OLD.rastreable_p, CONCAT('region_geografica: ', OLD.nombre)) INTO bobo;
+    SELECT RegistrarEliminacion(OLD.rastreable_p, CONCAT('territorio: ', OLD.nombre)) INTO bobo;
 
-    DELETE FROM tiendas_consumidores WHERE region_geografica_id = OLD.region_geografica_id;
-    DELETE FROM region_geografica_objetivo WHERE region_geografica_id = OLD.region_geografica_id;
-    DELETE FROM estadisticas WHERE region_geografica = OLD.region_geografica_id;
+    DELETE FROM tiendas_consumidores WHERE territorio_id = OLD.territorio_id;
+    DELETE FROM territorio_objetivo WHERE territorio_id = OLD.territorio_id;
+    DELETE FROM estadisticas WHERE territorio = OLD.territorio_id;
     DELETE FROM dibujable WHERE dibujable_id = OLD.dibujable_p;
+    DELETE FROM region_territorio WHERE territorio_id = OLD.territorio_id;
     /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
     DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
 END $$
@@ -4824,16 +4490,16 @@ DELIMITER $$
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_insertar_region_geografica_objetivo AFTER INSERT ON region_geografica_objetivo
+CREATE TRIGGER despues_de_insertar_territorio_objetivo AFTER INSERT ON territorio_objetivo
 FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
     DECLARE rastreable_p, bobo INT;
         
     SELECT CONCAT(
-        'publicidad->region_geografica_objetivo: ',
+        'publicidad->territorio_objetivo: ',
         CAST(NEW.publicidad_id AS CHAR),'->',
-        CAST(NEW.region_geografica_id AS CHAR)
+        CAST(NEW.territorio_id AS CHAR)
     ) INTO parametros;
     
     SELECT publicidad.rastreable_p FROM publicidad
@@ -4846,7 +4512,7 @@ END $$
 USE `spuria`$$
 
 
-CREATE TRIGGER antes_de_actualizar_region_geografica_objetivo BEFORE UPDATE ON region_geografica_objetivo
+CREATE TRIGGER antes_de_actualizar_territorio_objetivo BEFORE UPDATE ON territorio_objetivo
 FOR EACH ROW
 BEGIN
     IF NEW.publicidad_id != OLD.publicidad_id THEN
@@ -4857,7 +4523,7 @@ END $$
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_actualizar_region_geografica_objetivo AFTER UPDATE ON region_geografica_objetivo
+CREATE TRIGGER despues_de_actualizar_territorio_objetivo AFTER UPDATE ON territorio_objetivo
 FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
@@ -4867,14 +4533,14 @@ BEGIN
     WHERE publicidad_id = NEW.publicidad_id
     INTO rastreable_p;
         
-    IF NEW.region_geografica_id != OLD.region_geografica_id THEN
+    IF NEW.territorio_id != OLD.territorio_id THEN
         SELECT CONCAT(
-            'publicidad->region_geografica_objetivo(columna): ',
+            'publicidad->territorio_objetivo(columna): ',
             CAST(NEW.publicidad_id AS CHAR),'->(',
             CAST(NEW.publicidad_id AS CHAR),',',
-            CAST(NEW.region_geografica_id AS CHAR),')(region_geografica_id): ',
-            CAST(OLD.region_geografica_id AS CHAR),' ahora es ',
-            CAST(NEW.region_geografica_id AS CHAR)
+            CAST(NEW.territorio_id AS CHAR),')(territorio_id): ',
+            CAST(OLD.territorio_id AS CHAR),' ahora es ',
+            CAST(NEW.territorio_id AS CHAR)
         ) INTO parametros;
         
         SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
@@ -5340,384 +5006,6 @@ DELIMITER $$
 USE `spuria`$$
 
 
-CREATE TRIGGER antes_de_actualizar_municipio BEFORE UPDATE ON municipio
-FOR EACH ROW
-BEGIN
-    IF NEW.region_geografica_p != OLD.region_geografica_p THEN
-        SET NEW.region_geografica_p = OLD.region_geografica_p;
-    END IF;
-    IF NEW.municipio_id != OLD.municipio_id THEN
-        SET NEW.municipio_id = OLD.municipio_id;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_municipio AFTER INSERT ON municipio
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-
-    SELECT CONCAT(
-        'region_geografica->municipio: ',
-        CAST(NEW.region_geografica_p AS CHAR),'->',
-        CAST(NEW.municipio_id AS CHAR),',',
-        CAST(NEW.estado AS CHAR)
-    ) INTO parametros;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_actualizar_municipio AFTER UPDATE ON municipio
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE NEW.region_geografica_p = region_geografica_id
-    INTO rastreable_p;
-    
-    IF NEW.estado != OLD.estado THEN
-        SELECT CONCAT(
-            'region_geografica->municipio(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.municipio_id AS CHAR),'(estado):',
-            CAST(OLD.estado AS CHAR),' ahora es ',
-            CAST(NEW.estado AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-
-    IF NEW.ciudad != OLD.ciudad THEN
-        SELECT CONCAT(
-            'region_geografica->municipio(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.municipio_id AS CHAR),'(ciudad):',
-            CAST(OLD.ciudad AS CHAR),' ahora es ',
-            CAST(NEW.ciudad AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_municipio BEFORE DELETE ON municipio
-FOR EACH ROW
-BEGIN
-    DELETE FROM parroquia WHERE municipio = OLD.municipio_id;
-    DELETE FROM region_geografica WHERE region_geografica_id = OLD.region_geografica_p;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_estado AFTER INSERT ON estado
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-
-    SELECT CONCAT(
-        'region_geografica->estado: ',
-        CAST(NEW.region_geografica_p AS CHAR),'->',
-        CAST(NEW.estado_id AS CHAR),',',
-        CAST(NEW.pais AS CHAR),',',
-        CAST(NEW.huso_horario_normal AS CHAR)
-    ) INTO parametros;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_estado BEFORE UPDATE ON estado
-FOR EACH ROW
-BEGIN
-    IF NEW.region_geografica_p != OLD.region_geografica_p THEN
-        SET NEW.region_geografica_p = OLD.region_geografica_p;
-    END IF;
-    IF NEW.estado_id != OLD.estado_id THEN
-        SET NEW.estado_id = OLD.estado_id;
-    END IF;
-    IF NEW.pais != OLD.pais THEN
-        SET NEW.pais = OLD.pais;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_actualizar_estado AFTER UPDATE ON estado
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE NEW.region_geografica_p = region_geografica_id
-    INTO rastreable_p;
-    
-    IF NEW.huso_horario_normal != OLD.huso_horario_normal THEN
-        SELECT CONCAT(
-            'region_geografica->estado(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.estado_id AS CHAR),'(huso_horario_normal):',
-            CAST(OLD.huso_horario_normal AS CHAR),' ahora es ',
-            CAST(NEW.huso_horario_normal AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-
-    IF NEW.huso_horario_verano != OLD.huso_horario_verano THEN
-        SELECT CONCAT(
-            'region_geografica->estado(columna): ',
-            CAST(NEW.region_geografica_p AS CHAR),'->',
-            CAST(NEW.estado_id AS CHAR),'(huso_horario_verano):',
-            CAST(OLD.huso_horario_verano AS CHAR),' ahora es ',
-            CAST(NEW.huso_horario_verano AS CHAR)
-        ) INTO parametros;
-    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
- END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_estado BEFORE DELETE ON estado
-FOR EACH ROW
-BEGIN
-    DELETE FROM municipio WHERE estado = OLD.estado_id;
-    DELETE FROM region_geografica WHERE region_geografica_id = OLD.region_geografica_p;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_ciudad AFTER INSERT ON ciudad
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-
-    SELECT CONCAT(
-        'region_geografica->ciudad: ',
-        CAST(NEW.region_geografica_p AS CHAR),'->',
-        CAST(NEW.ciudad_id AS CHAR)        
-    ) INTO parametros;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_p
-    INTO rastreable_p;
-
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_ciudad BEFORE UPDATE ON ciudad
-FOR EACH ROW
-BEGIN
-    IF NEW.region_geografica_p != OLD.region_geografica_p THEN
-        SET NEW.region_geografica_p = OLD.region_geografica_p;
-    END IF;
-    IF NEW.ciudad_id != OLD.ciudad_id THEN
-        SET NEW.ciudad_id = OLD.ciudad_id;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_ciudad BEFORE DELETE ON ciudad
-FOR EACH ROW
-BEGIN
-    UPDATE Municipio SET ciudad = NULL WHERE ciudad = OLD.ciudad_id;
-    DELETE FROM region_geografica WHERE region_geografica_id = OLD.region_geografica_p;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_continente AFTER INSERT ON continente
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-
-    SELECT CONCAT(
-        'region_geografica->continente: ',
-        CAST(NEW.region_geografica_p AS CHAR),'->',
-        CAST(NEW.continente_id AS CHAR)        
-    ) INTO parametros;
-
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_continente BEFORE UPDATE ON continente
-FOR EACH ROW
-BEGIN
-    IF NEW.region_geografica_p != OLD.region_geografica_p THEN
-        SET NEW.region_geografica_p = OLD.region_geografica_p;
-    END IF;
-    IF NEW.continente_id != OLD.continente_id THEN
-        SET NEW.continente_id = OLD.continente_id;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_continente BEFORE DELETE ON continente
-FOR EACH ROW
-BEGIN
-    DELETE FROM subcontinente WHERE continente = OLD.continente_id;
-    DELETE FROM pais WHERE continente = OLD.continente_id;
-    DELETE FROM region_geografica WHERE region_geografica_id = OLD.region_geografica_p;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_subcontinente AFTER INSERT ON subcontinente
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo INT;
-
-    SELECT CONCAT(
-        'region_geografica->subcontinente: ',
-        CAST(NEW.region_geografica_p AS CHAR),'->',
-        CAST(NEW.subcontinente_id AS CHAR)        
-    ) INTO parametros;
-    
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_subcontinente BEFORE UPDATE ON subcontinente
-FOR EACH ROW
-BEGIN
-    IF NEW.region_geografica_p != OLD.region_geografica_p THEN
-        SET NEW.region_geografica_p = OLD.region_geografica_p;
-    END IF;
-    IF NEW.subcontinente_id != OLD.subcontinente_id THEN
-        SET NEW.subcontinente_id = OLD.subcontinente_id;
-    END IF;
-    IF NEW.continente != OLD.continente THEN
-        SET NEW.continente = OLD.continente;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_subcontinente BEFORE DELETE ON subcontinente
-FOR EACH ROW
-BEGIN
-    DELETE FROM pais_subcontinente WHERE subcontinente_id = OLD.subcontinente_id;
-    DELETE FROM region_geografica WHERE region_geografica_id = OLD.region_geografica_p;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_pais_subcontinente AFTER INSERT ON pais_subcontinente
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE region_geografica_p, rastreable_p, bobo INT;
-
-    SELECT region_geografica.region_geografica_id, region_geografica.rastreable_p FROM region_geografica, subcontinente
-    WHERE region_geografica_id = subcontinente.region_geografica_p AND subcontinente.subcontinente_id = NEW.subcontinente_id
-    INTO region_geografica_p, rastreable_p;
-    
-    SELECT CONCAT(
-        'region_geografica->subcontinente->pais_subcontinente: ',
-        CAST(region_geografica_p AS CHAR),'->',
-        CAST(NEW.subcontinente_id AS CHAR),'->(',
-        CAST(NEW.subcontinente_id AS CHAR),',',
-        CAST(NEW.pais_id AS CHAR),')'
-    ) INTO parametros;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_actualizar_pais_subcontinente BEFORE UPDATE ON pais_subcontinente
-FOR EACH ROW
-BEGIN
-    IF NEW.subcontinente_id != OLD.subcontinente_id THEN
-        SET NEW.subcontinente_id = OLD.subcontinente_id;
-    END IF;
-    IF NEW.pais_id != OLD.pais_id THEN
-        SET NEW.pais_id = OLD.pais_id;
-    END IF;
-END $$
-
-
-DELIMITER ;
-
-DELIMITER $$
-USE `spuria`$$
-
-
 CREATE TRIGGER antes_de_actualizar_administrador BEFORE UPDATE ON administrador
 FOR EACH ROW
 BEGIN
@@ -6111,8 +5399,8 @@ USE `spuria`$$
 CREATE TRIGGER antes_de_actualizar_tiendas_consumidores BEFORE UPDATE ON tiendas_consumidores
 FOR EACH ROW
 BEGIN
-    IF NEW.region_geografica_id != OLD.region_geografica_id THEN
-        SET NEW.region_geografica_id = OLD.region_geografica_id;
+    IF NEW.territorio_id != OLD.territorio_id THEN
+        SET NEW.territorio_id = OLD.territorio_id;
     END IF;
     IF NEW.fecha_inicio != OLD.fecha_inicio THEN
         SET NEW.fecha_inicio = OLD.fecha_inicio;
@@ -6128,14 +5416,14 @@ BEGIN
     DECLARE parametros TEXT;
     DECLARE rastreable_p, bobo INT;
     
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_id
+    SELECT territorio.rastreable_p FROM territorio
+    WHERE territorio_id = NEW.territorio_id
     INTO rastreable_p;
         
     IF NEW.fecha_fin != OLD.fecha_fin THEN
         SELECT CONCAT(
-            'region_geografica->tiendas_consumidores(columna): ',
-            CAST(NEW.region_geografica_id AS CHAR),'->',
+            'territorio->tiendas_consumidores(columna): ',
+            CAST(NEW.territorio_id AS CHAR),'->',
             CAST(NEW.fecha_inicio AS CHAR),'(fecha_fin): ',
             CAST(OLD.fecha_fin AS CHAR),' ahora es ',
             CAST(NEW.fecha_fin AS CHAR)
@@ -6146,8 +5434,8 @@ BEGIN
     
     IF NEW.numero_de_tiendas != OLD.numero_de_tiendas THEN
         SELECT CONCAT(
-            'region_geografica->numero_de_tiendas(columna): ',
-            CAST(NEW.region_geografica_id AS CHAR),'->',
+            'territorio->numero_de_tiendas(columna): ',
+            CAST(NEW.territorio_id AS CHAR),'->',
             CAST(NEW.fecha_inicio AS CHAR),'(numero_de_tiendas): ',
             CAST(OLD.numero_de_tiendas AS CHAR),' ahora es ',
             CAST(NEW.numero_de_tiendas AS CHAR)
@@ -6158,8 +5446,8 @@ BEGIN
     
     IF NEW.numero_de_consumidores != OLD.numero_de_consumidores THEN
         SELECT CONCAT(
-            'region_geografica->numero_de_tiendas(columna): ',
-            CAST(NEW.region_geografica_id AS CHAR),'->',
+            'territorio->numero_de_tiendas(columna): ',
+            CAST(NEW.territorio_id AS CHAR),'->',
             CAST(NEW.fecha_inicio AS CHAR),'(numero_de_consumidores): ',
             CAST(OLD.numero_de_consumidores AS CHAR),' ahora es ',
             CAST(NEW.numero_de_consumidores AS CHAR)
@@ -6179,18 +5467,42 @@ BEGIN
     DECLARE rastreable_p, bobo INT;
     
     SELECT CONCAT(
-        'region_geografica->tiendas_consumidores: ',
-        CAST(NEW.region_geografica_id AS CHAR),'->',
+        'territorio->tiendas_consumidores: ',
+        CAST(NEW.territorio_id AS CHAR),'->',
         CAST(NEW.fecha_inicio AS CHAR),': ',
         CAST(NEW.numero_de_tiendas AS CHAR),',',
         CAST(NEW.numero_de_consumidores AS CHAR)
     ) INTO parametros;
     
-    SELECT region_geografica.rastreable_p FROM region_geografica
-    WHERE region_geografica_id = NEW.region_geografica_id
+    SELECT territorio.rastreable_p FROM territorio
+    WHERE territorio_id = NEW.territorio_id
     INTO rastreable_p;
     
     SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+END $$
+
+
+DELIMITER ;
+
+DELIMITER $$
+USE `spuria`$$
+
+
+CREATE TRIGGER antes_de_actualizar_region BEFORE UPDATE ON region
+FOR EACH ROW
+BEGIN
+    IF NEW.region_id != OLD.region_id THEN
+        SET NEW.region_id = OLD.region_id;
+    END IF;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER antes_de_eliminar_region BEFORE DELETE ON region
+FOR EACH ROW
+BEGIN
+    DELETE FROM region_territorio WHERE region_id = OLD.region_id;
 END $$
 
 
