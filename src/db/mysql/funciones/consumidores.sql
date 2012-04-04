@@ -73,7 +73,7 @@ DELIMITER $$
 
 CREATE FUNCTION `InsertarConsumidor` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), 
                                       a_Estatus CHAR(9), a_Sexo CHAR(6), a_FechaDeNacimiento DATE, 
-                                      a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16), a_Parroquia INT, 
+                                      a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16), a_Ubicacion CHAR(16), 
                                       a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
@@ -95,7 +95,7 @@ BEGIN
 
     SELECT InsertarUsuario (
 		a_Creador,
-        a_Parroquia, 
+        a_Ubicacion, 
         a_CorreoElectronico, 
 		a_Contrasena
     ) INTO UsuarioID;

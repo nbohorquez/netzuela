@@ -14,7 +14,7 @@ SELECT 'InsertarTiendasConsumidores';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarTiendasConsumidores` (a_TerritorioID INT, a_NumeroDeConsumidores INT, a_NumeroDeTiendas INT)
+CREATE FUNCTION `InsertarTiendasConsumidores` (a_TerritorioID CHAR(16), a_NumeroDeConsumidores INT, a_NumeroDeTiendas INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE C, Pob INT;
@@ -80,10 +80,12 @@ SELECT 'InsertarTerritorio';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarTerritorio` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_Nivel INT UNSIGNED, a_TerritorioPadre INT, a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
-RETURNS INT NOT DETERMINISTIC
+CREATE FUNCTION `InsertarTerritorio` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_Nivel INT UNSIGNED, a_TerritorioPadre CHAR(16), a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
+RETURNS CHAR(16) NOT DETERMINISTIC
 BEGIN
-    DECLARE Territorio_P, Dibujable_P, Rastreable_P, Resultado INT;
+    DECLARE Dibujable_P, Rastreable_P, Resultado, Punto, C INT;
+	DECLARE N CHAR(2);
+	DECLARE ID, ACambiar, ADejarIgual CHAR(16);
 
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -95,10 +97,20 @@ BEGIN
     SELECT InsertarDibujable() INTO Dibujable_P;
     SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
 
+	SELECT COUNT(*) FROM territorio
+	WHERE territorio_padre = a_TerritorioPadre
+	INTO C;
+
+	SELECT LPAD(HEX(C + 1), 2, '0') INTO N;
+	SELECT LOCATE('00', a_TerritorioPadre) INTO Punto;
+	SELECT LEFT(a_TerritorioPadre, Punto + 1) INTO ACambiar;
+	SELECT RIGHT(a_TerritorioPadre, LENGTH(a_TerritorioPadre) - Punto - 1) INTO ADejarIgual;
+	SELECT CONCAT(REPLACE(ACambiar, '00', N), ADejarIgual) INTO ID;
+
     INSERT INTO territorio VALUES (
         Rastreable_P,
         Dibujable_P,
-        NULL,
+        ID,
         a_Nombre,
         a_Poblacion,
 		a_Idioma,
@@ -109,10 +121,8 @@ BEGIN
 		a_PIB
     );
 
-    SELECT LAST_INSERT_ID() INTO Territorio_P;
-    SELECT InsertarTiendasConsumidores(Territorio_P, 0, 0) INTO Resultado;
-    
-    RETURN Territorio_P;
+    SELECT InsertarTiendasConsumidores(ID, 0, 0) INTO Resultado;
+    RETURN ID;
 END$$
 
 /*
@@ -129,9 +139,10 @@ SELECT 'InsertarPais';
 DELIMITER $$
 
 CREATE FUNCTION `InsertarPais` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
-RETURNS INT NOT DETERMINISTIC
+RETURNS CHAR(16) NOT DETERMINISTIC
 BEGIN
-    DECLARE C, Territorio_P INT;
+    DECLARE C INT;
+	DECLARE Territorio_P CHAR(16);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -160,7 +171,7 @@ BEGIN
     INTO C;
 
     IF C = 0 THEN
-		SELECT InsertarTerritorio(a_Creador, a_Nombre, a_Poblacion, a_Idioma, 1, 1, a_CodigoPostal, a_PIB) INTO Territorio_P;
+		SELECT InsertarTerritorio(a_Creador, a_Nombre, a_Poblacion, a_Idioma, 1, '0.00.00.00.00.00', a_CodigoPostal, a_PIB) INTO Territorio_P;
         RETURN Territorio_P;
     ELSE    
         RETURN FALSE;
@@ -180,10 +191,11 @@ SELECT 'InsertarEstado';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarEstado` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_TerritorioPadre INT, a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
-RETURNS INT NOT DETERMINISTIC
+CREATE FUNCTION `InsertarEstado` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_TerritorioPadre CHAR(16), a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
+RETURNS CHAR(16) NOT DETERMINISTIC
 BEGIN
-    DECLARE C, Territorio_P INT;
+    DECLARE C INT;
+	DECLARE Territorio_P CHAR(16);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -240,10 +252,11 @@ SELECT 'InsertarMunicipio';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarMunicipio` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_TerritorioPadre INT, a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
-RETURNS INT NOT DETERMINISTIC
+CREATE FUNCTION `InsertarMunicipio` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_TerritorioPadre CHAR(16), a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
+RETURNS CHAR(16) NOT DETERMINISTIC
 BEGIN
-    DECLARE C, Territorio_P INT;
+    DECLARE C INT;
+	DECLARE Territorio_P CHAR(16);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -274,7 +287,7 @@ END$$
 
 /*
 *************************************************************
-*                     InsertarParroquia				              *
+*                     InsertarParroquia						*
 *************************************************************
 */
 
@@ -285,10 +298,11 @@ SELECT 'InsertarParroquia';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarParroquia` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_TerritorioPadre INT, a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
-RETURNS INT NOT DETERMINISTIC
+CREATE FUNCTION `InsertarParroquia` (a_Creador INT, a_Nombre VARCHAR(45), a_Poblacion INT UNSIGNED, a_Idioma CHAR(10), a_TerritorioPadre CHAR(16), a_CodigoPostal CHAR(10), a_PIB DECIMAL(15,0))
+RETURNS CHAR(16) NOT DETERMINISTIC
 BEGIN
-    DECLARE C, Territorio_P INT;
+    DECLARE C INT;
+	DECLARE Territorio_P CHAR(16);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN

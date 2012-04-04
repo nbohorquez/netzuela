@@ -14,8 +14,8 @@ SELECT 'InsertarPatrocinante';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarPatrocinante` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), 
-                                        a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria INT, a_Estatus CHAR(9), 
+CREATE FUNCTION `InsertarPatrocinante` (a_Creador INT, a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), 
+                                        a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria CHAR(16), a_Estatus CHAR(9), 
                                         a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
                                         a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
                                         a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
@@ -47,7 +47,7 @@ BEGIN
     
     SELECT InsertarCliente (
         a_Creador, 
-        a_Parroquia, 
+        a_Ubicacion, 
         a_CorreoElectronico, 
         a_Contrasena, 
         a_RIF, 
@@ -273,44 +273,44 @@ END $$
 
 /*
 *************************************************************
-*			         InsertarRegionGeograficaObjetivo			        *
+*			         InsertarTerritorioObjetivo			        *
 *************************************************************
 */
 
 DELIMITER ;
 
-DROP FUNCTION IF EXISTS `InsertarRegionGeograficaObjetivo`;
-SELECT 'InsertarRegionGeograficaObjetivo';
+DROP FUNCTION IF EXISTS `InsertarTerritorioObjetivo`;
+SELECT 'InsertarTerritorioObjetivo';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarRegionGeograficaObjetivo` (a_PublicidadID INT, a_RegionGeograficaID INT)
+CREATE FUNCTION `InsertarTerritorioObjetivo` (a_PublicidadID INT, a_TerritorioID CHAR(16))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
-        SET @MensajeDeError = 'Error de clave externa en InsertarRegionGeograficaObjetivo()';
+        SET @MensajeDeError = 'Error de clave externa en InsertarTerritorioObjetivo()';
         SET @CodigoDeError = 1452;
         RETURN -1452;
     END; 
 
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
-        SET @MensajeDeError = 'Error de valor nulo en InsertarRegionGeograficaObjetivo()';
+        SET @MensajeDeError = 'Error de valor nulo en InsertarTerritorioObjetivo()';
         SET @CodigoDeError = 1048;
         RETURN -1048;
     END;
 
     DECLARE EXIT HANDLER FOR 1062
     BEGIN
-        SET @MensajeDeError = 'Error de valor duplicado en InsertarRegionGeograficaObjetivo()';
+        SET @MensajeDeError = 'Error de valor duplicado en InsertarTerritorioObjetivo()';
         SET @CodigoDeError = 1062;
         RETURN -1062;
     END; 
 
-    INSERT INTO region_geografica_objetivo VALUES (
+    INSERT INTO territorio_objetivo VALUES (
         a_PublicidadID,
-        a_RegionGeograficaID
+        a_TerritorioID
     );
 
     RETURN TRUE;

@@ -14,8 +14,8 @@ SELECT 'InsertarTienda';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarTienda` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), 
-                                  a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria INT, a_Estatus CHAR(9), 
+CREATE FUNCTION `InsertarTienda` (a_Creador INT, a_Parroquia CHAR(16), a_CorreoElectronico VARCHAR(45), 
+                                  a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria CHAR(16), a_Estatus CHAR(9), 
                                   a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
                                   a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
                                   a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
@@ -24,7 +24,7 @@ RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Buscable_P, CalificableSeguible_P, Interlocutor_P, Dibujable_P, Resultado, T INT;
     DECLARE Cliente_P CHAR(10);
-        
+/*
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
         SET @MensajeDeError = 'Error de valor nulo en InsertarTienda()';
@@ -45,7 +45,7 @@ BEGIN
         SET @CodigoDeError = 1062;
         RETURN -1062;
     END;
-        
+*/        
     SELECT InsertarCliente (
         a_Creador, 
         a_Parroquia, 
@@ -257,8 +257,8 @@ DELIMITER $$
 
 CREATE FUNCTION `InsertarProducto` (a_Creador INT, a_TipoDeCodigo CHAR(7), a_Codigo CHAR(15), 
 						a_Estatus CHAR(9), a_Fabricante VARCHAR(45), a_Modelo VARCHAR(45), 
-						a_Nombre VARCHAR(45), a_Categoria INT, a_DebutEnElMercado DATE, 
-						a_Largo FLOAT, a_Ancho FLOAT, a_Alto FLOAT, a_Peso FLOAT, a_PaisDeOrigen INT)
+						a_Nombre VARCHAR(45), a_Categoria CHAR(16), a_DebutEnElMercado DATE, 
+						a_Largo FLOAT, a_Ancho FLOAT, a_Alto FLOAT, a_Peso FLOAT, a_PaisDeOrigen CHAR(16))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Rastreable_P, Describible_P, Buscable_P, CalificableSeguible_P INT;

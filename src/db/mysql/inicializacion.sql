@@ -104,8 +104,9 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 /* La categoria 'Inicio' es hija de ella misma */
-SELECT InsertarCategoria('Inicio', -1) INTO @Cat_0000;
-UPDATE categoria SET hijo_de_categoria = @Cat_0000 WHERE categoria_id = @Cat_0000;
+SELECT InsertarEtiquetable() INTO @Etiquetable_P;
+SELECT '0.00.00.00.00.00' INTO @Cat_0000;
+INSERT INTO categoria VALUES (@Etiquetable_P, '0.00.00.00.00.00', 'Inicio', '0.00.00.00.00.00');
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
@@ -215,7 +216,25 @@ SELECT InsertarAdministrador (
 
 /* Insertamos al planeta Tierra primero */
 SELECT 'mundo';
-SELECT InsertarTerritorio(@Creador, 'La Tierra', 0, 'Mandarin', 0, 1, '', 0) INTO @Mundo;
+SELECT InsertarDibujable() INTO @Dibujable_P;
+SELECT InsertarRastreable(@Creador) INTO @Rastreable_P;
+SELECT '0.00.00.00.00.00' INTO @Mundo;
+
+INSERT INTO territorio VALUES (
+    @Rastreable_P,
+    @Dibujable_P,
+    @Mundo,
+    'La Tierra',
+    0,
+	'Mandarin',
+	0,
+	@Mundo,
+    0, 0, NULL,
+	'', 
+	0
+);
+
+SELECT InsertarTiendasConsumidores(@Mundo, 0, 0);
 
 SELECT 'paises';
 SELECT InsertarPais (

@@ -114,7 +114,7 @@ SELECT 'InsertarEstadisticas';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarEstadisticas` (a_Creador INT, a_RegionGeografica INT)
+CREATE FUNCTION `InsertarEstadisticas` (a_Creador INT, a_Territorio CHAR(16))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Rastreable_P, EstaID, Resultado INT;
@@ -145,7 +145,7 @@ BEGIN
     INSERT INTO estadisticas VALUES (
         Rastreable_P,
         NULL,
-        a_RegionGeografica
+        a_Territorio
     );
     
     SELECT LAST_INSERT_ID() INTO EstaID;
@@ -167,7 +167,7 @@ SELECT 'InsertarEstadisticasDeInfluencia';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarEstadisticasDeInfluencia` (a_Creador INT, a_Palabra INT, a_RegionGeografica INT)
+CREATE FUNCTION `InsertarEstadisticasDeInfluencia` (a_Creador INT, a_Palabra INT, a_Territorio CHAR(16))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Estadisticas_P INT;
@@ -193,7 +193,7 @@ BEGIN
         RETURN -1062;
     END; 
 
-    SELECT InsertarEstadisticas(a_Creador, a_RegionGeografica) INTO Estadisticas_P;
+    SELECT InsertarEstadisticas(a_Creador, a_Territorio) INTO Estadisticas_P;
 	
     INSERT INTO estadisticas_de_influencia VALUES (
         Estadisticas_P,
@@ -218,7 +218,7 @@ SELECT 'InsertarEstadisticasDePopularidad';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarEstadisticasDePopularidad` (a_Creador INT, a_CalificableSeguible INT, a_RegionGeografica INT)
+CREATE FUNCTION `InsertarEstadisticasDePopularidad` (a_Creador INT, a_CalificableSeguible INT, a_Territorio CHAR(16))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Estadisticas_P INT;
@@ -244,7 +244,7 @@ BEGIN
         RETURN -1062;
     END; 
 
-    SELECT InsertarEstadisticas(a_Creador, a_RegionGeografica) INTO Estadisticas_P;
+    SELECT InsertarEstadisticas(a_Creador, a_Territorio) INTO Estadisticas_P;
 	
     INSERT INTO estadisticas_de_popularidad VALUES (
         Estadisticas_P,
@@ -269,7 +269,7 @@ SELECT 'InsertarEstadisticasDeVisitas';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarEstadisticasDeVisitas` (a_Creador INT, a_Buscable INT, a_RegionGeografica INT)
+CREATE FUNCTION `InsertarEstadisticasDeVisitas` (a_Creador INT, a_Buscable INT, a_Territorio CHAR(16))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Estadisticas_P, EstaID, Resultado INT;
@@ -295,7 +295,7 @@ BEGIN
         RETURN -1062;
     END; 
 
-    SELECT InsertarEstadisticas(a_Creador, a_RegionGeografica) INTO Estadisticas_P;
+    SELECT InsertarEstadisticas(a_Creador, a_Territorio) INTO Estadisticas_P;
 
     INSERT INTO estadisticas_de_visitas VALUES (
         Estadisticas_P,

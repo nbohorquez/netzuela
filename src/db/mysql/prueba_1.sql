@@ -360,7 +360,7 @@ SELECT InsertarPublicidad(@PatrocinanteID) INTO @PublicidadID;
 
 SELECT InsertarGrupoDeEdadObjetivo(@PublicidadID, 'Adultos jovenes');
 SELECT InsertarGradoDeInstruccionObjetivo(@PublicidadID, 'Universitaria');
-SELECT InsertarRegionGeograficaObjetivo(@PublicidadID, @AmbrosioID);
+SELECT InsertarTerritorioObjetivo(@PublicidadID, @paAmbrosio);
 SELECT InsertarSexoObjetivo(@PublicidadID, 'Hombre');
 SELECT InsertarConsumidorObjetivo(@PublicidadID, @ConsumidorID2);
 

@@ -14,7 +14,7 @@ SELECT 'InsertarUsuario';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
+CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE AccesoID, Rastreable_P INT;
@@ -45,7 +45,7 @@ BEGIN
     INSERT INTO usuario VALUES ( 
 		Rastreable_P,   
         NULL,
-        a_Parroquia
+        a_Ubicacion
     );
 
     SELECT LAST_INSERT_ID() INTO AccesoID; 
@@ -77,7 +77,7 @@ SELECT 'InsertarAdministrador';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarAdministrador` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), 
+CREATE FUNCTION `InsertarAdministrador` (a_Creador INT, a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), 
                                          a_Contrasena VARCHAR(45), a_Estatus CHAR(9), a_Privilegios VARCHAR(45), 
                                          a_Nombre VARCHAR(45), a_Apellido VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
@@ -100,7 +100,7 @@ BEGIN
                                    
     SELECT InsertarUsuario (
 		a_Creador,
-        a_Parroquia, 
+        a_Ubicacion, 
         a_CorreoElectronico, a_Contrasena
     ) INTO UsuarioID;
 
@@ -129,8 +129,8 @@ SELECT 'InsertarCliente';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarCliente` (a_Creador INT, a_Parroquia INT, a_CorreoElectronico VARCHAR(45), 
-                                   a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria INT, a_Estatus CHAR(9), 
+CREATE FUNCTION `InsertarCliente` (a_Creador INT, a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), 
+                                   a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria CHAR(16), a_Estatus CHAR(9), 
                                    a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
                                    a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
                                    a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
@@ -162,7 +162,7 @@ BEGIN
 
     SELECT InsertarUsuario (
 		a_Creador,
-        a_Parroquia, 
+        a_Ubicacion, 
         a_CorreoElectronico, 
 		a_Contrasena
     ) INTO UsuarioID;

@@ -14,10 +14,12 @@ SELECT 'InsertarCategoria';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarCategoria` (a_Nombre CHAR(30), a_HijoDeCategoria INT)
-RETURNS INT NOT DETERMINISTIC
+CREATE FUNCTION `InsertarCategoria` (a_Nombre CHAR(30), a_HijoDeCategoria CHAR(16))
+RETURNS CHAR(16) NOT DETERMINISTIC
 BEGIN
-    DECLARE C, Etiquetable_P INT;
+    DECLARE C, Etiquetable_P, Punto INT;
+	DECLARE N CHAR(2);
+	DECLARE ID, ACambiar, ADejarIgual CHAR(16);
 
     DECLARE EXIT HANDLER FOR 1452
     BEGIN
@@ -34,17 +36,27 @@ BEGIN
     INTO C;
 
     IF C = 0 THEN
+		SELECT COUNT(*) FROM categoria
+		WHERE hijo_de_categoria = a_HijoDeCategoria
+		INTO C;
+
+		SELECT LPAD(HEX(C + 1), 2, '0') INTO N;
+		SELECT LOCATE('00', a_HijoDeCategoria) INTO Punto;
+		SELECT LEFT(a_HijoDeCategoria, Punto + 1) INTO ACambiar;
+		SELECT RIGHT(a_HijoDeCategoria, LENGTH(a_HijoDeCategoria) - Punto - 1) INTO ADejarIgual;
+		SELECT CONCAT(REPLACE(ACambiar, '00', N), ADejarIgual) INTO ID;
+
         INSERT INTO categoria VALUES (
             Etiquetable_P,
-            NULL,
+            ID,
             a_Nombre,
             a_HijoDeCategoria
         );
+
+		RETURN ID;
     ELSE
         RETURN FALSE;
     END IF;
-
-    RETURN LAST_INSERT_ID();
 END$$
 
 /***********************************************************/
