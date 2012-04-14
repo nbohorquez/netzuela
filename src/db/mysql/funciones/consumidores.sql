@@ -3,7 +3,7 @@ USE `spuria`;
 
 /*
 *************************************************************
-*				               InsertarSeguidor			                *
+*						InsertarSeguidor					*
 *************************************************************
 */
 
@@ -60,7 +60,7 @@ END$$
 
 /*
 *************************************************************
-*                    InsertarConsumidor				              *
+*                    InsertarConsumidor						*
 *************************************************************
 */
 
@@ -94,9 +94,12 @@ BEGIN
     END;
 
     SELECT InsertarUsuario (
-		a_Creador,
-        a_Ubicacion, 
-        a_CorreoElectronico, 
+		a_Creador, 
+		a_Nombre, 
+		a_Apellido, 
+		a_Estatus, 
+		a_Ubicacion, 
+		a_CorreoElectronico, 
 		a_Contrasena
     ) INTO UsuarioID;
   
@@ -106,9 +109,6 @@ BEGIN
         Interlocutor_P,
         UsuarioID,
         NULL,
-        a_Nombre,
-        a_Apellido,
-        a_Estatus,
         a_Sexo,
         a_FechaDeNacimiento,
         a_GrupoDeEdad,

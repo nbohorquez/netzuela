@@ -3,7 +3,7 @@ USE `spuria`;
 
 /*
 *************************************************************
-*				             InsertarInterlocutor				            *
+*					InsertarInterlocutor					*
 *************************************************************
 */
 
@@ -23,7 +23,7 @@ END$$
 
 /*
 *************************************************************
-*				                InsertarMensaje				              *
+*						InsertarMensaje						*
 *************************************************************
 */
 
@@ -53,11 +53,14 @@ BEGIN
         RETURN -1048;
     END; 
 
-	SELECT u.rastreable_p
-	FROM usuario AS u
-	LEFT JOIN consumidor AS co ON u.usuario_id = co.usuario_p
-	LEFT JOIN cliente AS cl ON u.usuario_id = cl.usuario_p
-	LEFT JOIN tienda AS ti ON cl.rif = ti.cliente_p
+	SELECT DISTINCT
+	CASE 
+	WHEN co.interlocutor_p = a_Remitente THEN u.rastreable_p
+	WHEN ti.interlocutor_p = a_Remitente THEN cl.rastreable_p
+	END
+	FROM (usuario AS u, cliente AS cl)
+	JOIN consumidor AS co ON u.usuario_id = co.usuario_p
+	JOIN tienda AS ti ON cl.rif = ti.cliente_p
 	WHERE co.interlocutor_p = a_Remitente OR ti.interlocutor_p = a_Remitente
 	INTO creador;
 

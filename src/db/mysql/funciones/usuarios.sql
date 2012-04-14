@@ -3,7 +3,7 @@ USE `spuria`;
 
 /*
 *************************************************************
-*                      InsertarUsuario				              *
+*                      InsertarUsuario						*
 *************************************************************
 */
 
@@ -14,7 +14,7 @@ SELECT 'InsertarUsuario';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
+CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), a_Estatus CHAR(9), a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE AccesoID, Rastreable_P INT;
@@ -45,6 +45,9 @@ BEGIN
     INSERT INTO usuario VALUES ( 
 		Rastreable_P,   
         NULL,
+		a_Nombre,
+		a_Apellido,
+		a_Estatus,
         a_Ubicacion
     );
 
@@ -66,7 +69,7 @@ END$$
 
 /*
 *************************************************************
-*                    InsertarAdministrador			            *
+*                    InsertarAdministrador					*
 *************************************************************
 */
 
@@ -97,20 +100,21 @@ BEGIN
         SET @CodigoDeError = 1452;
         RETURN -1452;
     END;
-                                   
+                              
     SELECT InsertarUsuario (
-		a_Creador,
-        a_Ubicacion, 
-        a_CorreoElectronico, a_Contrasena
+		a_Creador, 
+		a_Nombre, 
+		a_Apellido, 
+		a_Estatus, 
+		a_Ubicacion, 
+		a_CorreoElectronico, 
+		a_Contrasena
     ) INTO UsuarioID;
 
     INSERT INTO administrador VALUES (
         UsuarioID,
         NULL,
-        a_Estatus,
-        a_Privilegios,
-        a_Nombre,
-        a_Apellido
+        a_Privilegios
     );
     
     RETURN LAST_INSERT_ID();
@@ -118,7 +122,7 @@ END$$
 
 /*
 *************************************************************
-*                      InsertarCliente				              *
+*                      InsertarCliente						*
 *************************************************************
 */
 
@@ -129,15 +133,14 @@ SELECT 'InsertarCliente';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarCliente` (a_Creador INT, a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), 
-                                   a_Contrasena VARCHAR(45), a_RIF CHAR(10), a_Categoria CHAR(16), a_Estatus CHAR(9), 
-                                   a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), a_Telefono CHAR(12), 
-                                   a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), a_Local CHAR(12), 
-                                   a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), a_PaginaWeb CHAR(40), 
-                                   a_Facebook CHAR(80), a_Twitter CHAR(80), a_CorreoElectronicoPublico VARCHAR(45))
+CREATE FUNCTION `InsertarCliente` (a_Propietario INT, a_Ubicacion CHAR(16), a_RIF CHAR(10), a_Categoria CHAR(16),
+								   a_Estatus CHAR(9), a_NombreLegal VARCHAR(45), a_NombreComun VARCHAR(45), 
+								   a_Telefono CHAR(12), a_Edificio_CC CHAR(20), a_Piso CHAR(12), a_Apartamento CHAR(12), 
+								   a_Local CHAR(12), a_Casa CHAR(20), a_Calle CHAR(12), a_Sector_Urb_Barrio CHAR(20), 
+								   a_PaginaWeb CHAR(40), a_Facebook CHAR(80), a_Twitter CHAR(80), a_CorreoElectronicoPublico VARCHAR(45))
 RETURNS CHAR(10) NOT DETERMINISTIC
 BEGIN
-    DECLARE Describible_P, UsuarioID INT;
+    DECLARE Rastreable, Rastreable_P, Describible_P INT;
 
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -160,19 +163,19 @@ BEGIN
         RETURN -1062;
     END;
 
-    SELECT InsertarUsuario (
-		a_Creador,
-        a_Ubicacion, 
-        a_CorreoElectronico, 
-		a_Contrasena
-    ) INTO UsuarioID;
-    
+	SELECT u.rastreable_p 	
+	FROM usuario AS u
+	WHERE u.usuario_id = a_Propietario
+	INTO Rastreable;
+	
+	SELECT InsertarRastreable(Rastreable) INTO Rastreable_P;
     SELECT InsertarDescribible() INTO Describible_P;
         
     INSERT INTO cliente VALUES (
+		Rastreable_P,
         Describible_P,
-        UsuarioID,
         a_RIF,
+		a_Propietario,
         a_Categoria,
         a_Estatus,
         a_NombreLegal,
@@ -188,7 +191,8 @@ BEGIN
         a_PaginaWeb,
         a_Facebook,
         a_Twitter,
-		a_CorreoElectronicoPublico
+		a_CorreoElectronicoPublico,
+		a_Ubicacion
     );  
         
     RETURN a_RIF;

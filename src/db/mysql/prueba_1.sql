@@ -115,11 +115,19 @@ WHERE region_geografica.nombre = 'Ambrosio'
 INTO @paAmbrosio;
 */
 
+SELECT InsertarUsuario (
+	@Creador, 
+	'Ursula', 
+	'Dorante', 
+	'Activo', 
+	@paCHerrera, 
+	'molleja@abc.com', 
+    '41ssdas#ASX'
+) INTO @UsuarioTienda1;    
+
 SELECT InsertarTienda (
-    @Creador, 
-    @paAmbrosio, 
-    'molleja@abc.com', 
-    '41ssdas#ASX',
+    @UsuarioTienda1, 
+    @paAmbrosio,	
     'V180638080', 
     @Cat_2000, 
     'Activo', 
@@ -160,11 +168,10 @@ ON parroquia.region_geografica_p = region_geografica.region_geografica_id
 WHERE region_geografica.nombre = 'La Rosa'
 INTO @LaRosaID;
 */
+
 SELECT InsertarTienda (
-    @Creador, 
+    @UsuarioTienda1, 
     @paLaRosa, 
-    'tca7410nb@gmail.com', 
-    '444544sd54sd4sd4s4548494s',
     'J-1515151D', 
     @Cat_2000, 
     'Activo', 
@@ -204,13 +211,6 @@ SELECT InsertarTurno(@TiendaID2, 'Domingo', '11:00:00', '22:00:00') INTO @HT7ID;
 *														*
 *********************************************************
 */
-
-SELECT u.rastreable_p 
-FROM usuario AS u
-LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
-LEFT JOIN tienda AS t ON c.rif = t.cliente_p
-WHERE t.tienda_id = @TiendaID1
-INTO @Creador;
 
 SELECT InsertarInventario(@TiendaID1, 'TD-015SC', 'Computadora SGI 02', 'Ambos visibles', @ProductoID1, 640.00, 12);
 SELECT InsertarInventario(@TiendaID1, 'TD-1841C', 'Celular N78 Ve', 'Ambos visibles', @ProductoID2, 104.00, 9);
@@ -324,11 +324,19 @@ SELECT InsertarMensaje (
 *********************************************************
 */
 
-SELECT InsertarPatrocinante (
-    @Creador, 
-    @paAmbrosio, 
+SELECT InsertarUsuario (
+	@Creador, 
+	'Kcenia', 
+	'Hartmann', 
+	'Activo', 
+	@paAmbrosio, 
     'hola@comoestais.com', 
-    'pAA101D54Om_4aidf18',
+    'pAA101D54Om_4aidf18'
+) INTO @UsuarioPatrocinante;
+
+SELECT InsertarPatrocinante (
+    @UsuarioPatrocinante, 
+    @paAmbrosio, 
     'V195445890', 
     @Cat_3000, 
     'Activo', 
@@ -452,9 +460,8 @@ SELECT InsertarSeguidor(@Producto4Calificable, @ConsumidorID3, 'TENEIS QUE REVIS
 *********************************************************
 */
 
-SELECT u.rastreable_p 
-FROM usuario AS u
-LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+SELECT c.rastreable_p 
+FROM cliente AS c
 LEFT JOIN tienda AS t ON c.rif = t.cliente_p
 WHERE t.tienda_id = @TiendaID1
 INTO @Tienda1Rastreable;
@@ -463,9 +470,9 @@ SELECT describible_p FROM producto
 WHERE producto_id = @ProductoID1
 INTO @Producto1Describible;
 
-SELECT describible_p 
-FROM cliente JOIN tienda
-ON cliente.rif = tienda.cliente_p
+SELECT c.describible_p 
+FROM cliente AS c
+JOIN tienda AS t ON c.rif = t.cliente_p
 WHERE tienda.tienda_id = @TiendaID1
 INTO @Tienda1Describible;
 
@@ -573,9 +580,8 @@ SELECT InsertarCroquis(@Tienda1Rastreable, @Tienda1Dibujable) INTO @Tienda1Croqu
 SELECT InsertarPunto(10.420891,-71.461491) INTO @PuntoID1;
 SELECT InsertarPuntoDeCroquis(@Tienda1Croquis, @PuntoID1);
 
-SELECT u.rastreable_p 
-FROM usuario AS u
-LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+SELECT c.rastreable_p 
+FROM cliente AS c
 LEFT JOIN tienda AS t ON c.rif = t.cliente_p
 WHERE t.tienda_id = @TiendaID2
 INTO @Tienda2Rastreable;

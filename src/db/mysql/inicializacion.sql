@@ -219,20 +219,7 @@ SELECT 'mundo';
 SELECT InsertarDibujable() INTO @Dibujable_P;
 SELECT InsertarRastreable(@Creador) INTO @Rastreable_P;
 SELECT '0.00.00.00.00.00' INTO @Mundo;
-
-INSERT INTO territorio VALUES (
-    @Rastreable_P,
-    @Dibujable_P,
-    @Mundo,
-    'La Tierra',
-    0,
-	'Mandarin',
-	0,
-	@Mundo,
-    0, 0, NULL,
-	'', 
-	0
-);
+INSERT INTO territorio VALUES (@Rastreable_P, @Dibujable_P, @Mundo, 'La Tierra', 0,	'Mandarin',	0, @Mundo, 0, 0, NULL, '', 0);
 
 SELECT InsertarTiendasConsumidores(@Mundo, 0, 0);
 
@@ -296,7 +283,7 @@ SET usuario.ubicacion = @paAmbrosio
 WHERE usuario_id = 1;
 
 SELECT InsertarParroquia(@Creador, 'Aristides Calvani', 		6148, 	'Espanol', @mCabimas, '4013', 0);
-SELECT InsertarParroquia(@Creador, 'Carmen Herrera', 			37197, 	'Espanol', @mCabimas, '4013', 0);
+SELECT InsertarParroquia(@Creador, 'Carmen Herrera', 			37197, 	'Espanol', @mCabimas, '4013', 0) INTO @paCHerrera;
 SELECT InsertarParroquia(@Creador, 'German Rios Linares', 		46195, 	'Espanol', @mCabimas, '4013', 0);
 SELECT InsertarParroquia(@Creador, 'Jorge Hernandez', 			56158, 	'Espanol', @mCabimas, '4013', 0);
 SELECT InsertarParroquia(@Creador, 'La Rosa', 					29326, 	'Espanol', @mCabimas, '4013', 0) INTO @paLaRosa;
@@ -439,13 +426,36 @@ SELECT InsertarParroquia(@Creador, 'Raul Cuenca', 				13652, 	'Espanol', @mVRodr
 /* 
 Deja de joderte la vida, Google ya hizo esta tarea por vos. Simplemente hace un sencillo programa en python que se encargue de pedir esa informacion. Ver: https://developers.google.com/maps/documentation/geocoding/?hl=es
 */
-/*
-SELECT r.dibujable_p
-FROM region_geografica AS r
-WHERE r.nombre = 'Zulia'
+
+SELECT t.dibujable_p
+FROM territorio AS t
+WHERE t.territorio_id = @pyVenezuela COLLATE latin1_spanish_ci
+INTO @VenezuelaDibujable;
+
+SELECT InsertarCroquis(@Creador, @VenezuelaDibujable) INTO @VenezuelaCroquis;
+SELECT InsertarPunto(12.200000, -59.797222) INTO @PuntoID1;
+SELECT InsertarPunto(00.648056, -73.377222) INTO @PuntoID2;
+SELECT InsertarPuntoDeCroquis(@VenezuelaCroquis, @PuntoID1);
+SELECT InsertarPuntoDeCroquis(@VenezuelaCroquis, @PuntoID2);
+
+SELECT t.dibujable_p
+FROM territorio AS t
+WHERE t.territorio_id = @eZulia COLLATE latin1_spanish_ci
 INTO @ZuliaDibujable;
 
 SELECT InsertarCroquis(@Creador, @ZuliaDibujable) INTO @ZuliaCroquis;
-SELECT InsertarPunto(10.401457,-71.470045) INTO @PuntoID1;
+SELECT InsertarPunto(11.791667, -70.737500) INTO @PuntoID1;
+SELECT InsertarPunto(08.208333, -73.378611) INTO @PuntoID2;
 SELECT InsertarPuntoDeCroquis(@ZuliaCroquis, @PuntoID1);
-*/
+SELECT InsertarPuntoDeCroquis(@ZuliaCroquis, @PuntoID2);
+
+SELECT t.dibujable_p
+FROM territorio AS t
+WHERE t.territorio_id = @mCabimas COLLATE latin1_spanish_ci
+INTO @CabimasDibujable;
+
+SELECT InsertarCroquis(@Creador, @CabimasDibujable) INTO @CabimasCroquis;
+SELECT InsertarPunto(10.316667, -71.450000) INTO @PuntoID1;
+SELECT InsertarPunto(10.466667, -70.866667) INTO @PuntoID2;
+SELECT InsertarPuntoDeCroquis(@CabimasCroquis, @PuntoID1);
+SELECT InsertarPuntoDeCroquis(@CabimasCroquis, @PuntoID2);

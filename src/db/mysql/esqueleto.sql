@@ -164,11 +164,15 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `spuria`.`usuario` (
   `rastreable_p` INT NOT NULL ,
   `usuario_id` INT NOT NULL AUTO_INCREMENT ,
+  `nombre` VARCHAR(45) NOT NULL ,
+  `apellido` VARCHAR(45) NOT NULL ,
+  `estatus` CHAR(9) NOT NULL ,
   `ubicacion` CHAR(16) NULL ,
   PRIMARY KEY (`usuario_id`) ,
   INDEX `fk_Usuario_Rastreable` (`rastreable_p` ASC) ,
   UNIQUE INDEX `rastreable_p_UNIQUE` (`rastreable_p` ASC) ,
   INDEX `fk_Usuario_Territorio` (`ubicacion` ASC) ,
+  INDEX `fk_Usuario_Estatus` (`estatus` ASC) ,
   CONSTRAINT `fk_Usuario_Rastreable`
     FOREIGN KEY (`rastreable_p` )
     REFERENCES `spuria`.`rastreable` (`rastreable_id` )
@@ -178,6 +182,11 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`usuario` (
     FOREIGN KEY (`ubicacion` )
     REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Usuario_Estatus`
+    FOREIGN KEY (`estatus` )
+    REFERENCES `spuria`.`estatus` (`valor` )
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -186,9 +195,10 @@ ENGINE = InnoDB;
 -- Table `spuria`.`cliente`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`cliente` (
+  `rastreable_p` INT NOT NULL ,
   `describible_p` INT NOT NULL ,
-  `usuario_p` INT NOT NULL ,
   `rif` CHAR(10) NOT NULL ,
+  `propietario` INT NOT NULL ,
   `categoria` CHAR(16) NOT NULL ,
   `estatus` CHAR(9) NOT NULL ,
   `nombre_legal` VARCHAR(45) NOT NULL ,
@@ -205,6 +215,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`cliente` (
   `facebook` CHAR(80) NULL ,
   `twitter` CHAR(80) NULL ,
   `correo_electronico` VARCHAR(45) NULL ,
+  `ubicacion` CHAR(16) NULL ,
   INDEX `fk_Cliente_Categoria` (`categoria` ASC) ,
   INDEX `fk_Cliente_Describible` (`describible_p` ASC) ,
   INDEX `fk_Cliente_Estatus` (`estatus` ASC) ,
@@ -212,8 +223,10 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`cliente` (
   UNIQUE INDEX `Describible_P_UNIQUE` (`describible_p` ASC) ,
   UNIQUE INDEX `NombreLegal_UNIQUE` (`nombre_legal` ASC) ,
   PRIMARY KEY (`rif`) ,
-  INDEX `fk_Cliente_Usuario` (`usuario_p` ASC) ,
-  UNIQUE INDEX `Usuario_P_UNIQUE` (`usuario_p` ASC) ,
+  INDEX `fk_Cliente_Usuario` (`propietario` ASC) ,
+  INDEX `fk_Cliente_Rastreable` (`rastreable_p` ASC) ,
+  UNIQUE INDEX `rastreable_p_UNIQUE` (`rastreable_p` ASC) ,
+  INDEX `fk_Cliente_Territorio` (`ubicacion` ASC) ,
   CONSTRAINT `fk_Cliente_Categoria`
     FOREIGN KEY (`categoria` )
     REFERENCES `spuria`.`categoria` (`categoria_id` )
@@ -230,8 +243,18 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`cliente` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Cliente_Usuario`
-    FOREIGN KEY (`usuario_p` )
+    FOREIGN KEY (`propietario` )
     REFERENCES `spuria`.`usuario` (`usuario_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cliente_Rastreable`
+    FOREIGN KEY (`rastreable_p` )
+    REFERENCES `spuria`.`rastreable` (`rastreable_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Cliente_Territorio`
+    FOREIGN KEY (`ubicacion` )
+    REFERENCES `spuria`.`territorio` (`territorio_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -523,16 +546,12 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`consumidor` (
   `interlocutor_p` INT NOT NULL ,
   `usuario_p` INT NOT NULL ,
   `consumidor_id` INT NOT NULL AUTO_INCREMENT ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `apellido` VARCHAR(45) NOT NULL ,
-  `estatus` CHAR(9) NOT NULL ,
   `sexo` CHAR(6) NOT NULL ,
   `fecha_de_nacimiento` DATE NOT NULL ,
   `grupo_de_edad` CHAR(15) NOT NULL ,
   `grado_de_instruccion` CHAR(16) NOT NULL ,
   PRIMARY KEY (`consumidor_id`) ,
   INDEX `fk_Consumidor_Interlocutor` (`interlocutor_p` ASC) ,
-  INDEX `fk_Consumidor_Estatus` (`estatus` ASC) ,
   INDEX `fk_Consumidor_Sexo` (`sexo` ASC) ,
   INDEX `fk_Consumidor_GradoDeInstruccion` (`grado_de_instruccion` ASC) ,
   INDEX `fk_Consumidor_GrupoDeEdad` (`grupo_de_edad` ASC) ,
@@ -542,11 +561,6 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`consumidor` (
   CONSTRAINT `fk_Consumidor_Interlocutor`
     FOREIGN KEY (`interlocutor_p` )
     REFERENCES `spuria`.`interlocutor` (`interlocutor_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Consumidor_Estatus`
-    FOREIGN KEY (`estatus` )
-    REFERENCES `spuria`.`estatus` (`valor` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Consumidor_Sexo`
@@ -1011,6 +1025,8 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`registro` (
   PRIMARY KEY (`registro_id`) ,
   INDEX `fk_Registro_Accion` (`accion` ASC) ,
   INDEX `fk_Registro_CodigoDeError` (`codigo_de_error` ASC) ,
+  INDEX `ix_ActorActivo` (`actor_activo` ASC) ,
+  INDEX `ix_ActorPasivo` (`actor_pasivo` ASC) ,
   CONSTRAINT `fk_Registro_Accion`
     FOREIGN KEY (`accion` )
     REFERENCES `spuria`.`accion` (`valor` )
@@ -1372,20 +1388,11 @@ ENGINE = InnoDB;
 CREATE  TABLE IF NOT EXISTS `spuria`.`administrador` (
   `usuario_p` INT NOT NULL ,
   `administrador_id` INT NOT NULL AUTO_INCREMENT ,
-  `estatus` CHAR(9) NOT NULL ,
   `privilegios` CHAR(7) NOT NULL ,
-  `nombre` VARCHAR(45) NOT NULL ,
-  `apellido` VARCHAR(45) NOT NULL ,
-  INDEX `fk_Administrador_Estatus` (`estatus` ASC) ,
   INDEX `fk_Administrador_Privilegios` (`privilegios` ASC) ,
   INDEX `fk_Administrador_Usuario` (`usuario_p` ASC) ,
   PRIMARY KEY (`administrador_id`) ,
   UNIQUE INDEX `Usuario_P_UNIQUE` (`usuario_p` ASC) ,
-  CONSTRAINT `fk_Administrador_Estatus`
-    FOREIGN KEY (`estatus` )
-    REFERENCES `spuria`.`estatus` (`valor` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_Administrador_Privilegios`
     FOREIGN KEY (`privilegios` )
     REFERENCES `spuria`.`privilegios` (`valor` )
@@ -1619,18 +1626,16 @@ CREATE TRIGGER despues_de_actualizar_tienda AFTER UPDATE ON tienda
 FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo, usuario_id INT;
+    DECLARE rastreable_p, bobo INT;
 
-    SELECT u.rastreable_p, u.usuario_id
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+    SELECT c.rastreable_p
+    FROM cliente AS c
     WHERE c.rif = NEW.cliente_p
-    INTO rastreable_p, usuario_id;
+    INTO rastreable_p;
     
     IF NEW.abierto != OLD.abierto THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda: ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda: ',
             CAST(NEW.cliente_p AS CHAR),'->',
             CAST(NEW.tienda_id AS CHAR),'(abierto): ',
             CAST(OLD.abierto AS CHAR),' ahora es ',
@@ -1664,17 +1669,15 @@ CREATE TRIGGER despues_de_insertar_tienda AFTER INSERT ON tienda
 FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo, usuario_id INT;
+    DECLARE rastreable_p, bobo INT;
 
-    SELECT u.rastreable_p, u.usuario_id
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+    SELECT c.rastreable_p
+    FROM cliente AS c
     WHERE c.rif = NEW.cliente_p
-    INTO rastreable_p, usuario_id;
+    INTO rastreable_p;
     
     SELECT CONCAT(
-        'usuario->cliente->tienda: ',
-        CAST(usuario_id AS CHAR),'->',
+        'cliente->tienda: ',
         CAST(NEW.cliente_p AS CHAR),'->',
         CAST(NEW.tienda_id AS CHAR),',',
         CAST(NEW.buscable_p AS CHAR),',',
@@ -1943,11 +1946,14 @@ USE `spuria`$$
 CREATE TRIGGER antes_de_actualizar_cliente BEFORE UPDATE ON cliente
 FOR EACH ROW
 BEGIN
+    IF NEW.rastreable_p != OLD.rastreable_p THEN
+        SET NEW.rastreable_p = OLD.rastreable_p;
+    END IF;
     IF NEW.describible_p != OLD.describible_p THEN
         SET NEW.describible_p = OLD.describible_p;
     END IF;
-    IF NEW.usuario_p != OLD.usuario_p THEN
-        SET NEW.usuario_p = OLD.usuario_p;
+    IF NEW.propietario != OLD.propietario THEN
+        SET NEW.propietario = OLD.propietario;
     END IF;
     IF NEW.rif != OLD.rif THEN
         SET NEW.rif = OLD.rif;
@@ -1960,69 +1966,12 @@ END $$
 USE `spuria`$$
 
 
-CREATE TRIGGER antes_de_eliminar_cliente BEFORE DELETE ON cliente
-FOR EACH ROW
-BEGIN
-    DECLARE bobo, rastreable_p INT;
-
-    SELECT usuario.rastreable_p FROM usuario
-    WHERE usuario_id = OLD.usuario_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarEliminacion(rastreable_p, CONCAT('cliente: ', OLD.rif, ', ', OLD.nombre_legal)) INTO bobo;
-    
-    DELETE FROM describible WHERE describible_id = OLD.describible_p;
-    /*
-    DELETE FROM tienda WHERE cliente_p = OLD.rif;
-    DELETE FROM patrocinante WHERE cliente_p = OLD.rif;
-    */
-    DELETE FROM factura WHERE cliente = OLD.rif;
-    DELETE FROM usuario WHERE usuario_id = OLD.usuario_p;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_insertar_cliente AFTER INSERT ON cliente
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE bobo, rastreable_p INT;
-        
-    SELECT CONCAT(
-        'cliente: ',
-        CAST(NEW.describible_p AS CHAR),',',
-        CAST(NEW.usuario_p AS CHAR),',',
-        NEW.rif,',',
-        NEW.categoria,',',
-        NEW.estatus,',',
-        NEW.nombre_legal,',',
-        NEW.nombre_comun,',',
-        NEW.telefono,',',
-        NEW.calle,',',
-        NEW.sector_urb_barrio
-    ) INTO parametros;
-    
-    SELECT usuario.rastreable_p FROM usuario 
-    WHERE usuario_id = NEW.usuario_p
-    INTO rastreable_p;
-
-    SELECT RegistrarCreacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
 CREATE TRIGGER despues_de_actualizar_cliente AFTER UPDATE ON cliente
 FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
-    DECLARE bobo, rastreable_p INT;
+    DECLARE bobo INT;
 
-    SELECT usuario.rastreable_p FROM usuario 
-    WHERE usuario_id = NEW.usuario_p
-    INTO rastreable_p;
-    
     IF NEW.categoria != OLD.categoria THEN
         SELECT CONCAT(
             'cliente(columna): ', 
@@ -2031,7 +1980,7 @@ BEGIN
             NEW.categoria
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.estatus != OLD.estatus THEN
@@ -2042,7 +1991,7 @@ BEGIN
             CAST(NEW.estatus AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.nombre_comun != OLD.nombre_comun THEN
@@ -2053,7 +2002,7 @@ BEGIN
             CAST(NEW.nombre_comun AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.telefono != OLD.telefono THEN
@@ -2064,7 +2013,7 @@ BEGIN
             CAST(NEW.telefono AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.edificio_cc != OLD.edificio_cc THEN
@@ -2075,7 +2024,7 @@ BEGIN
             CAST(NEW.edificio_cc AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.piso != OLD.piso THEN
@@ -2086,7 +2035,7 @@ BEGIN
             CAST(NEW.piso AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.apartamento != OLD.apartamento THEN
@@ -2097,7 +2046,7 @@ BEGIN
             CAST(NEW.apartamento AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.local_no != OLD.local_no THEN
@@ -2108,7 +2057,7 @@ BEGIN
             CAST(NEW.local_no AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.casa != OLD.casa THEN
@@ -2119,7 +2068,7 @@ BEGIN
             CAST(NEW.casa AS CHAR)
         ) INTO parametros;
         
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.calle != OLD.calle THEN
@@ -2130,7 +2079,7 @@ BEGIN
             CAST(NEW.calle AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.sector_urb_barrio != OLD.sector_urb_barrio THEN
@@ -2141,7 +2090,7 @@ BEGIN
             CAST(NEW.sector_urb_barrio AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.pagina_web != OLD.pagina_web THEN
@@ -2152,7 +2101,7 @@ BEGIN
             CAST(NEW.pagina_web AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.facebook != OLD.facebook THEN
@@ -2163,7 +2112,7 @@ BEGIN
             CAST(NEW.facebook AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
     
     IF NEW.twitter != OLD.twitter THEN
@@ -2174,7 +2123,7 @@ BEGIN
             CAST(NEW.twitter AS CHAR)
         ) INTO parametros;
 
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
 
     IF NEW.correo_electronico != OLD.correo_electronico THEN
@@ -2185,8 +2134,65 @@ BEGIN
             CAST(NEW.correo_electronico AS CHAR)
         ) INTO parametros;
    
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
+
+    IF NEW.ubicacion != OLD.ubicacion THEN
+        SELECT CONCAT(
+            'cliente(columna): ', 
+            NEW.rif,'(ubicacion)',
+            CAST(OLD.ubicacion AS CHAR),' ahora es ',
+            CAST(NEW.ubicacion AS CHAR)
+        ) INTO parametros;
+   
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER antes_de_eliminar_cliente BEFORE DELETE ON cliente
+FOR EACH ROW
+BEGIN
+    DECLARE bobo INT;
+
+    SELECT RegistrarEliminacion(OLD.rastreable_p, CONCAT('cliente: ', OLD.rif, ', ', OLD.nombre_legal)) INTO bobo;
+    
+    DELETE FROM describible WHERE describible_id = OLD.describible_p;
+    /*
+    DELETE FROM tienda WHERE cliente_p = OLD.rif;
+    DELETE FROM patrocinante WHERE cliente_p = OLD.rif;
+    */
+    DELETE FROM factura WHERE cliente = OLD.rif;
+    /*DELETE FROM usuario WHERE usuario_id = OLD.usuario_p;*/
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER despues_de_insertar_cliente AFTER INSERT ON cliente
+FOR EACH ROW
+BEGIN
+    DECLARE parametros TEXT;
+    DECLARE bobo INT;
+        
+    SELECT CONCAT(
+        'cliente: ',
+        CAST(NEW.describible_p AS CHAR),',',
+        CAST(NEW.propietario AS CHAR),',',
+        NEW.rif,',',
+        NEW.categoria,',',
+        NEW.estatus,',',
+        NEW.nombre_legal,',',
+        NEW.nombre_comun,',',
+        NEW.telefono,',',
+        NEW.calle,',',
+        NEW.sector_urb_barrio,',',
+        NEW.ubicacion
+    ) INTO parametros;
+    
+    SELECT RegistrarCreacion(NEW.rastreable_p, parametros) INTO bobo;
 END $$
 
 
@@ -2450,39 +2456,6 @@ BEGIN
     WHERE usuario_id = NEW.usuario_p
     INTO rastreable_p;
 
-    IF NEW.nombre != OLD.nombre THEN
-        SELECT CONCAT(
-            'consumidor(columna): ', 
-            CAST(NEW.consumidor_id AS CHAR),'(nombre)',
-            CAST(OLD.nombre AS CHAR),' ahora es ',
-            CAST(NEW.nombre AS CHAR)
-        ) INTO parametros;
-
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-    
-    IF NEW.apellido != OLD.apellido THEN
-        SELECT CONCAT(
-            'consumidor(columna): ', 
-            CAST(NEW.consumidor_id AS CHAR),'(apellido)',
-            CAST(OLD.apellido AS CHAR),' ahora es ',
-            CAST(NEW.apellido AS CHAR)
-        ) INTO parametros;
-
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-    
-    IF NEW.estatus != OLD.estatus THEN
-        SELECT CONCAT(
-            'consumidor(columna): ', 
-            CAST(NEW.consumidor_id AS CHAR),'(estatus)',
-            CAST(OLD.estatus AS CHAR),' ahora es ',
-            CAST(NEW.estatus AS CHAR)
-        ) INTO parametros;
-
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-    
     IF NEW.sexo != OLD.sexo THEN
         SELECT CONCAT(
             'consumidor(columna): ', 
@@ -2509,27 +2482,6 @@ END $$
 USE `spuria`$$
 
 
-CREATE TRIGGER antes_de_eliminar_consumidor BEFORE DELETE ON consumidor
-FOR EACH ROW
-BEGIN
-    DECLARE bobo, rastreable_p INT;
-
-    SELECT usuario.rastreable_p FROM usuario 
-    WHERE usuario_id = OLD.usuario_p
-    INTO rastreable_p;
-    
-    SELECT RegistrarEliminacion(rastreable_p, CONCAT('consumidor: ', OLD.nombre, ' ', OLD.apellido)) INTO bobo;
-    
-    DELETE FROM interlocutor WHERE interlocutor_id = OLD.interlocutor_p;
-    DELETE FROM seguidor WHERE consumidor_id = OLD.consumidor_id;
-    DELETE FROM calificacion_resena WHERE consumidor_id = OLD.consumidor_id;
-    DELETE FROM consumidor_objetivo WHERE consumidor_id = OLD.consumidor_id;
-    DELETE FROM usuario WHERE usuario_id = OLD.usuario_p;
-END $$
-
-USE `spuria`$$
-
-
 CREATE TRIGGER despues_de_insertar_consumidor AFTER INSERT ON consumidor
 FOR EACH ROW
 BEGIN
@@ -2545,34 +2497,41 @@ BEGIN
         CAST(NEW.interlocutor_p AS CHAR),',',
         CAST(NEW.usuario_p AS CHAR),',',
         CAST(NEW.consumidor_id AS CHAR),',',
-        NEW.nombre,',',
-        NEW.apellido,',',
-        NEW.estatus,',',
         NEW.sexo,',',
         CAST(NEW.fecha_de_nacimiento AS CHAR),',',
         NEW.grupo_de_edad,',',
         NEW.grado_de_instruccion
     ) INTO parametros;
     
-    SELECT RegistrarCreacion(rastreable_p, parametros) INTO bobo;
+    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER antes_de_eliminar_consumidor BEFORE DELETE ON consumidor
+FOR EACH ROW
+BEGIN
+/*
+    DECLARE bobo, rastreable_p INT;
+
+    SELECT usuario.rastreable_p FROM usuario 
+    WHERE usuario_id = OLD.usuario_p
+    INTO rastreable_p;
+    
+    SELECT RegistrarEliminacion(rastreable_p, CONCAT('consumidor: ', OLD.nombre, ' ', OLD.apellido)) INTO bobo;
+*/    
+    DELETE FROM interlocutor WHERE interlocutor_id = OLD.interlocutor_p;
+    DELETE FROM seguidor WHERE consumidor_id = OLD.consumidor_id;
+    DELETE FROM calificacion_resena WHERE consumidor_id = OLD.consumidor_id;
+    DELETE FROM consumidor_objetivo WHERE consumidor_id = OLD.consumidor_id;
+    DELETE FROM usuario WHERE usuario_id = OLD.usuario_p;
 END $$
 
 
 DELIMITER ;
 
 DELIMITER $$
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_usuario BEFORE DELETE ON usuario
-FOR EACH ROW
-BEGIN
-    DELETE FROM acceso WHERE acceso_id = OLD.usuario_id;
-    DELETE FROM busqueda WHERE busqueda_id = OLD.usuario_id;
-    /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
-    DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
-END $$
-
 USE `spuria`$$
 
 
@@ -2590,52 +2549,58 @@ END $$
 USE `spuria`$$
 
 
+CREATE TRIGGER despues_de_insertar_usuario AFTER INSERT ON usuario
+FOR EACH ROW
+BEGIN
+    DECLARE parametros TEXT;
+    DECLARE bobo INT;
+
+    SELECT CONCAT(
+        'usuario: ',
+        CAST(NEW.usuario_id AS CHAR),',',
+        NEW.nombre,',',
+        NEW.apellido,',',
+        NEW.estatus,',',
+        NEW.ubicacion
+    ) INTO parametros;
+    
+    SELECT RegistrarCreacion(NEW.rastreable_p, parametros) INTO bobo;
+END $$
+
+USE `spuria`$$
+
+
 CREATE TRIGGER despues_de_actualizar_usuario AFTER UPDATE ON usuario
 FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
-    DECLARE cliente CHAR(10);
-    DECLARE cl, ad, co, rastreable_p, bobo INT;
+    DECLARE bobo INT;
     
-    IF NEW.ubicacion != OLD.ubicacion THEN
-        SELECT COUNT(*) FROM cliente
-        WHERE usuario_p = NEW.usuario_id
-        INTO cl;
-    
-        SELECT COUNT(*) FROM administrador
-        WHERE usuario_p = NEW.usuario_id
-        INTO ad;
-    
-        SELECT COUNT(*) FROM consumidor
-        WHERE usuario_p = NEW.usuario_id
-        INTO co;
-    
-        IF cl = 1 THEN
-            SELECT rif FROM cliente
-            WHERE usuario_p = NEW.usuario_id
-            INTO cl;
-            
-            SELECT CONCAT('cliente<-usuario(columna): ',cl,'<-') INTO parametros;
-        END IF;
-        
-        IF ad = 1 THEN
-            SELECT administrador_id FROM administrador
-            WHERE usuario_p = NEW.usuario_id
-            INTO ad;
-            
-            SELECT CONCAT('administrador<-usuario(columna): ', CAST(ad AS CHAR),'<-') INTO parametros;
-        END IF;
-        
-        IF co = 1 THEN
-            SELECT consumidor_id FROM consumidor
-            WHERE usuario_p = NEW.usuario_id
-            INTO co;
-            
-            SELECT CONCAT('consumidor<-usuario(columna): ', CAST(co AS CHAR),'<-') INTO parametros;
-        END IF;
-        
+    IF NEW.nombre != OLD.nombre THEN
         SELECT CONCAT(
-            parametros,
+            'usuario(columna):',
+            CAST(NEW.usuario_id AS CHAR),'(nombre): ',
+            OLD.nombre,' ahora es ',
+            NEW.nombre
+        ) INTO parametros;
+                
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF;
+
+    IF NEW.apellido != OLD.apellido THEN
+        SELECT CONCAT(
+            'usuario(columna):',
+            CAST(NEW.usuario_id AS CHAR),'(apellido): ',
+            OLD.apellido,' ahora es ',
+            NEW.apellido
+        ) INTO parametros;
+                
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF;
+
+    IF NEW.ubicacion != OLD.ubicacion THEN
+        SELECT CONCAT(
+            'usuario(columna):',
             CAST(NEW.usuario_id AS CHAR),'(ubicacion): ',
             OLD.ubicacion,' ahora es ',
             NEW.ubicacion
@@ -2643,6 +2608,33 @@ BEGIN
                 
         SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
     END IF;
+
+    IF NEW.estatus != OLD.estatus THEN
+        SELECT CONCAT(
+            'usuario(columna):',
+            CAST(NEW.usuario_id AS CHAR),'(estatus): ',
+            OLD.estatus,' ahora es ',
+            NEW.estatus
+        ) INTO parametros;
+                
+        SELECT RegistrarModificacion(NEW.rastreable_p, parametros) INTO bobo;
+    END IF;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER antes_de_eliminar_usuario BEFORE DELETE ON usuario
+FOR EACH ROW
+BEGIN
+    DECLARE bobo INT;
+
+    SELECT RegistrarEliminacion(OLD.rastreable_p, CONCAT('usuario: ', OLD.usuario_id, ', ', OLD.nombre, ' ', OLD.apellido)) INTO bobo;
+    
+    DELETE FROM acceso WHERE acceso_id = OLD.usuario_id;
+    DELETE FROM busqueda WHERE busqueda_id = OLD.usuario_id;
+    /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
+    DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
 END $$
 
 
@@ -3940,37 +3932,6 @@ DELIMITER $$
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_insertar_tamano AFTER INSERT ON tamano
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE cliente_p CHAR(10);
-    DECLARE rastreable_p, bobo, usuario_id INT;
-    
-    SELECT u.rastreable_p, u.usuario_id, t.cliente_p
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
-    LEFT JOIN tienda AS t ON c.rif = t.cliente_p
-    WHERE t.tienda_id = NEW.tienda_id
-    INTO rastreable_p, usuario_id, cliente_p;
-
-    SELECT CONCAT(
-        'usuario->cliente->tienda->tamano: ',
-        CAST(usuario_id AS CHAR),'->',
-        cliente_p,'->',
-        CAST(NEW.tienda_id AS CHAR),'->',
-        CAST(NEW.fecha_inicio AS CHAR),': ',
-        CAST(NEW.numero_total_de_productos AS CHAR),',',
-        CAST(NEW.cantidad_total_de_productos AS CHAR),',',
-        CAST(NEW.valor AS CHAR)
-    ) INTO parametros;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
 CREATE TRIGGER antes_de_actualizar_tamano BEFORE UPDATE ON tamano
 FOR EACH ROW
 BEGIN
@@ -3992,17 +3953,15 @@ BEGIN
     DECLARE cliente_p CHAR(10);
     DECLARE rastreable_p, bobo, usuario_id INT;
     
-    SELECT u.rastreable_p, u.usuario_id, t.cliente_p
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+    SELECT c.rastreable_p, t.cliente_p
+    FROM cliente AS c
     LEFT JOIN tienda AS t ON c.rif = t.cliente_p
     WHERE t.tienda_id = NEW.tienda_id
-    INTO rastreable_p, usuario_id, cliente_p;
+    INTO rastreable_p, cliente_p;
         
     IF NEW.fecha_fin != OLD.fecha_fin THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda->tamano(columna): ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda->tamano(columna): ',
             cliente_p,'->',
             CAST(NEW.tienda_id AS CHAR),'->',
             CAST(NEW.fecha_inicio AS CHAR),'(fecha_fin): ',
@@ -4015,8 +3974,7 @@ BEGIN
         
     IF NEW.numero_total_de_productos != OLD.numero_total_de_productos THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda->tamano(columna): ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda->tamano(columna): ',
             cliente_p,'->',
             CAST(NEW.tienda_id AS CHAR),'->',
             CAST(NEW.fecha_inicio AS CHAR),'(numero_total_de_productos): ',
@@ -4029,8 +3987,7 @@ BEGIN
     
     IF NEW.cantidad_total_de_productos != OLD.cantidad_total_de_productos THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda->tamano(columna): ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda->tamano(columna): ',
             cliente_p,'->',
             CAST(NEW.tienda_id AS CHAR),'->',
             CAST(NEW.fecha_inicio AS CHAR),'(cantidad_total_de_productos): ',
@@ -4043,8 +4000,7 @@ BEGIN
     
     IF NEW.valor != OLD.valor THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda->tamano(columna): ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda->tamano(columna): ',
             cliente_p,'->',
             CAST(NEW.tienda_id AS CHAR),'->',
             CAST(NEW.fecha_inicio AS CHAR),'(tamano): ',
@@ -4054,6 +4010,35 @@ BEGIN
 
         SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
     END IF;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER despues_de_insertar_tamano AFTER INSERT ON tamano
+FOR EACH ROW
+BEGIN
+    DECLARE parametros TEXT;
+    DECLARE cliente_p CHAR(10);
+    DECLARE rastreable_p, bobo INT;
+    
+    SELECT c.rastreable_p, t.cliente_p
+    FROM cliente AS c
+    LEFT JOIN tienda AS t ON c.rif = t.cliente_p
+    WHERE t.tienda_id = NEW.tienda_id
+    INTO rastreable_p, cliente_p;
+
+    SELECT CONCAT(
+        'cliente->tienda->tamano: ',
+        cliente_p,'->',
+        CAST(NEW.tienda_id AS CHAR),'->',
+        CAST(NEW.fecha_inicio AS CHAR),': ',
+        CAST(NEW.numero_total_de_productos AS CHAR),',',
+        CAST(NEW.cantidad_total_de_productos AS CHAR),',',
+        CAST(NEW.valor AS CHAR)
+    ) INTO parametros;
+    
+    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
 END $$
 
 
@@ -4068,18 +4053,16 @@ FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
     DECLARE cliente_p CHAR(10);
-    DECLARE rastreable_p, bobo, usuario_id INT;
+    DECLARE rastreable_p, bobo INT;
     
-    SELECT u.rastreable_p, u.usuario_id, t.cliente_p
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+    SELECT c.rastreable_p,  t.cliente_p
+    FROM cliente AS c
     LEFT JOIN tienda AS t ON c.rif = t.cliente_p
     WHERE t.tienda_id = NEW.tienda_id
-    INTO rastreable_p, usuario_id, cliente_p;
+    INTO rastreable_p, cliente_p;
 
     SELECT CONCAT(
-        'usuario->cliente->tienda->horario_de_trabajo->turno: ',
-        CAST(usuario_id AS CHAR),'->',
+        'cliente->tienda->horario_de_trabajo->turno: ',
         cliente_p,'->',
         CAST(NEW.tienda_id AS CHAR),'->',
         NEW.dia,'->(',
@@ -4112,19 +4095,17 @@ FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
     DECLARE cliente_p CHAR(10);
-    DECLARE rastreable_p, bobo, usuario_id INT;
+    DECLARE rastreable_p, bobo INT;
     
-    SELECT u.rastreable_p, u.usuario_id, t.cliente_p
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+    SELECT c.rastreable_p,  t.cliente_p
+    FROM cliente AS c
     LEFT JOIN tienda AS t ON c.rif = t.cliente_p
     WHERE t.tienda_id = NEW.tienda_id
-    INTO rastreable_p, usuario_id, cliente_p;
+    INTO rastreable_p, cliente_p;
             
     IF NEW.hora_de_apertura != OLD.hora_de_apertura THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda->horario_de_trabajo->turno(columna): ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda->horario_de_trabajo->turno(columna): ',
             cliente_p,'->',
             CAST(NEW.tienda_id AS CHAR),'->',
             NEW.dia,'->(hora_de_apertura): ',
@@ -4137,8 +4118,7 @@ BEGIN
     
     IF NEW.hora_de_cierre != OLD.hora_de_cierre THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda->horario_de_trabajo->turno(columna): ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda->horario_de_trabajo->turno(columna): ',
             cliente_p,'->',
             CAST(NEW.tienda_id AS CHAR),'->',
             NEW.dia,'->(hora_de_cierre): ',
@@ -4162,18 +4142,16 @@ FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
     DECLARE cliente_p CHAR(10);
-    DECLARE rastreable_p, bobo, usuario_id INT;
+    DECLARE rastreable_p, bobo INT;
     
-    SELECT u.rastreable_p, u.usuario_id, t.cliente_p
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+    SELECT c.rastreable_p, t.cliente_p
+    FROM cliente AS c
     LEFT JOIN tienda AS t ON c.rif = t.cliente_p
     WHERE t.tienda_id = NEW.tienda_id
-    INTO rastreable_p, usuario_id, cliente_p;
+    INTO rastreable_p, cliente_p;
     
     SELECT CONCAT(
-        'usuario->cliente->tienda->horario_de_trabajo: ',
-        CAST(usuario_id AS CHAR),'->',
+        'cliente->tienda->horario_de_trabajo: ',
         cliente_p,'->',
         CAST(NEW.tienda_id AS CHAR),'->(',
         NEW.dia,',',
@@ -4205,19 +4183,17 @@ FOR EACH ROW
 BEGIN
     DECLARE parametros TEXT;
     DECLARE cliente_p CHAR(10);
-    DECLARE rastreable_p, bobo, usuario_id INT;
+    DECLARE rastreable_p, bobo INT;
     
-    SELECT u.rastreable_p, u.usuario_id, t.cliente_p
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
+    SELECT c.rastreable_p, t.cliente_p
+    FROM cliente AS c
     LEFT JOIN tienda AS t ON c.rif = t.cliente_p
     WHERE t.tienda_id = NEW.tienda_id
-    INTO rastreable_p, usuario_id, cliente_p;
+    INTO rastreable_p, cliente_p;
 
     IF NEW.laborable != OLD.laborable THEN
         SELECT CONCAT(
-            'usuario->cliente->tienda->horario_de_trabajo(columna): ',
-            CAST(usuario_id AS CHAR),'->',
+            'cliente->tienda->horario_de_trabajo(columna): ',
             cliente_p,'->',
             CAST(NEW.tienda_id AS CHAR),'->',
             NEW.dia,'(laborable): ',
@@ -4245,31 +4221,6 @@ DELIMITER $$
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_insertar_patrocinante AFTER INSERT ON patrocinante
-FOR EACH ROW
-BEGIN
-    DECLARE parametros TEXT;
-    DECLARE rastreable_p, bobo, usuario_id INT;
-    
-    SELECT u.rastreable_p, u.usuario_id
-    FROM usuario AS u
-    LEFT JOIN cliente AS c ON u.usuario_id = c.usuario_p
-    WHERE c.rif = NEW.cliente_p
-    INTO rastreable_p, usuario_id;
-    
-    SELECT CONCAT(
-        'usuario->cliente->patrocinante: ',
-        CAST(usuario_id AS CHAR),'->',
-        CAST(NEW.cliente_p AS CHAR),'->',
-        CAST(NEW.patrocinante_id AS CHAR)
-    ) INTO parametros;
-    
-    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
 CREATE TRIGGER antes_de_actualizar_patrocinante BEFORE UPDATE ON patrocinante
 FOR EACH ROW
 BEGIN
@@ -4279,6 +4230,29 @@ BEGIN
     IF NEW.patrocinante_id != OLD.patrocinante_id THEN
         SET NEW.patrocinante_id = OLD.patrocinante_id;
     END IF;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER despues_de_insertar_patrocinante AFTER INSERT ON patrocinante
+FOR EACH ROW
+BEGIN
+    DECLARE parametros TEXT;
+    DECLARE rastreable_p, bobo INT;
+    
+    SELECT c.rastreable_p
+    FROM cliente AS c
+    WHERE c.rif = NEW.cliente_p
+    INTO rastreable_p;
+    
+    SELECT CONCAT(
+        'patrocinante: ',
+        CAST(NEW.cliente_p AS CHAR),',',
+        CAST(NEW.patrocinante_id AS CHAR)
+    ) INTO parametros;
+    
+    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
 END $$
 
 USE `spuria`$$
@@ -5015,29 +4989,31 @@ BEGIN
     IF NEW.administrador_id != OLD.administrador_id THEN
         SET NEW.administrador_id = OLD.administrador_id;
     END IF;
-    IF NEW.nombre != OLD.nombre THEN
-        SET NEW.nombre = OLD.nombre;
-    END IF;
-    IF NEW.apellido != OLD.apellido THEN
-        SET NEW.apellido = OLD.apellido;
-    END IF;
 END $$
 
 USE `spuria`$$
 
 
-CREATE TRIGGER antes_de_eliminar_administrador BEFORE DELETE ON administrador
+CREATE TRIGGER despues_de_actualizar_administrador AFTER UPDATE ON administrador
 FOR EACH ROW
 BEGIN
+    DECLARE parametros TEXT;
     DECLARE bobo, rastreable_p INT;
 
     SELECT usuario.rastreable_p FROM usuario 
-    WHERE usuario_id = OLD.usuario_p
+    WHERE usuario_id = NEW.usuario_p
     INTO rastreable_p;
     
-    SELECT RegistrarEliminacion(rastreable_p, CONCAT('administrador: ', OLD.nombre, ' ', OLD.apellido)) INTO bobo;
-        
-    DELETE FROM usuario WHERE usuario_id = OLD.usuario_p;
+    IF NEW.privilegios != OLD.privilegios THEN
+        SELECT CONCAT(
+            'administrador_id(columna): ', 
+            CAST(NEW.administrador_id AS CHAR),'(privilegios)',
+            CAST(OLD.privilegios AS CHAR),' ahora es ',
+            CAST(NEW.privilegios AS CHAR)
+        ) INTO parametros;
+
+        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
+    END IF;
 END $$
 
 USE `spuria`$$
@@ -5057,49 +5033,28 @@ BEGIN
         'administrador: ',
         CAST(NEW.usuario_p AS CHAR),',',
         CAST(NEW.administrador_id AS CHAR),',',
-        NEW.estatus,',',
-        NEW.privilegios,',',
-        NEW.nombre,',',
-        NEW.apellido
+        NEW.privilegios,','
     ) INTO parametros;
     
-    SELECT RegistrarCreacion(rastreable_p, parametros) INTO bobo;
+    SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
 END $$
 
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_actualizar_administrador AFTER UPDATE ON administrador
+CREATE TRIGGER antes_de_eliminar_administrador BEFORE DELETE ON administrador
 FOR EACH ROW
 BEGIN
-    DECLARE parametros TEXT;
+/*
     DECLARE bobo, rastreable_p INT;
 
     SELECT usuario.rastreable_p FROM usuario 
-    WHERE usuario_id = NEW.usuario_p
+    WHERE usuario_id = OLD.usuario_p
     INTO rastreable_p;
     
-    IF NEW.estatus != OLD.estatus THEN
-        SELECT CONCAT(
-            'administrador_id(columna): ', 
-            CAST(NEW.administrador_id AS CHAR),'(estatus)',
-            CAST(OLD.estatus AS CHAR),' ahora es ',
-            CAST(NEW.estatus AS CHAR)
-        ) INTO parametros;
-
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
-    
-    IF NEW.privilegios != OLD.privilegios THEN
-        SELECT CONCAT(
-            'administrador_id(columna): ', 
-            CAST(NEW.administrador_id AS CHAR),'(privilegios)',
-            CAST(OLD.privilegios AS CHAR),' ahora es ',
-            CAST(NEW.privilegios AS CHAR)
-        ) INTO parametros;
-
-        SELECT RegistrarModificacion(rastreable_p, parametros) INTO bobo;
-    END IF;
+    SELECT RegistrarEliminacion(rastreable_p, CONCAT('administrador: ', OLD.nombre, ' ', OLD.apellido)) INTO bobo;
+*/       
+    DELETE FROM usuario WHERE usuario_id = OLD.usuario_p;
 END $$
 
 

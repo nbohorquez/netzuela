@@ -50,15 +50,7 @@ BEGIN
 
     SELECT poblacion FROM territorio 
     WHERE territorio_id = a_TerritorioID INTO Pob;
-/*
-    UPDATE region_geografica 
-    SET consumidores_poblacion = IF(Pob > 0, a_NumeroDeConsumidores/Pob, 0), tiendas_poblacion = IF(Pob > 0, a_NumeroDeTiendas/Pob, 0)
-    WHERE region_geografica_id = a_RegionGeograficaID;
-        
-    UPDATE region_geografica 
-    SET tiendas_consumidores = IF(a_NumeroDeConsumidores > 0, a_NumeroDeTiendas/a_NumeroDeConsumidores, NULL)
-    WHERE region_geografica_id = a_RegionGeograficaID;
-*/
+
 	UPDATE territorio 
     SET consumidores_poblacion = IF(Pob > 0, a_NumeroDeConsumidores/Pob, 0), tiendas_poblacion = IF(Pob > 0, a_NumeroDeTiendas/Pob, 0),
 	tiendas_consumidores = IF(a_NumeroDeConsumidores > 0, a_NumeroDeTiendas/a_NumeroDeConsumidores, NULL)
