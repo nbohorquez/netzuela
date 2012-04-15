@@ -16,7 +16,7 @@ SOURCE ~/netzuela/spuria/src/db/mysql/funciones/estadisticas.sql
 SOURCE ~/netzuela/spuria/src/db/mysql/funciones/mensajes.sql
 SOURCE ~/netzuela/spuria/src/db/mysql/funciones/palabras.sql
 SOURCE ~/netzuela/spuria/src/db/mysql/funciones/patrocinantes_publicidades.sql
-SOURCE ~/netzuela/spuria/src/db/mysql/funciones/regiones_geograficas.sql
+SOURCE ~/netzuela/spuria/src/db/mysql/funciones/territorios.sql
 SOURCE ~/netzuela/spuria/src/db/mysql/funciones/registros.sql
 SOURCE ~/netzuela/spuria/src/db/mysql/funciones/tiendas_productos.sql
 SOURCE ~/netzuela/spuria/src/db/mysql/funciones/usuarios.sql

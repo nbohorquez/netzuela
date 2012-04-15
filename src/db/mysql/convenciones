@@ -1,0 +1,31 @@
+Esquema de la ID de categorias y territorios
+============================================
+
+0.##.##.##.##.##
+|  |  |  |  |  |
+|  |  |  |  |  |__ Nivel 5: Desde 1 hasta FF (255 valores posibles)
+|  |  |  |  |
+|  |  |  |  |_____ Nivel 4: Desde 1 hasta FF (255 valores posibles)
+|  |  |  |
+|  |  |  |________ Nivel 3: Desde 1 hasta FF (255 valores posibles)
+|  |  |
+|  |  |___________ Nivel 2: Desde 1 hasta FF (255 valores posibles)
+|  |
+|  |______________ Nivel 1: Desde 1 hasta FF (255 valores posibles)
+|
+|_________________ Nivel 0: Siempre es 0: la raiz (root, diria el gringo)
+
+Ejemplos:
+
+0.00.00.00.00.00 = root
+0.01.00.00.00.00 = Primer hijo de root
+0.05.01.00.00.00 = Primer hijo del quinto hijo de root
+
+Niveles de profundidad en territorios
+=====================================
+
+Nivel 0 = Mundo
+Nivel 1 = Pais
+Nivel 2 = Estado
+Nivel 3 = Municipio
+Nivel 4 = Parroquia

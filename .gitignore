@@ -5,7 +5,7 @@ src/Zuliaworks.Netzuela.Spuria.TiposApi/bin/
 src/Zuliaworks.Netzuela.Spuria.TiposApi/obj/
 src/Zuliaworks.Netzuela.Spuria.TiposApi/StyleCop.Cache
 
-src/BaseDeDatos/ModeloDeDatosRelacional.mwb.bak
+src/db/mysql/modelo_de_datos_relacional.mwb.bak
 
 src/Zuliaworks.Netzuela.Spuria.Api/bin/
 src/Zuliaworks.Netzuela.Spuria.Api/obj/

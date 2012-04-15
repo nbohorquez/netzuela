@@ -3,7 +3,7 @@ USE `spuria`;
 
 /*
 *************************************************************
-*				               InsertarRegistro			  	            *
+*						InsertarRegistro					*
 *************************************************************
 */
 
@@ -14,7 +14,7 @@ SELECT 'InsertarRegistro';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarRegistro` (a_ActorActivo INT, a_ActorPasivo INT, a_Accion CHAR(13), a_Parametros TEXT, a_CodigoDeError CHAR(10))
+CREATE FUNCTION `InsertarRegistro` (a_ActorActivo INT, a_Accion CHAR(13), a_ActorPasivo INT, a_Columna TEXT, a_Valor TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE EXIT HANDLER FOR 1452   
@@ -35,10 +35,10 @@ BEGIN
         NULL,
         DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f'),
         a_ActorActivo,
+		a_Accion,
         a_ActorPasivo,
-        a_Accion,
-        a_Parametros,
-        a_CodigoDeError
+        a_Columna,
+        a_Valor
     );
 	
     RETURN LAST_INSERT_ID();
@@ -46,7 +46,7 @@ END$$
 
 /*
 *************************************************************
-*                     RegistrarEliminacion				          *
+*                     RegistrarEliminacion					*
 *************************************************************
 */
 
@@ -57,7 +57,7 @@ SELECT 'RegistrarEliminacion';
 
 DELIMITER $$
 
-CREATE FUNCTION `RegistrarEliminacion` (a_Rastreable INT, a_Parametros TEXT)
+CREATE FUNCTION `RegistrarEliminacion` (a_Rastreable INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE ActorActivo, Resultado INT;
@@ -67,11 +67,11 @@ BEGIN
     INTO ActorActivo;
 
     SELECT InsertarRegistro (
-        ActorActivo,    
+        ActorActivo,
+		'Eliminar',
         a_Rastreable,
-        'Eliminar',
-        a_Parametros,
-        'OK'
+        NULL,
+        NULL
     ) INTO Resultado;
 
     RETURN Resultado;
@@ -79,18 +79,18 @@ END$$
 
 /*
 *************************************************************
-*                      RegistrarCreacion				            *
+*                      RegistrarInsercion					*
 *************************************************************
 */
 
 DELIMITER ;
 
-DROP FUNCTION IF EXISTS `RegistrarCreacion`;
-SELECT 'RegistrarCreacion';
+DROP FUNCTION IF EXISTS `RegistrarInsercion`;
+SELECT 'RegistrarInsercion';
 
 DELIMITER $$
 
-CREATE FUNCTION `RegistrarCreacion` (a_Rastreable INT, a_Parametros TEXT)
+CREATE FUNCTION `RegistrarInsercion` (a_Rastreable INT, a_Columnas TEXT, a_Valores TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE ActorActivo, Resultado INT;
@@ -101,10 +101,10 @@ BEGIN
 
    	SELECT InsertarRegistro (
         ActorActivo,
+        'Insertar',
         a_Rastreable,
-        'Crear',
-        a_Parametros,
-        'OK'
+        a_Columnas,
+        a_Valores
     ) INTO Resultado;
 
     RETURN Resultado;
@@ -112,18 +112,18 @@ END$$
 
 /*
 *************************************************************
-*                   RegistrarModificacion				            *
+*                   RegistrarActualizacion					*
 *************************************************************
 */
 
 DELIMITER ;
 
-DROP FUNCTION IF EXISTS `RegistrarModificacion`;
-SELECT 'RegistrarModificacion';
+DROP FUNCTION IF EXISTS `RegistrarActualizacion`;
+SELECT 'RegistrarActualizacion';
 
 DELIMITER $$
 
-CREATE FUNCTION `RegistrarModificacion` (a_Rastreable INT, a_Parametros TEXT)
+CREATE FUNCTION `RegistrarActualizacion` (a_Rastreable INT, a_Columna TEXT, a_Valor TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE ActorActivo, Resultado INT;
@@ -134,10 +134,10 @@ BEGIN
 
    	SELECT InsertarRegistro (
         ActorActivo,
+		'Actualizar',
         a_Rastreable,
-        'Actualizar',
-        a_Parametros,
-      	'OK'
+        a_Columna,
+      	a_Valor
     ) INTO Resultado;
 
     RETURN Resultado;

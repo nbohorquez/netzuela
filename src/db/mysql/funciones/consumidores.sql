@@ -3,7 +3,7 @@ USE `spuria`;
 
 /*
 *************************************************************
-*				               InsertarSeguidor			                *
+*						InsertarSeguidor					*
 *************************************************************
 */
 
@@ -60,7 +60,7 @@ END$$
 
 /*
 *************************************************************
-*                    InsertarConsumidor				              *
+*                    InsertarConsumidor						*
 *************************************************************
 */
 
@@ -73,7 +73,7 @@ DELIMITER $$
 
 CREATE FUNCTION `InsertarConsumidor` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), 
                                       a_Estatus CHAR(9), a_Sexo CHAR(6), a_FechaDeNacimiento DATE, 
-                                      a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16), a_Parroquia INT, 
+                                      a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16), a_Ubicacion CHAR(16), 
                                       a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
@@ -94,9 +94,12 @@ BEGIN
     END;
 
     SELECT InsertarUsuario (
-		a_Creador,
-        a_Parroquia, 
-        a_CorreoElectronico, 
+		a_Creador, 
+		a_Nombre, 
+		a_Apellido, 
+		a_Estatus, 
+		a_Ubicacion, 
+		a_CorreoElectronico, 
 		a_Contrasena
     ) INTO UsuarioID;
   
@@ -106,9 +109,6 @@ BEGIN
         Interlocutor_P,
         UsuarioID,
         NULL,
-        a_Nombre,
-        a_Apellido,
-        a_Estatus,
         a_Sexo,
         a_FechaDeNacimiento,
         a_GrupoDeEdad,
