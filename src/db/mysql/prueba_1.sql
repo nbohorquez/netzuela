@@ -473,7 +473,7 @@ INTO @Producto1Describible;
 SELECT c.describible_p 
 FROM cliente AS c
 JOIN tienda AS t ON c.rif = t.cliente_p
-WHERE tienda.tienda_id = @TiendaID1
+WHERE t.tienda_id = @TiendaID1
 INTO @Tienda1Describible;
 
 SELECT InsertarDescripcion(@Tienda1Rastreable, @Producto1Describible, 'El motor aeroespacial PAE-1516 de 20kN de empuje...');

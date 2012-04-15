@@ -56,7 +56,7 @@ INSERT INTO visibilidad VALUES("Precio visible");
 INSERT INTO visibilidad VALUES("Ambos visibles");
 
 SELECT 'accion';
-INSERT INTO accion VALUES("Crear");
+INSERT INTO accion VALUES("Insertar");
 INSERT INTO accion VALUES("Abrir");
 INSERT INTO accion VALUES("Actualizar");
 INSERT INTO accion VALUES("Eliminar");
@@ -205,13 +205,13 @@ SELECT InsertarAdministrador (
 /*
 *********************************************************
 *                                                     	*
-*					REGIONES GEOGRAFICAS				*
+*						TERRITORIOS						*
 *														*
 *********************************************************
 */
 
 /* 
-   Se crean solo las regiones geograficas del estado Zulia
+   Se crean solo los terriotorios del estado Zulia
 */
 
 /* Insertamos al planeta Tierra primero */
