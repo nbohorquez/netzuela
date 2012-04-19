@@ -1,5 +1,5 @@
 #!/bin/bash
-declare -A TAMANOS=(["grandes"]="500" ["medianas"]="300" ["pequenas"]="160")
+declare -A TAMANOS=(["grandes"]="500" ["medianas"]="300" ["pequenas"]="160" ["miniaturas"]="70")
 
 # Hacemos las comprobaciones necesarias sobre el primer argumento
 if [ ! $1 ];
@@ -66,7 +66,7 @@ do
 	alto=`identify -format '%h' $1`
 	ruta_archivo="$base"/"$i"/"$dir1"/"$dir2"/"$archivo"."$extension"
 
-	if [ $ancho -gt $alto -a $i = 'pequenas' ];
+	if [ $ancho -gt $alto -a \( $i = 'pequenas' -o $i = 'miniaturas' \) ];
 	then
 		convert "$1" -resize x"${TAMANOS[$i]}" "$ruta_archivo"
 		ancho=`identify -format '%w' $ruta_archivo`

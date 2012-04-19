@@ -263,7 +263,7 @@ SELECT InsertarMunicipio(@Creador, 'Valmore Rodriguez', 		0, 		'Espanol', @eZuli
 SELECT 'parroquias';
 
 /* Parroquias de Almirante Padilla */
-SELECT InsertarParroquia(@Creador, 'Isla de Toas', 			9210, 	'Espanol', @mAPadilla, '4031', 0);
+SELECT InsertarParroquia(@Creador, 'Isla de Toas', 				9210, 	'Espanol', @mAPadilla, '4031', 0);
 SELECT InsertarParroquia(@Creador, 'Monagas', 					3429, 	'Espanol', @mAPadilla, '3429', 0);
 
 /* Parroquias de Baralt */
