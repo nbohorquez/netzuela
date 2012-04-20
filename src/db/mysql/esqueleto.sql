@@ -163,6 +163,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`usuario` (
   `rastreable_p` INT NOT NULL ,
+  `describible_p` INT NOT NULL ,
   `usuario_id` INT NOT NULL AUTO_INCREMENT ,
   `nombre` VARCHAR(45) NOT NULL ,
   `apellido` VARCHAR(45) NOT NULL ,
@@ -173,6 +174,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`usuario` (
   UNIQUE INDEX `rastreable_p_UNIQUE` (`rastreable_p` ASC) ,
   INDEX `fk_Usuario_Territorio` (`ubicacion` ASC) ,
   INDEX `fk_Usuario_Estatus` (`estatus` ASC) ,
+  INDEX `fk_Usuario_Describible` (`describible_p` ASC) ,
   CONSTRAINT `fk_Usuario_Rastreable`
     FOREIGN KEY (`rastreable_p` )
     REFERENCES `spuria`.`rastreable` (`rastreable_id` )
@@ -186,6 +188,11 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`usuario` (
   CONSTRAINT `fk_Usuario_Estatus`
     FOREIGN KEY (`estatus` )
     REFERENCES `spuria`.`estatus` (`valor` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Usuario_Describible`
+    FOREIGN KEY (`describible_p` )
+    REFERENCES `spuria`.`describible` (`describible_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -2225,13 +2232,13 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
 
-    SELECT 'usuario_id,nombre,apellido,estatus,ubicacion' INTO columnas;
+    SELECT 'describible_p,usuario_id,nombre,apellido,estatus' INTO columnas;
     SELECT CONCAT(
+        CAST(NEW.describible_p AS CHAR),',',
         CAST(NEW.usuario_id AS CHAR),',',
         NEW.nombre,',',
         NEW.apellido,',',
-        NEW.estatus,',',
-        NEW.ubicacion
+        NEW.estatus
     ) INTO valores;
     
     SELECT RegistrarInsercion(NEW.rastreable_p, columnas, valores) INTO bobo;
@@ -2249,22 +2256,9 @@ BEGIN
     IF NEW.rastreable_p != OLD.rastreable_p THEN
         SET NEW.rastreable_p = OLD.rastreable_p;
     END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER antes_de_eliminar_usuario BEFORE DELETE ON usuario
-FOR EACH ROW
-BEGIN
-    DECLARE bobo INT;
-
-    SELECT RegistrarEliminacion(OLD.rastreable_p) INTO bobo;
-    
-    DELETE FROM acceso WHERE acceso_id = OLD.usuario_id;
-    DELETE FROM busqueda WHERE busqueda_id = OLD.usuario_id;
-    /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
-    DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
+    IF NEW.describible_p != OLD.describible_p THEN
+        SET NEW.describible_p = OLD.describible_p;
+    END IF;
 END $$
 
 USE `spuria`$$
@@ -2281,6 +2275,23 @@ BEGIN
     + IF(NEW.ubicacion != OLD.ubicacion, RegistrarActualizacion(NEW.rastreable_p, 'ubicacion', NEW.ubicacion), 0)
     + IF(NEW.estatus != OLD.estatus, RegistrarActualizacion(NEW.rastreable_p, 'estatus', NEW.estatus), 0)
     INTO bobo;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER antes_de_eliminar_usuario BEFORE DELETE ON usuario
+FOR EACH ROW
+BEGIN
+    DECLARE bobo INT;
+
+    SELECT RegistrarEliminacion(OLD.rastreable_p) INTO bobo;
+    
+    DELETE FROM acceso WHERE acceso_id = OLD.usuario_id;
+    DELETE FROM busqueda WHERE busqueda_id = OLD.usuario_id;
+    /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
+    DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
+    DELETE FROM describible WHERE describible_id = OLD.describible_p;
 END $$
 
 

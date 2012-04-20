@@ -17,7 +17,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), a_Estatus CHAR(9), a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE AccesoID, Rastreable_P INT;
+    DECLARE AccesoID, Rastreable_P, Describible_P INT;
 
     DECLARE EXIT HANDLER FOR 1048
     BEGIN
@@ -41,9 +41,11 @@ BEGIN
     END;
 
 	SELECT InsertarRastreable(a_Creador) INTO Rastreable_P;
+	SELECT InsertarDescribible() INTO Describible_P;
 
     INSERT INTO usuario VALUES ( 
-		Rastreable_P,   
+		Rastreable_P,
+		Describible_P,
         NULL,
 		a_Nombre,
 		a_Apellido,
