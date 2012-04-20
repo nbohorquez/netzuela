@@ -361,7 +361,7 @@ SELECT InsertarPatrocinante (
 *********************************************************
 */
 
-SELECT InsertarPublicidad(@PatrocinanteID) INTO @PublicidadID;
+SELECT InsertarPublicidad(@PatrocinanteID, 'Coca-Cola es inimitable... y verga') INTO @PublicidadID;
 
 SELECT InsertarGrupoDeEdadObjetivo(@PublicidadID, 'Adultos jovenes');
 SELECT InsertarGradoDeInstruccionObjetivo(@PublicidadID, 'Universitaria');

@@ -954,6 +954,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`publicidad` (
   `cobrable_p` INT NOT NULL ,
   `publicidad_id` INT NOT NULL AUTO_INCREMENT ,
   `patrocinante` INT NOT NULL ,
+  `nombre` VARCHAR(45) NOT NULL ,
   `tamano_de_poblacion_objetivo` INT NULL ,
   PRIMARY KEY (`publicidad_id`) ,
   INDEX `fk_Publicidad_Etiquetable` (`etiquetable_p` ASC) ,
@@ -2891,7 +2892,7 @@ BEGIN
     DELETE FROM consumidor_objetivo WHERE publicidad_id = OLD.publicidad_id;
     DELETE FROM grupo_de_edad_objetivo WHERE publicidad_id = OLD.publicidad_id;
     DELETE FROM grado_de_instruccion_objetivo WHERE publicidad_id = OLD.publicidad_id;
-    DELETE FROM region_geografica_objetivo WHERE publicidad_id = OLD.publicidad_id;
+    DELETE FROM territorio_objetivo WHERE publicidad_id = OLD.publicidad_id;
     DELETE FROM sexo_objetivo WHERE publicidad_id = OLD.publicidad_id;
     /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
     DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
@@ -2914,7 +2915,8 @@ BEGIN
         CAST(NEW.etiquetable_p AS CHAR),',',
         CAST(NEW.cobrable_p AS CHAR),',',
         CAST(NEW.publicidad_id AS CHAR),',',
-        CAST(NEW.patrocinante AS CHAR)
+        CAST(NEW.patrocinante AS CHAR),',',
+        NEW.nombre
     ) INTO valores;
     
     SELECT RegistrarInsercion(NEW.rastreable_p, columnas, valores) INTO bobo;
@@ -2929,7 +2931,8 @@ BEGIN
     DECLARE bobo INT;
     
     SELECT 
-    IF(
+    IF(NEW.nombre != OLD.nombre, RegistrarActualizacion(NEW.rastreable_p, 'nombre', NEW.nombre), 0) 
+    + IF(
         NEW.tamano_de_poblacion_objetivo != OLD.tamano_de_poblacion_objetivo, 
         RegistrarActualizacion(NEW.rastreable_p, 'tamano_de_poblacion_objetivo', NEW.tamano_de_poblacion_objetivo), 
         0
@@ -3336,9 +3339,9 @@ BEGIN
     WHERE t.tienda_id = NEW.tienda_id
     INTO rastreable_p;
 
-    SELECT 'fecha_inicio, numero_total_de_productos' INTO columnas;
+    SELECT 'fecha_inicio,numero_total_de_productos' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.fecha_inicio AS CHAR),': ',
+        CAST(NEW.fecha_inicio AS CHAR),',',
         CAST(NEW.numero_total_de_productos AS CHAR)
     ) INTO valores;
     
@@ -4349,7 +4352,7 @@ BEGIN
     SELECT 'fecha_inicio,precio,cantidad' INTO columnas;
     SELECT CONCAT(
         CAST(NEW.fecha_inicio AS CHAR),',',
-        CAST(NEW.precio AS CHAR),
+        CAST(NEW.precio AS CHAR),',',
         CAST(NEW.cantidad AS CHAR)
     ) INTO valores;
     

@@ -87,7 +87,7 @@ SELECT 'InsertarPublicidad';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarPublicidad` (a_Patrocinante INT)
+CREATE FUNCTION `InsertarPublicidad` (a_Patrocinante INT, a_Nombre VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE buscable, describible, rastreable, etiquetable, cobrable, creador INT;
@@ -125,7 +125,8 @@ BEGIN
         etiquetable,
         cobrable,
         NULL,
-        a_Patrocinante, 
+        a_Patrocinante,
+		a_Nombre,
         NULL
     );
 		
