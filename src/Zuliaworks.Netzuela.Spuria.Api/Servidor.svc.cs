@@ -35,7 +35,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
     {
         #region Variables y constantes
 
-        private readonly int tiendaId;
+		private readonly int tiendaId;
 
         #endregion
 
@@ -46,13 +46,16 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         /// </summary>
         public Servidor()
         {
+			//Conexion conexion = new Conexion();
 			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
                 conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
 
-                string sql = "SELECT Tienda.TiendaID FROM Tienda, Acceso, Cliente " +
-                             "WHERE Acceso.CorreoElectronico = '" + this.Cliente + "' AND Cliente.Usuario_P = Acceso.AccesoID " +
-                             "AND Tienda.Cliente_P = Cliente.RIF";
+                string sql = "SELECT tienda.tienda_id FROM tienda "
+                			+ "JOIN cliente "
+							+ "JOIN usuario "
+							+ "JOIN acceso "
+							+ "WHERE acceso.correo_electronico = '" + this.Cliente + "' AND cliente.propietario = Acceso.AccesoID LIMIT 1";
                 DataTable t = conexion.Consultar("spuria", sql);
                 this.tiendaId = (int)t.Rows[0][0];
             }
@@ -78,7 +81,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         public string[] ListarBasesDeDatos()
         {
             List<string> resultadoFinal = new List<string>();
-
+			/*
             try
             {
                 using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
@@ -97,7 +100,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             {
                 throw new Exception("SPURIA: Error de listado de base de datos", ex);
             }
-
+			 */
+			resultadoFinal.Add("cabimas");
+			resultadoFinal.Add("maracaibo");
             return resultadoFinal.ToArray();
         }
 

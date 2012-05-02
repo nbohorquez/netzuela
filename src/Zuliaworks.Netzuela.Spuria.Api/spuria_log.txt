@@ -1,0 +1,1 @@
+﻿2012-05-01 02:18:01,597 [Threadpool worker] FATAL Zuliaworks.Netzuela.Spuria.Api.HttpInspector [(null)] - Error autentificando el usuario

@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,16 +53,24 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Comunes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\lib\Comunes.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Dropbox\lib2linux\Comunes.dll</HintPath>
     </Reference>
     <Reference Include="Datos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\lib\Datos.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Dropbox\lib2linux\Datos.dll</HintPath>
     </Reference>
     <Reference Include="Logica, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\lib\Logica.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Dropbox\lib2linux\Logica.dll</HintPath>
     </Reference>
     <Reference Include="Preferencias, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\lib\Preferencias.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Dropbox\lib2linux\Preferencias.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\opt\log4net-1.2.11\bin\mono\2.0\release\log4net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -78,12 +87,14 @@
     <Compile Include="Servidor.svc.cs">
       <DependentUpon>Servidor.svc</DependentUpon>
     </Compile>
-    <Compile Include="Autentificacion.cs" />
     <Compile Include="Permisos.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sesion.cs" />
-    <Compile Include="InspectorBehaviorExtension.cs" />
-    <Compile Include="Inspector.cs" />
+    <Compile Include="WcfBehaviorExtension.cs" />
+    <Compile Include="WcfInspectorParametros.cs" />
+    <Compile Include="WcfInspectorMensajes.cs" />
+    <Compile Include="HttpInspector.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AutentificacionExtensiones.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
@@ -108,7 +119,7 @@
     </VisualStudio>
     <MonoDevelop>
       <Properties VerifyCodeBehindFields="true" VerifyCodeBehindEvents="true">
-        <XspParameters Port="8080" Address="127.0.0.1" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
+        <XspParameters Port="2145" Address="0.0.0.0" SslMode="None" SslProtocol="Default" KeyType="None" CertFile="" KeyFile="" PasswordOptions="None" Password="" Verbose="true" />
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
@@ -124,5 +135,8 @@
       <Project>{8DE4172C-BAE2-4320-A092-585077DBB33F}</Project>
       <Name>TiposApi</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>

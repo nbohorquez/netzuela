@@ -115,7 +115,20 @@
 
             return datosAEnviar;
         }
-
+		
+		public static object ConvertirEnObjetoDinamico(this DataTableXml xml, System.Reflection.Assembly ensamblado)
+		{
+			DataTableXmlDinamico dinamico = new	DataTableXmlDinamico(ensamblado);
+			dinamico.BaseDeDatos = xml.BaseDeDatos;
+			dinamico.NombreTabla = xml.NombreTabla;
+			dinamico.EsquemaXml = xml.EsquemaXml;
+			dinamico.Xml = xml.Xml;
+			dinamico.EstadoFilas = xml.EstadoFilas;
+			dinamico.ClavePrimaria = xml.ClavePrimaria;
+			
+			return dinamico.ObjectInstance;
+		}
+		
         #endregion
     }
 }

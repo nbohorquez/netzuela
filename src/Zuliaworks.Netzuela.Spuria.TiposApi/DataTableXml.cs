@@ -25,6 +25,16 @@
             this.EsquemaXml = esquemaXml;
             this.Xml = xml;
         }
+		
+		public DataTableXml(DataTableXmlDinamico dinamico)
+		{
+			this.BaseDeDatos = dinamico.BaseDeDatos;
+			this.NombreTabla = dinamico.NombreTabla;
+			this.EsquemaXml = dinamico.EsquemaXml;
+			this.Xml = dinamico.Xml;
+			this.EstadoFilas = dinamico.EstadoFilas;
+			this.ClavePrimaria = dinamico.ClavePrimaria;
+		}
 
         #endregion
 
