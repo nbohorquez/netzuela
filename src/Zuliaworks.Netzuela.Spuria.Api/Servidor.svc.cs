@@ -6,6 +6,8 @@
 
 namespace Zuliaworks.Netzuela.Spuria.Api
 {
+	using log4net;
+	
     using System;
     using System.Collections.Generic;
     using System.Configuration;                     // ConfigurationManager
@@ -36,6 +38,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         #region Variables y constantes
 
 		private readonly int tiendaId;
+		private readonly ILog log;
+		public const string BaseDeDatos = "spuria";
 
         #endregion
 
@@ -46,18 +50,24 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         /// </summary>
         public Servidor()
         {
-			//Conexion conexion = new Conexion();
+			log = LogManager.GetLogger(typeof(Servidor));
+			
+			if(int.Parse(Cliente) == (int)Autentificacion.TipoDeUsuario.Anonimo)
+			{
+				log.Fatal("Imposible acceder con cuenta anonima");
+				throw new Exception("Imposible acceder con cuenta anonima");
+			}
+			
 			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
-                conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+				conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
 
                 string sql = "SELECT tienda.tienda_id FROM tienda "
                 			+ "JOIN cliente "
 							+ "JOIN usuario "
-							+ "JOIN acceso "
-							+ "WHERE acceso.correo_electronico = '" + this.Cliente + "' AND cliente.propietario = Acceso.AccesoID LIMIT 1";
-                DataTable t = conexion.Consultar("spuria", sql);
-                this.tiendaId = (int)t.Rows[0][0];
+							+ "WHERE usuario.usuario_id = " + this.Cliente + " LIMIT 1";
+                DataTable t = conexion.Consultar(BaseDeDatos, sql);
+                this.tiendaId = (int)t.Rows[0].ItemArray[0];
             }
         }
 
@@ -67,7 +77,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
         private string Cliente
         {
-            get { return OperationContext.Current.ServiceSecurityContext.PrimaryIdentity.Name; }
+            //get { return OperationContext.Current.ServiceSecurityContext.AuthorizationContext.Properties["Usuario"].ToString(); }
+			get { return Sesion.Propiedades["Usuario"].ToString(); }
         }
 
         #endregion
@@ -81,7 +92,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         public string[] ListarBasesDeDatos()
         {
             List<string> resultadoFinal = new List<string>();
-			/*
+
             try
             {
                 using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
@@ -98,11 +109,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             }
             catch (Exception ex)
             {
-                throw new Exception("SPURIA: Error de listado de base de datos", ex);
+            	log.Fatal("Error de listado de base de datos");
+                throw new Exception("Error de listado de base de datos", ex);
             }
-			 */
-			resultadoFinal.Add("cabimas");
-			resultadoFinal.Add("maracaibo");
             return resultadoFinal.ToArray();
         }
 

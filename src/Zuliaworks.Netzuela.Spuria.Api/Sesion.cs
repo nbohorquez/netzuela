@@ -8,40 +8,25 @@
     using Zuliaworks.Netzuela.Valeria.Comunes;          // ParametrosDeConexion
     using Zuliaworks.Netzuela.Valeria.Preferencias;     // CargarGuardar
 	
-	using System.Configuration;
     public static class Sesion
     {
 		private static readonly ParametrosDeConexion parametros;
-        //private static readonly SecureString[] credenciales;
-		private static readonly string[] credenciales;
-
+        private static readonly SecureString[] credenciales;
+		private static Dictionary<string, object> propiedades;
+		
         static Sesion()
         {
             parametros = CargarGuardar.CargarParametrosDeConexion("Local");
-            //credenciales = CargarGuardar.CargarCredenciales("Local");
-			AutentificacionSection c = (AutentificacionSection)ConfigurationManager.GetSection("credenciales");
-			
-			List<string> dale = new List<string>();
-			if(c != null)
+            credenciales = CargarGuardar.CargarCredenciales("Local");
+			propiedades = new Dictionary<string, object>() 
 			{
-				foreach(UsuarioContrasenaElement usuCon in c.LlavesDeAcceso)
-				{
-					if(usuCon.ID == "Local")
-					{
-						dale.Add(usuCon.Usuario.DesencriptarS());
-						dale.Add(usuCon.Contrasena.DesencriptarS());
-					}
-				}
-			}
-			
-			credenciales = dale.ToArray();
+				{ "Usuario", string.Empty }
+			};
 					
 			if (parametros == null || credenciales.Length != 2)
             {
                 throw new Exception("Error interno del servidor. Por favor inténtelo más tarde");
             }
-			
-			throw new Exception("Usuario=" + credenciales[0] + ";Contrasena=" + credenciales[1]);
         }
 
         public static ParametrosDeConexion CadenaDeConexion
@@ -49,24 +34,14 @@
             get { return parametros; }
 		}
 		
-		/*
         public static SecureString[] Credenciales
         {
             get { return credenciales; }
 		}
-		*/
 		
-		public static SecureString[] Credenciales
-        {
-            get 
-			{
-				List<SecureString> asd = new List<SecureString>();
-				
-				foreach(string c in credenciales)
-					asd.Add(c.ConvertirASecureString());
-				
-				return asd.ToArray(); 
-			}
+		public static Dictionary<string, object> Propiedades 
+		{ 
+			get { return propiedades; }
 		}
     }
 }

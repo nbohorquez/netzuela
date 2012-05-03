@@ -20,12 +20,12 @@
             entidadesPermitidas = new Dictionary<string, DescriptorDeTabla[]>();
 
             DescriptorDeTabla inventarioTienda = new DescriptorDeTabla(
-                "inventariotienda",
-                new string[] { "tiendaid", "codigo", "descripcion", "precio", "cantidad" },
-                new string[] { "tiendaid", "codigo" },
-                "tiendaid");
+                "inventario_tienda",
+                new string[] { "tienda_id", "codigo", "descripcion", "precio", "cantidad" },
+                new string[] { "tienda_id", "codigo" },
+                "tienda_id");
 
-            entidadesPermitidas.Add("spuria", new DescriptorDeTabla[] { inventarioTienda });
+            entidadesPermitidas.Add(Servidor.BaseDeDatos, new DescriptorDeTabla[] { inventarioTienda });
         }
 
         #endregion

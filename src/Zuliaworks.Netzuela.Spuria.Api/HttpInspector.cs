@@ -14,6 +14,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.Globalization;
 	using System.Linq;
 	using System.Net;
+	using System.Security.Principal;				// GenericIdentity, GenericPrincipal
 	using System.Text;
 	using System.Web;
 	
@@ -39,22 +40,34 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		
 		#region Funciones
 		
+		private void ComenzarPeticion(object remitente, EventArgs e)
+		{
+		}
+		
 		private void AutentificarPeticion(object remitente, EventArgs e)
 		{
-			HttpContext contexto = HttpContext.Current;			
-			if (contexto.Request.ContieneEncabezadoAutorizacion())
+			Autentificacion auth = new Autentificacion((WebHeaderCollection)HttpContext.Current.Request.Headers);
+			
+			if (auth.TieneEncabezadoAutorizacion)
 			{
 				try
 				{
-					if (!Autentificar(contexto.Request))
+					if (auth.Autentificar())
 				    {
-						contexto.DenegarAutorizacion();
+						GenericIdentity identidad = new GenericIdentity(auth.Usuario.ToString());
+						HttpContext.Current.User = new GenericPrincipal(identidad, new string[] { "Tienda" } );
 				    }
+					else
+					{
+						HttpContext.Current.DenegarAutorizacion();
+					}
+					
+					log.Debug("Usuario=" + HttpContext.Current.User.Identity.Name + " autentificado?=" + HttpContext.Current.User.Identity.IsAuthenticated.ToString());
 				}
 				catch(Exception ex)
 				{
 					log.Fatal("Error autentificando el usuario");
-					throw new Exception("SPURIA: Error autentificando el usuario"  + Sesion.Credenciales[0].ConvertirAUnsecureString() + ";" + Sesion.Credenciales[1].ConvertirAUnsecureString(), ex);
+					throw new Exception("SPURIA: Error autentificando el usuario", ex);
 				}
 			}
 		}
@@ -69,34 +82,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		    }
 		}
 		
-		public bool Autentificar(HttpRequest peticion)
-		{
-			string autorizacionCodificada = peticion.Headers["Authorization"].Replace("Basic ", string.Empty);
-			string autorizacionDecodificada = autorizacionCodificada.DecodificarBase64();
-			string[] autorizacion = autorizacionDecodificada.Split(':');
-			
-			if (autorizacion.Length != 2 || string.IsNullOrEmpty(autorizacion[0]) || string.IsNullOrEmpty(autorizacion[1]))
-			{
-				return false;
-			}
-				
-			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
-            {
-				log.Debug("Intento de conexion con base de datos con usuario=" + Sesion.Credenciales[0].ConvertirAUnsecureString() + ";contrasena=" + Sesion.Credenciales[1].ConvertirAUnsecureString());
-                conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
-
-				string sql = "SELECT acceso_id FROM acceso WHERE correo_electronico = '" + autorizacion[0] + "' AND contrasena = '" + autorizacion[1] + "'";
-                DataTable t = conexion.Consultar("spuria", sql);
-
-                if (t.Rows.Count != 1)
-                {
-                    return false;
-                }
-				
-				return true;
-            }
-		}
-		
 		#endregion
 		
 		#region Implementacion de interfaces
@@ -108,7 +93,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
 		public void Init (HttpApplication context)
 		{
-			context.AuthenticateRequest += new EventHandler(AutentificarPeticion);
+			context.BeginRequest += new EventHandler(ComenzarPeticion);
+			//context.AuthenticateRequest += new EventHandler(AutentificarPeticion);
 			context.EndRequest += new EventHandler(FinalizarPeticion);
 		}
 		
