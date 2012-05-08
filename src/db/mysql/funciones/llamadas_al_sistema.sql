@@ -3,7 +3,7 @@ USE `spuria`;
 
 /*
 *************************************************************
-*			                   SepararString				              *
+*						SepararString						*
 *************************************************************
 */
 
@@ -69,7 +69,7 @@ END$$
 
 /*
 *************************************************************
-*				                    Insertar				                *
+*							Insertar						*
 *************************************************************
 */
 
@@ -86,12 +86,12 @@ BEGIN
     DECLARE Codigo CHAR(15);
     DECLARE Descripcion VARCHAR(45);
     DECLARE Precio DECIMAL(10,2);
-    DECLARE Cantidad INT;
+    DECLARE Cantidad DECIMAL(9,3);
 
     DECLARE Creador INT;
     DECLARE Resultado INT;
     DECLARE PrecioViejo DECIMAL(10,2);
-    DECLARE CantidadVieja INT;
+    DECLARE CantidadVieja DECIMAL(9,3);
 
     /*START TRANSACTION;*/
 
@@ -101,7 +101,7 @@ BEGIN
     SELECT CONVERT(Valor, CHAR(15)) FROM Parametros WHERE ID = 2 INTO Codigo;
     SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
     SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
+    SELECT CONVERT(Valor, DECIMAL(9,3)) FROM Parametros WHERE ID = 5 INTO Cantidad;
 	
     DROP TEMPORARY TABLE IF EXISTS Parametros;
 
@@ -117,7 +117,7 @@ END$$
 
 /*
 *************************************************************
-*                           Actualizar				              *
+*							Actualizar						*
 *************************************************************
 */
 
@@ -134,11 +134,11 @@ BEGIN
     DECLARE Codigo CHAR(15);
     DECLARE Descripcion VARCHAR(45);
     DECLARE Precio DECIMAL(10,2);
-    DECLARE Cantidad INT;
+    DECLARE Cantidad DECIMAL(9,3);
 
     DECLARE Resultado INT;
     DECLARE PrecioViejo DECIMAL(10,2);
-    DECLARE CantidadVieja INT;
+    DECLARE CantidadVieja DECIMAL(9,3);
 
     /*START TRANSACTION;*/
     
@@ -148,7 +148,7 @@ BEGIN
     SELECT CONVERT(Valor, CHAR(15)) FROM Parametros WHERE ID = 2 INTO Codigo;
     SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
     SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
+    SELECT CONVERT(Valor, DECIMAL(9,3)) FROM Parametros WHERE ID = 5 INTO Cantidad;
 	
     DROP TEMPORARY TABLE IF EXISTS Parametros;
 	
@@ -170,7 +170,7 @@ END$$
 
 /*
 *************************************************************
-*                           Borrar 				                  *
+*							Borrar							*
 *************************************************************
 */
 
@@ -187,7 +187,7 @@ BEGIN
     DECLARE Codigo CHAR(15);
     DECLARE Descripcion VARCHAR(45);
     DECLARE Precio DECIMAL(10,2);
-    DECLARE Cantidad INT;
+    DECLARE Cantidad DECIMAL(9,3);
 
     /*START TRANSACTION;*/
 
@@ -197,7 +197,7 @@ BEGIN
     SELECT CONVERT(Valor, CHAR(15)) FROM Parametros WHERE ID = 2 INTO Codigo;
     SELECT CONVERT(Valor, CHAR) FROM Parametros WHERE ID = 3 INTO Descripcion;
     SELECT CONVERT(Valor, DECIMAL(10,2)) FROM Parametros WHERE ID = 4 INTO Precio;
-    SELECT CONVERT(Valor, SIGNED) FROM Parametros WHERE ID = 5 INTO Cantidad;
+    SELECT CONVERT(Valor, DECIMAL(9,3)) FROM Parametros WHERE ID = 5 INTO Cantidad;
 	
     DROP TEMPORARY TABLE IF EXISTS Parametros;
 

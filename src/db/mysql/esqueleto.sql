@@ -1461,7 +1461,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`precio_cantidad` (
   `fecha_inicio` DECIMAL(17,3) NOT NULL ,
   `fecha_fin` DECIMAL(17,3) NULL ,
   `precio` DECIMAL(10,2) NOT NULL ,
-  `cantidad` INT NOT NULL ,
+  `cantidad` DECIMAL(9,3) NOT NULL ,
   PRIMARY KEY (`tienda_id`, `codigo`, `fecha_inicio`) ,
   INDEX `fk_PrecioCantidad_Inventario` (`tienda_id` ASC, `codigo` ASC) ,
   CONSTRAINT `fk_PrecioCantidad_Inventario`

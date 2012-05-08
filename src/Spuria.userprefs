@@ -1,21 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/HttpExtensiones.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs">
     <Files>
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Sesion.cs" Line="25" Column="14" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Web.config" Line="117" Column="27" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Autentificacion.cs" Line="64" Column="13" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs" Line="103" Column="14" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/ValidadorCredenciales.cs" Line="33" Column="6" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/WcfInspectorMensajes.cs" Line="39" Column="48" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/HttpExtensiones.cs" Line="38" Column="4" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs" Line="296" Column="7" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Permisos.cs" Line="29" Column="10" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.TiposApi/DataTableXmlExtensiones.cs" Line="59" Column="85" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Api" expanded="True">
-            <Node name="HttpExtensiones.cs" selected="True" />
-            <Node name="Servidor.svc" expanded="True" />
+            <Node name="Servidor.svc" expanded="True">
+              <Node name="Servidor.svc.cs" selected="True" />
+            </Node>
           </Node>
           <Node name="TiposApi" expanded="True" />
         </State>
@@ -37,8 +34,6 @@
       <Breakpoint file="/home/nestor/netzuela/spuria/src/Zuliaworks.Netzuela.Spuria.Api/InspectorHttp.cs" line="34" />
       <Breakpoint file="/home/nestor/netzuela/spuria/src/Zuliaworks.Netzuela.Spuria.Api/InspectorWcfParametros.cs" line="20" />
       <Breakpoint file="/home/nestor/netzuela/spuria/src/Zuliaworks.Netzuela.Spuria.Api/InspectorWcfParametros.cs" line="25" />
-      <Breakpoint file="/home/nestor/netzuela/spuria/src/Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs" line="84" />
-      <Breakpoint file="/home/nestor/netzuela/spuria/src/Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs" line="55" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -14,7 +14,7 @@
     {
         #region Constructores
 
-        public DataTableXml() 
+        public DataTableXml()
         { 
         }
 
@@ -32,7 +32,7 @@
 			this.NombreTabla = dinamico.NombreTabla;
 			this.EsquemaXml = dinamico.EsquemaXml;
 			this.Xml = dinamico.Xml;
-			this.EstadoFilas = dinamico.EstadoFilas;
+			//this.EstadoFilas = dinamico.EstadoFilas;
 			this.ClavePrimaria = dinamico.ClavePrimaria;
 		}
 
@@ -48,8 +48,10 @@
         public string EsquemaXml { get; set; }
         [DataMember]
         public string Xml { get; set; }
+		/*
         [DataMember]
         public DataRowState[] EstadoFilas { get; set; }
+        */
         [DataMember]
         public int[] ClavePrimaria { get; set; }
 

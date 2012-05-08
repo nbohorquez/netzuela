@@ -21,7 +21,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
     using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
 	using Zuliaworks.Netzuela.Spuria.TiposApi;      // IApi
-
+	
+	using System.IO;
+	
     /*
      * Para informacion sobre concurrencia ver: http://www.codeproject.com/KB/WCF/WCFConcurrency.aspx
      */
@@ -52,7 +54,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         {
 			log = LogManager.GetLogger(typeof(Servidor));
 			
-			if(int.Parse(Cliente) == (int)Autentificacion.TipoDeUsuario.Anonimo)
+			if (int.Parse(Cliente) == (int)Autentificacion.TipoDeUsuario.Anonimo)
 			{
 				log.Fatal("Imposible acceder con cuenta anonima");
 				throw new Exception("Imposible acceder con cuenta anonima");
@@ -112,6 +114,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             	log.Fatal("Error de listado de base de datos");
                 throw new Exception("Error de listado de base de datos", ex);
             }
+			
             return resultadoFinal.ToArray();
         }
 
@@ -140,7 +143,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             }
             catch (Exception ex)
             {
-                throw new Exception("SPURIA: Error de listado de tablas", ex);
+				log.Fatal("Error de listado de base de tablas: baseDeDatos=" + baseDeDatos);
+                throw new Exception("Error de listado de tablas", ex);
             }
 
             return resultadoFinal.ToArray();
@@ -166,11 +170,13 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
             if (!Permisos.EntidadesPermitidas.Keys.Contains(baseDeDatos))
             {
+				log.Fatal("Argumento incorrecto: baseDeDatos=" + baseDeDatos);
                 throw new ArgumentOutOfRangeException("baseDeDatos");
             }
-
+			
             if (!Permisos.EntidadesPermitidas[baseDeDatos].Any(e => string.Equals(e.Nombre, tabla, StringComparison.OrdinalIgnoreCase)))
             {
+				log.Fatal("Argumento incorrecto: tabla=" + tabla);
                 throw new ArgumentOutOfRangeException("tabla");
             }
 
@@ -201,7 +207,10 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
                     DataTable t = conexion.Consultar(baseDeDatos, sql);
                     List<DataColumn> cp = new List<DataColumn>();
-
+					
+					// Seleccionamos todas las columnas que sean clave primaria y que no sean descriptor.TiendaID
+					// porque esta columna no va a ser enviado al cliente. Esto se hace con la intencion de que
+					// toda tabla enviada siempre tenga una clave primaria.
                     foreach (string columna in descriptor.ClavePrimaria)
                     {
                         if (!string.Equals(columna, descriptor.TiendaID, StringComparison.OrdinalIgnoreCase))
@@ -212,11 +221,12 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
                     t.PrimaryKey = cp.ToArray();
                     datosAEnviar = t.DataTableAXml(baseDeDatos, tabla);
-                }
+	            }
             }
             catch (Exception ex)
             {
-                throw new Exception("SPURIA: Error de lectura", ex);
+				log.Fatal("Error de lectura");
+                throw new Exception("Error de lectura", ex);
             }
 
             return datosAEnviar;
@@ -231,12 +241,14 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         {
             if (!Permisos.EntidadesPermitidas.Keys.Contains(tablaXml.BaseDeDatos))
             {
+				log.Fatal("Argumento incorrecto: tablaXml.BaseDeDatos=" + tablaXml.BaseDeDatos);
                 throw new ArgumentOutOfRangeException("tablaXml");
             }
 
             if (!Permisos.EntidadesPermitidas[tablaXml.BaseDeDatos].Any(e => string.Equals(e.Nombre, tablaXml.NombreTabla, StringComparison.OrdinalIgnoreCase)))
             {
-                throw new ArgumentOutOfRangeException("tabla");
+				log.Fatal("Argumento incorrecto: tablaXml.NombreTabla=" + tablaXml.NombreTabla);
+                throw new ArgumentOutOfRangeException("tablaXml");
             }
 
             bool resultado = false;
@@ -249,25 +261,58 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 
                     Permisos.DescriptorDeTabla descriptor =
                         Permisos.EntidadesPermitidas[tablaXml.BaseDeDatos].First(e => string.Equals(e.Nombre, tablaXml.NombreTabla, StringComparison.OrdinalIgnoreCase));
-
-                    DataTable tabla = tablaXml.XmlADataTable();
-                    DataColumn col = new DataColumn(descriptor.TiendaID, this.tiendaId.GetType());
-
-                    tabla.Columns.Add(col);
-
+					
+                    DataTable tablaRecibida = tablaXml.XmlADataTable();
+					//tablaRecibida.WriteXml("/var/www/log/trXml.txt", XmlWriteMode.DiffGram);
+					//tablaRecibida.WriteXmlSchema("/var/www/log/trEsquemaXml.txt");
+					
+					DataTable tablaProcesada = tablaRecibida.Copy();
+					
+					// Si la tabla original poseia una columna tienda_id, debemos colocarsela de nuevo
+					if (descriptor.TiendaID != null)
+					{
+						List<DataRow> filasEliminadas = new List<DataRow>();
+	                    DataColumn col = new DataColumn(descriptor.TiendaID, this.tiendaId.GetType());
+	                    tablaProcesada.Columns.Add(col);
+						
+						for (int i = 0; i < tablaProcesada.Rows.Count; i++)
+						{
+							if (tablaProcesada.Rows[i].RowState == DataRowState.Deleted)
+							{
+								tablaProcesada.Rows[i].RejectChanges();
+								tablaProcesada.Rows[i][col] = this.tiendaId;
+								filasEliminadas.Add(tablaProcesada.Rows[i]);
+							}
+							else
+							{
+								tablaProcesada.Rows[i][col] = this.tiendaId;
+							}
+						}
+						
+						// Agregamos tienda_id al conjunto de claves primarias
+						List<DataColumn> cp = tablaProcesada.PrimaryKey.ToList();
+						cp.Add(col);
+						tablaProcesada.PrimaryKey = cp.ToArray();
+						
+						filasEliminadas.ToList().ForEach(f => f.Delete());
+					}
+						
+					// Reordenamos las columnas
                     for (int i = 0; i < descriptor.Columnas.Length; i++)
                     {
-                        tabla.Columns[descriptor.Columnas[i]].SetOrdinal(i);
+                        tablaProcesada.Columns[descriptor.Columnas[i]].SetOrdinal(i);
                     }
-
-                    conexion.EscribirTabla(tablaXml.BaseDeDatos, tablaXml.NombreTabla, tabla);
-
+					
+					//tablaProcesada.WriteXml("/var/www/log/tpXml.txt", XmlWriteMode.DiffGram);
+					//tablaProcesada.WriteXmlSchema("/var/www/log/tpEsquemaXml.txt");
+                    //conexion.EscribirTabla(tablaXml.BaseDeDatos, tablaXml.NombreTabla, tabla);
                     resultado = true;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("SPURIA: Error de escritura", ex);
+				log.Fatal("Error de escritura");
+                throw new Exception("Error de escritura", ex);
             }
 
             return resultado;

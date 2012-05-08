@@ -324,7 +324,7 @@ SELECT 'InsertarInventario';
 DELIMITER $$
 
 CREATE FUNCTION `InsertarInventario` (a_TiendaID INT, a_Codigo CHAR(15), a_Descripcion VARCHAR(45), 
-						a_Visibilidad CHAR(16), a_ProductoID INT, a_Precio DECIMAL(10,2), a_Cantidad INT)
+						a_Visibilidad CHAR(16), a_ProductoID INT, a_Precio DECIMAL(10,2), a_Cantidad DECIMAL(9,3))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE rastreable_p, cobrable_p, resultado, numero, cantidad, tamano INT;
@@ -396,7 +396,7 @@ SELECT 'InsertarPrecioCantidad';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarPrecioCantidad` (a_TiendaID INT, a_Codigo CHAR(15), a_Precio DECIMAL(10,2), a_Cantidad INT)
+CREATE FUNCTION `InsertarPrecioCantidad` (a_TiendaID INT, a_Codigo CHAR(15), a_Precio DECIMAL(10,2), a_Cantidad DECIMAL(9,3))
 RETURNS INT DETERMINISTIC
 BEGIN
     DECLARE C INT;

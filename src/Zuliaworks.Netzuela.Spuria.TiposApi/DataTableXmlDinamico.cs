@@ -13,12 +13,13 @@
     {
         #region Constantes
 
-        private const string Tipo = "Zuliaworks.Netzuela.Spuria.TiposApi.DataTableXml";
+        //private const string Tipo = "Zuliaworks.Netzuela.Spuria.TiposApi.DataTableXml";
+		private const string Tipo = "netzuela.zuliaworks.com.spuria.api.DataTableXml";
         private const string BaseDeDatosPropiedad = "BaseDeDatos";
         private const string NombreTablaPropiedad = "NombreTabla";
         private const string EsquemaXmlPropiedad = "EsquemaXml";
         private const string XmlPropiedad = "Xml";
-        private const string EstadoFilasPropiedad = "EstadoFilas";
+        //private const string EstadoFilasPropiedad = "EstadoFilas";
         private const string ClavePrimariaPropiedad = "ClavePrimaria";
 
         #endregion
@@ -68,13 +69,13 @@
             get { return (string)GetProperty(XmlPropiedad); }
             set { SetProperty(XmlPropiedad, value); }
         }
-
+		/*
         public DataRowState[] EstadoFilas
         {
             get { return (DataRowState[])GetProperty(EstadoFilasPropiedad); }
             set { SetProperty(EstadoFilasPropiedad, value); }
         }
-
+		*/
         public int[] ClavePrimaria
         {
             get { return (int[])GetProperty(ClavePrimariaPropiedad); }

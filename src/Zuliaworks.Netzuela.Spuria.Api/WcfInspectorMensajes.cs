@@ -16,7 +16,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	{
 		#region Variables y Constantes
 		
-		private readonly ILog log;		
+		private readonly ILog log;
+		
 		#endregion
 		
 		#region Constructores
@@ -64,7 +65,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 			    }
 				else
 				{
-					log.Fatal("Usuario/contrasena invalido");
+					log.Fatal("Usuario=" + auten.Usuario.ToString() + " autentificado?=" + auten.Autentificado.ToString());
 					throw new Exception("Usuario/contrasena invalido");
 				}
 					

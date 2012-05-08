@@ -17,10 +17,11 @@
              * Con codigo de: http://pstaev.blogspot.com/2008/04/passing-dataset-to-wcf-method.html
              */
 
-            DataTable tabla = null;
+            DataTable tabla = new DataTable(tablaXml.NombreTabla);
 
             try
             {
+				/*
                 DataSet setTemporal = new DataSet();
 
                 setTemporal.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(tablaXml.EsquemaXml)));
@@ -53,7 +54,9 @@
                             throw new Exception("No se reconoce el estado de la fila");
                     }
                 }
-
+                */
+				tabla.ReadXmlSchema(new MemoryStream(Encoding.UTF8.GetBytes(tablaXml.EsquemaXml)));
+                tabla.ReadXml(new MemoryStream(Encoding.UTF8.GetBytes(tablaXml.Xml))); 
                 List<DataColumn> columnas = new List<DataColumn>();
 
                 foreach (int columna in tablaXml.ClavePrimaria)
@@ -77,28 +80,31 @@
 
             try
             {
-                DataSet setTemporal = null;
-
-                if (tabla.DataSet != null)
-                {
-                    setTemporal = tabla.DataSet;
-                }
-                else
-                {
-                    setTemporal = new DataSet(nombreTabla);
-                    setTemporal.Tables.Add(tabla);
-                }
-
-                datosAEnviar = new DataTableXml(baseDeDatos, nombreTabla, setTemporal.GetXmlSchema(), setTemporal.GetXml());
-                List<DataRowState> estadoFilas = new List<DataRowState>();
+				Stream xml = new MemoryStream();
+				Stream esquemaXml = new MemoryStream();
+				
+				tabla.TableName = nombreTabla;
+				tabla.WriteXml(xml, XmlWriteMode.DiffGram);
+				tabla.WriteXmlSchema(esquemaXml);
+				
+				// Como hubo escritura en el intermedio, es necesario reiniciar la posicion del lector.
+				xml.Position = 0;
+				esquemaXml.Position = 0;
+				
+				StreamReader lectorXml = new StreamReader(xml, Encoding.UTF8);
+				StreamReader lectorEsquemaXml = new StreamReader(esquemaXml, Encoding.UTF8);				
+				
+                datosAEnviar = new DataTableXml(baseDeDatos, nombreTabla, lectorEsquemaXml.ReadToEnd(), lectorXml.ReadToEnd());
+				/*
+				List<DataRowState> estadoFilas = new List<DataRowState>();
 
                 foreach (DataRow fila in tabla.Rows)
                 {
                     estadoFilas.Add(fila.RowState);
                 }
-
+				
                 datosAEnviar.EstadoFilas = estadoFilas.ToArray();
-
+                */
                 List<int> clavePrimaria = new List<int>();
 
                 foreach (DataColumn columna in tabla.PrimaryKey)
@@ -123,7 +129,7 @@
 			dinamico.NombreTabla = xml.NombreTabla;
 			dinamico.EsquemaXml = xml.EsquemaXml;
 			dinamico.Xml = xml.Xml;
-			dinamico.EstadoFilas = xml.EstadoFilas;
+			//dinamico.EstadoFilas = xml.EstadoFilas;
 			dinamico.ClavePrimaria = xml.ClavePrimaria;
 			
 			return dinamico.ObjectInstance;
