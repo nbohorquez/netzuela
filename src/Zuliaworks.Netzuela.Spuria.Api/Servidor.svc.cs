@@ -6,9 +6,7 @@
 
 namespace Zuliaworks.Netzuela.Spuria.Api
 {
-	using log4net;
-	
-    using System;
+	using System;
     using System.Collections.Generic;
     using System.Configuration;                     // ConfigurationManager
     using System.Data;                              // DataTable
@@ -18,8 +16,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
     using System.ServiceModel;
     using System.ServiceModel.Web;
     using System.Text;
-
-    using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
+	
+	using log4net;
+	using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
 	using Zuliaworks.Netzuela.Spuria.TiposApi;      // IApi
 	
 	using System.IO;
@@ -208,9 +207,11 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                     DataTable t = conexion.Consultar(baseDeDatos, sql);
                     List<DataColumn> cp = new List<DataColumn>();
 					
-					// Seleccionamos todas las columnas que sean clave primaria y que no sean descriptor.TiendaID
-					// porque esta columna no va a ser enviado al cliente. Esto se hace con la intencion de que
-					// toda tabla enviada siempre tenga una clave primaria.
+					/* 
+					 * Seleccionamos todas las columnas que sean clave primaria y que no sean iguales a 
+					 * descriptor.TiendaID (esta columna no va a ser enviada al cliente). Hay que hacer 
+					 * esto para que toda tabla enviada siempre tenga una clave primaria.
+					 */
                     foreach (string columna in descriptor.ClavePrimaria)
                     {
                         if (!string.Equals(columna, descriptor.TiendaID, StringComparison.OrdinalIgnoreCase))
@@ -282,6 +283,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 								tablaProcesada.Rows[i].RejectChanges();
 								tablaProcesada.Rows[i][col] = this.tiendaId;
 								filasEliminadas.Add(tablaProcesada.Rows[i]);
+								tablaProcesada.Rows[i].AcceptChanges();
 							}
 							else
 							{
@@ -290,8 +292,13 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 						}
 						
 						// Agregamos tienda_id al conjunto de claves primarias
-						List<DataColumn> cp = tablaProcesada.PrimaryKey.ToList();
-						cp.Add(col);
+						List<DataColumn> cp = new List<DataColumn>();
+						
+						foreach (string pk in descriptor.ClavePrimaria)
+						{
+							cp.Add(tablaProcesada.Columns[pk]);
+						}
+						
 						tablaProcesada.PrimaryKey = cp.ToArray();
 						
 						filasEliminadas.ToList().ForEach(f => f.Delete());
@@ -305,7 +312,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 					
 					//tablaProcesada.WriteXml("/var/www/log/tpXml.txt", XmlWriteMode.DiffGram);
 					//tablaProcesada.WriteXmlSchema("/var/www/log/tpEsquemaXml.txt");
-                    //conexion.EscribirTabla(tablaXml.BaseDeDatos, tablaXml.NombreTabla, tabla);
+                    conexion.EscribirTabla(tablaXml.BaseDeDatos, tablaXml.NombreTabla, tablaProcesada);
                     resultado = true;
                 }
             }

@@ -88,7 +88,6 @@ BEGIN
     DECLARE Precio DECIMAL(10,2);
     DECLARE Cantidad DECIMAL(9,3);
 
-    DECLARE Creador INT;
     DECLARE Resultado INT;
     DECLARE PrecioViejo DECIMAL(10,2);
     DECLARE CantidadVieja DECIMAL(9,3);
@@ -104,14 +103,12 @@ BEGIN
     SELECT CONVERT(Valor, DECIMAL(9,3)) FROM Parametros WHERE ID = 5 INTO Cantidad;
 	
     DROP TEMPORARY TABLE IF EXISTS Parametros;
+    SELECT InsertarInventario(TiendaID, Codigo, Descripcion, 'Ambos visibles', NULL, Precio, Cantidad) INTO Resultado;
 
-    SELECT cliente.rastreable_p
-    FROM cliente, tienda
-    WHERE tienda.tienda_id = TiendaID AND cliente.rif = tienda.cliente_p
-    INTO Creador;
-
-    SELECT InsertarInventario(Creador, TiendaID, Codigo, Descripcion, 'Ambos visibles', NULL, Precio, Cantidad) INTO Resultado;
-
+	/* Esto es un parapeto que tuve que hacer para que se actualizara row_count() (a nivel de mysql) y RowsAffected (a nivel de .NET) */	 
+	INSERT INTO codigo_de_error VALUES ("Parapeto");
+	DELETE FROM codigo_de_error WHERE valor = "Parapeto";
+	
     /* COMMIT; */
 END$$
 
@@ -189,6 +186,9 @@ BEGIN
     DECLARE Precio DECIMAL(10,2);
     DECLARE Cantidad DECIMAL(9,3);
 
+	DECLARE OLD_UNIQUE_CHECKS, OLD_FOREIGN_KEY_CHECKS INT;
+	DECLARE OLD_SQL_MODE VARCHAR(45);
+
     /*START TRANSACTION;*/
 
     CALL SepararString(`a_Parametros`, ",");
@@ -201,9 +201,21 @@ BEGIN
 	
     DROP TEMPORARY TABLE IF EXISTS Parametros;
 
-    DELETE 
+	SET OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+	SET OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+	SET OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+
+	DELETE 
     FROM inventario
     WHERE inventario.tienda_id = TiendaID AND inventario.codigo = Codigo;
+
+	SET SQL_MODE=OLD_SQL_MODE;
+	SET FOREIGN_KEY_CHECKS=OLD_FOREIGN_KEY_CHECKS;
+	SET UNIQUE_CHECKS=OLD_UNIQUE_CHECKS;
+    
+	/* Esto es un parapeto que tuve que hacer para que se actualizara row_count() (a nivel de mysql) y RowsAffected (a nivel de .NET) */	 
+	INSERT INTO codigo_de_error VALUES ('Parapeto');
+	DELETE FROM codigo_de_error WHERE valor = 'Parapeto';
 
     /* COMMIT; */
 END$$

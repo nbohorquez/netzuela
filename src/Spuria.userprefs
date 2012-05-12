@@ -1,18 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/Sesion.cs">
     <Files>
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs" Line="296" Column="7" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Permisos.cs" Line="29" Column="10" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.TiposApi/DataTableXmlExtensiones.cs" Line="59" Column="85" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Servidor.svc.cs" Line="249" Column="80" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Permisos.cs" Line="1" Column="1" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Sesion.cs" Line="10" Column="2" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Api" expanded="True">
-            <Node name="Servidor.svc" expanded="True">
-              <Node name="Servidor.svc.cs" selected="True" />
-            </Node>
+          <Node name="Api" expanded="True" selected="True">
+            <Node name="Servidor.svc" expanded="True" />
           </Node>
           <Node name="TiposApi" expanded="True" />
         </State>
