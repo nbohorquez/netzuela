@@ -21,50 +21,8 @@
 
             try
             {
-				/*
-                DataSet setTemporal = new DataSet();
-
-                setTemporal.ReadXmlSchema(new MemoryStream(Encoding.Unicode.GetBytes(tablaXml.EsquemaXml)));
-                setTemporal.ReadXml(new MemoryStream(Encoding.Unicode.GetBytes(tablaXml.Xml)));
-
-                tabla = setTemporal.Tables[0];
-                tabla.AcceptChanges();
-
-                DataRowCollection fila = tabla.Rows;
-
-                for (int i = 0; i < fila.Count; i++)
-                {
-                    switch (tablaXml.EstadoFilas[i])
-                    {
-                        case DataRowState.Added:
-                            fila[i].SetAdded();
-                            break;
-                        case DataRowState.Deleted:
-                            fila[i].Delete();
-                            break;
-                        case DataRowState.Detached:
-                            // Fila[i].Delete();
-                            break;
-                        case DataRowState.Modified:
-                            fila[i].SetModified();
-                            break;
-                        case DataRowState.Unchanged:
-                            break;
-                        default:
-                            throw new Exception("No se reconoce el estado de la fila");
-                    }
-                }
-                */
 				tabla.ReadXmlSchema(new MemoryStream(Encoding.UTF8.GetBytes(tablaXml.EsquemaXml)));
-                tabla.ReadXml(new MemoryStream(Encoding.UTF8.GetBytes(tablaXml.Xml))); 
-                List<DataColumn> columnas = new List<DataColumn>();
-
-                foreach (int columna in tablaXml.ClavePrimaria)
-                {
-                    columnas.Add(tabla.Columns[columna]);
-                }
-
-                tabla.PrimaryKey = columnas.ToArray();
+                tabla.ReadXml(new MemoryStream(Encoding.UTF8.GetBytes(tablaXml.Xml)));
             }
             catch (Exception ex)
             {
@@ -95,24 +53,6 @@
 				StreamReader lectorEsquemaXml = new StreamReader(esquemaXml, Encoding.UTF8);				
 				
                 datosAEnviar = new DataTableXml(baseDeDatos, nombreTabla, lectorEsquemaXml.ReadToEnd(), lectorXml.ReadToEnd());
-				/*
-				List<DataRowState> estadoFilas = new List<DataRowState>();
-
-                foreach (DataRow fila in tabla.Rows)
-                {
-                    estadoFilas.Add(fila.RowState);
-                }
-				
-                datosAEnviar.EstadoFilas = estadoFilas.ToArray();
-                */
-                List<int> clavePrimaria = new List<int>();
-
-                foreach (DataColumn columna in tabla.PrimaryKey)
-                {
-                    clavePrimaria.Add(columna.Ordinal);
-                }
-
-                datosAEnviar.ClavePrimaria = clavePrimaria.ToArray();
             }
             catch (Exception ex)
             {
@@ -129,8 +69,6 @@
 			dinamico.NombreTabla = xml.NombreTabla;
 			dinamico.EsquemaXml = xml.EsquemaXml;
 			dinamico.Xml = xml.Xml;
-			//dinamico.EstadoFilas = xml.EstadoFilas;
-			dinamico.ClavePrimaria = xml.ClavePrimaria;
 			
 			return dinamico.ObjectInstance;
 		}

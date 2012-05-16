@@ -300,7 +300,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 						}
 						
 						tablaProcesada.PrimaryKey = cp.ToArray();
-						
 						filasEliminadas.ToList().ForEach(f => f.Delete());
 					}
 						

@@ -19,8 +19,6 @@
         private const string NombreTablaPropiedad = "NombreTabla";
         private const string EsquemaXmlPropiedad = "EsquemaXml";
         private const string XmlPropiedad = "Xml";
-        //private const string EstadoFilasPropiedad = "EstadoFilas";
-        private const string ClavePrimariaPropiedad = "ClavePrimaria";
 
         #endregion
 
@@ -69,19 +67,7 @@
             get { return (string)GetProperty(XmlPropiedad); }
             set { SetProperty(XmlPropiedad, value); }
         }
-		/*
-        public DataRowState[] EstadoFilas
-        {
-            get { return (DataRowState[])GetProperty(EstadoFilasPropiedad); }
-            set { SetProperty(EstadoFilasPropiedad, value); }
-        }
-		*/
-        public int[] ClavePrimaria
-        {
-            get { return (int[])GetProperty(ClavePrimariaPropiedad); }
-            set { SetProperty(ClavePrimariaPropiedad, value); }
-        }
-
+		
         #endregion
 
         #region Funciones

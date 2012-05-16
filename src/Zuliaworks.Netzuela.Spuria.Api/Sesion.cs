@@ -20,7 +20,7 @@
             credenciales = CargarGuardar.CargarCredenciales("Local");
 			propiedades = new Dictionary<string, object>() 
 			{
-				{ "Usuario", string.Empty }
+				{ "Usuario", Autentificacion.TipoDeUsuario.Anonimo }
 			};
 					
 			if (parametros == null || credenciales.Length != 2)

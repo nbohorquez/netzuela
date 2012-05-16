@@ -68,7 +68,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 					log.Fatal("Usuario=" + auten.Usuario.ToString() + " autentificado?=" + auten.Autentificado.ToString());
 					throw new Exception("Usuario/contrasena invalido");
 				}
-					
+
 				log.Debug("Usuario=" + auten.Usuario.ToString() + " autentificado?=" + auten.Autentificado.ToString());
 			}
 			

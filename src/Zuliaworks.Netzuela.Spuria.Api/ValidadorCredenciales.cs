@@ -31,6 +31,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		
 		public override void Validate (string userName, string password)
 		{
+			// Tengo que dejar este validador aqui para que puedan pasar los mensajes con los credenciales
+			// a WcfInspectorMensajes
 			log.Debug("UserNamePasswordValidator");
 		}
 		
