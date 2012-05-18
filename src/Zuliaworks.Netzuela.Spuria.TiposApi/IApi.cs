@@ -12,6 +12,15 @@
     [ServiceContract(Namespace = Constantes.Namespace)]    
     public interface IApi
     {
+		                                         /// <summary>
+		/// Lista las tiendas que son propiedad del cliente.
+		/// </summary>
+		/// <returns>
+		/// Nombres de las tiendas encontradas.
+		/// </returns>
+		[OperationContract]
+        string[] ListarTiendas();
+			
         /// <summary>
         /// Lista las bases de datos disponibles en el servidor.
         /// </summary>
@@ -34,7 +43,7 @@
         /// <param name="tabla">Nombre de la tabla a leer.</param>
         /// <returns>Tabla leída.</returns>
         [OperationContract]
-        DataTableXml LeerTabla(string baseDeDatos, string tabla);
+        DataTableXml LeerTabla(int tiendaId, string baseDeDatos, string tabla);
 
         /// <summary>
         /// Escribe el contenido de la tabla en la base de datos.
@@ -42,6 +51,6 @@
         /// <param name="tabla">Tabla a escribir.</param>
         /// <returns>Indica si la operación de escritura tuvo éxito.</returns>
         [OperationContract]
-        bool EscribirTabla(DataTableXml tabla);
+        bool EscribirTabla(int tiendaId, DataTableXml tabla);
     }
 }

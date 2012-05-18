@@ -21,8 +21,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using Zuliaworks.Netzuela.Valeria.Logica;       // Conexion
 	using Zuliaworks.Netzuela.Spuria.TiposApi;      // IApi
 	
-	using System.IO;
-	
     /*
      * Para informacion sobre concurrencia ver: http://www.codeproject.com/KB/WCF/WCFConcurrency.aspx
      */
@@ -38,7 +36,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
     {
         #region Variables y constantes
 
-		private readonly int tiendaId;
 		private readonly ILog log;
 		public const string BaseDeDatos = "spuria";
 
@@ -58,18 +55,19 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 				log.Fatal("Imposible acceder con cuenta anonima");
 				throw new Exception("Imposible acceder con cuenta anonima");
 			}
-			
+			/*
 			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
 				conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
 
-                string sql = "SELECT tienda.tienda_id FROM tienda "
-                			+ "JOIN cliente "
-							+ "JOIN usuario "
-							+ "WHERE usuario.usuario_id = " + this.Cliente + " LIMIT 1";
+                string sql = "SELECT t.tienda_id "
+                			+ "FROM tienda AS t "
+                			+ "JOIN cliente AS c ON t.cliente_p = c.rif "
+							+ "JOIN usuario AS u ON c.propietario = u.usuario_id "
+							+ "WHERE u.usuario_id = " + this.Cliente + " LIMIT 1";
                 DataTable t = conexion.Consultar(BaseDeDatos, sql);
                 this.tiendaId = (int)t.Rows[0].ItemArray[0];
-            }
+            }*/
         }
 
         #endregion
@@ -83,9 +81,71 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         }
 
         #endregion
+		
+		#region Funciones
+		
+		private bool PerteneceAEsteCliente(int tiendaId)
+		{
+			bool resultado = false;
+			
+			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
+            {
+				conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+
+                string sql = "SELECT t.tienda_id "
+                			+ "FROM tienda AS t "
+                			+ "JOIN cliente AS c ON t.cliente_p = c.rif "
+							+ "JOIN usuario AS u ON c.propietario = u.usuario_id "
+							+ "WHERE u.usuario_id = " + this.Cliente;
+                DataTable t = conexion.Consultar(BaseDeDatos, sql);				
+				resultado = t.Rows.Cast<DataRow>().Any(r => tiendaId == (int)r.ItemArray[0]);
+            }
+			
+			return resultado;
+		}
+		
+		#endregion
 
         #region Implementacion de interfaces
-
+		
+		/// <summary>
+		/// Lista las tiendas que son propiedad del cliente.
+		/// </summary>
+		/// <returns>
+		/// Nombres de las tiendas encontradas.
+		/// </returns>
+		public string[] ListarTiendas()
+		{
+			List<string> resultado = new List<string>();
+			
+			try
+			{
+				using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
+	            {
+					conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+					
+					string sql = "SELECT t.tienda_id, c.nombre_legal "
+								+ "FROM tienda AS t "
+								+ "JOIN cliente AS c ON t.cliente_p = c.rif "
+								+ "JOIN usuario AS u ON c.propietario = u.usuario_id "
+								+ "WHERE u.usuario_id = " + this.Cliente;
+					DataTable t = conexion.Consultar(BaseDeDatos, sql);
+					
+					foreach(DataRow r in t.Rows)
+					{
+						resultado.Add(r[0].ToString() + ":" + r[1].ToString());
+					}
+	            }
+			}
+			catch(Exception ex)
+			{
+				log.Fatal("Error de listado de base de datos");
+                throw new Exception("Error de listado de base de datos", ex);
+			}
+			
+			return resultado.ToArray();
+		}
+		
         /// <summary>
         /// Lista las bases de datos disponibles en el servidor.
         /// </summary>
@@ -155,7 +215,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         /// <param name="baseDeDatos">Base de datos a consultar.</param>
         /// <param name="tabla">Nombre de la tabla a leer.</param>
         /// <returns>Tabla leída.</returns>
-        public DataTableXml LeerTabla(string baseDeDatos, string tabla)
+        public DataTableXml LeerTabla(int tiendaId, string baseDeDatos, string tabla)
         {
             DataTableXml datosAEnviar = null;
 
@@ -166,7 +226,13 @@ namespace Zuliaworks.Netzuela.Spuria.Api
              * Para sacar un DataTable de un EF:
              * http://www.codeproject.com/Tips/171006/Convert-LINQ-to-Entity-Result-to-a-DataTable.aspx
              */
-
+			
+			if (!this.PerteneceAEsteCliente(tiendaId))
+			{
+				log.Fatal("Argumento incorrecto: tiendaId=" + baseDeDatos);
+                throw new ArgumentOutOfRangeException("tiendaId");
+			}
+			
             if (!Permisos.EntidadesPermitidas.Keys.Contains(baseDeDatos))
             {
 				log.Fatal("Argumento incorrecto: baseDeDatos=" + baseDeDatos);
@@ -202,7 +268,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                         }
                     }
 
-                    sql += " FROM " + tabla + " WHERE " + descriptor.TiendaID + " = " + this.tiendaId.ToString();
+                    sql += " FROM " + tabla + " WHERE " + descriptor.TiendaID + " = " + tiendaId.ToString();
 
                     DataTable t = conexion.Consultar(baseDeDatos, sql);
                     List<DataColumn> cp = new List<DataColumn>();
@@ -238,8 +304,14 @@ namespace Zuliaworks.Netzuela.Spuria.Api
         /// </summary>
         /// <param name="tablaXml">Tabla a escribir.</param>
         /// <returns>Indica si la operación de escritura tuvo éxito.</returns>
-        public bool EscribirTabla(DataTableXml tablaXml)
+        public bool EscribirTabla(int tiendaId, DataTableXml tablaXml)
         {
+			if (!this.PerteneceAEsteCliente(tiendaId))
+			{
+				log.Fatal("Argumento incorrecto: tiendaId=" + tiendaId);
+                throw new ArgumentOutOfRangeException("tiendaId");
+			}
+			
             if (!Permisos.EntidadesPermitidas.Keys.Contains(tablaXml.BaseDeDatos))
             {
 				log.Fatal("Argumento incorrecto: tablaXml.BaseDeDatos=" + tablaXml.BaseDeDatos);
@@ -273,7 +345,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 					if (descriptor.TiendaID != null)
 					{
 						List<DataRow> filasEliminadas = new List<DataRow>();
-	                    DataColumn col = new DataColumn(descriptor.TiendaID, this.tiendaId.GetType());
+	                    DataColumn col = new DataColumn(descriptor.TiendaID, tiendaId.GetType());
 	                    tablaProcesada.Columns.Add(col);
 						
 						for (int i = 0; i < tablaProcesada.Rows.Count; i++)
@@ -281,13 +353,13 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 							if (tablaProcesada.Rows[i].RowState == DataRowState.Deleted)
 							{
 								tablaProcesada.Rows[i].RejectChanges();
-								tablaProcesada.Rows[i][col] = this.tiendaId;
+								tablaProcesada.Rows[i][col] = tiendaId;
 								filasEliminadas.Add(tablaProcesada.Rows[i]);
 								tablaProcesada.Rows[i].AcceptChanges();
 							}
 							else
 							{
-								tablaProcesada.Rows[i][col] = this.tiendaId;
+								tablaProcesada.Rows[i][col] = tiendaId;
 							}
 						}
 						
