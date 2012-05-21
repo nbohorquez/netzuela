@@ -55,19 +55,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 				log.Fatal("Imposible acceder con cuenta anonima");
 				throw new Exception("Imposible acceder con cuenta anonima");
 			}
-			/*
-			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
-            {
-				conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
-
-                string sql = "SELECT t.tienda_id "
-                			+ "FROM tienda AS t "
-                			+ "JOIN cliente AS c ON t.cliente_p = c.rif "
-							+ "JOIN usuario AS u ON c.propietario = u.usuario_id "
-							+ "WHERE u.usuario_id = " + this.Cliente + " LIMIT 1";
-                DataTable t = conexion.Consultar(BaseDeDatos, sql);
-                this.tiendaId = (int)t.Rows[0].ItemArray[0];
-            }*/
         }
 
         #endregion
@@ -137,9 +124,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 					}
 	            }
 			}
-			catch(Exception ex)
+			catch (Exception ex)
 			{
-				log.Fatal("Error de listado de base de datos");
+				log.Fatal("Usuario: " + this.Cliente + ". Error de listado de base de datos: " + ex.Message);
                 throw new Exception("Error de listado de base de datos", ex);
 			}
 			
@@ -170,7 +157,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             }
             catch (Exception ex)
             {
-            	log.Fatal("Error de listado de base de datos");
+            	log.Fatal("Usuario: " + this.Cliente + ". Error de listado de base de datos: " + ex.Message);
                 throw new Exception("Error de listado de base de datos", ex);
             }
 			
@@ -202,7 +189,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             }
             catch (Exception ex)
             {
-				log.Fatal("Error de listado de base de tablas: baseDeDatos=" + baseDeDatos);
+				log.Fatal("Usuario: " + this.Cliente + ". Error de listado de base de tablas: " + ex.Message);
                 throw new Exception("Error de listado de tablas", ex);
             }
 
@@ -292,8 +279,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             }
             catch (Exception ex)
             {
-				log.Fatal("Error de lectura");
-                throw new Exception("Error de lectura", ex);
+				log.Fatal("Usuario: " + this.Cliente + ". Error de lectura de tabla: " + ex.Message);
+                throw new Exception("Error de lectura de tabla", ex.Message);
             }
 
             return datosAEnviar;
@@ -335,10 +322,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                     Permisos.DescriptorDeTabla descriptor =
                         Permisos.EntidadesPermitidas[tablaXml.BaseDeDatos].First(e => string.Equals(e.Nombre, tablaXml.NombreTabla, StringComparison.OrdinalIgnoreCase));
 					
-                    DataTable tablaRecibida = tablaXml.XmlADataTable();
-					//tablaRecibida.WriteXml("/var/www/log/trXml.txt", XmlWriteMode.DiffGram);
-					//tablaRecibida.WriteXmlSchema("/var/www/log/trEsquemaXml.txt");
-					
+                    DataTable tablaRecibida = tablaXml.XmlADataTable();					
 					DataTable tablaProcesada = tablaRecibida.Copy();
 					
 					// Si la tabla original poseia una columna tienda_id, debemos colocarsela de nuevo
@@ -381,16 +365,20 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                         tablaProcesada.Columns[descriptor.Columnas[i]].SetOrdinal(i);
                     }
 					
-					//tablaProcesada.WriteXml("/var/www/log/tpXml.txt", XmlWriteMode.DiffGram);
-					//tablaProcesada.WriteXmlSchema("/var/www/log/tpEsquemaXml.txt");
                     conexion.EscribirTabla(tablaXml.BaseDeDatos, tablaXml.NombreTabla, tablaProcesada);
-                    resultado = true;
+					
+					tablaRecibida.Dispose();
+					tablaProcesada.Dispose();
+					tablaRecibida = null;
+					tablaProcesada = null;
+					
+					resultado = true;
                 }
             }
             catch (Exception ex)
             {
-				log.Fatal("Error de escritura");
-                throw new Exception("Error de escritura", ex);
+				log.Fatal("Usuario: " + this.Cliente + ". Error de escritura de tabla: " + ex.Message);
+                throw new Exception("Error de escritura de tabla", ex);
             }
 
             return resultado;

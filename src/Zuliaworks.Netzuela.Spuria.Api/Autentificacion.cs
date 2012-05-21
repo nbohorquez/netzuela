@@ -14,7 +14,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.ServiceModel.Channels;				// HttpRequestMessageProperty
 	using System.Web;								// HttpContext, HttpRequest
 	
-	
+	using log4net;
 	using Zuliaworks.Netzuela.Valeria.Comunes;
 	using Zuliaworks.Netzuela.Valeria.Logica;
 	
@@ -43,6 +43,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
     {
 		#region Variables y Constantes
 		
+		private readonly ILog log;
 		private string[] autorizacion;
 		public enum TipoDeUsuario { Anonimo=-10 };
 		
@@ -52,6 +53,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		
 		public Autentificacion(WebHeaderCollection encabezados)
 		{
+			log = LogManager.GetLogger(typeof(Autentificacion));
 			Encabezados = encabezados;
 			Autentificado = false;
 			Usuario = (int)TipoDeUsuario.Anonimo;
@@ -76,23 +78,32 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		
 		public bool Autentificar()
 		{
-			using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
-            {
-				bool resultado = false;
-				
-				conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
-				string sql = "SELECT acceso_id FROM acceso WHERE correo_electronico = '" + autorizacion[0] + "' AND contrasena = '" + autorizacion[1] + "'";
-                DataTable t = conexion.Consultar("spuria", sql);
-				
-                if (t.Rows.Count == 1)
-                {
-                    resultado = true;
-					Usuario = (int)t.Rows[0].ItemArray[0];
-				}
-				
-				Autentificado = resultado;
-				return resultado;
-            }
+			try
+			{
+				using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
+	            {
+					bool resultado = false;
+					
+					conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
+					string sql = "SELECT acceso_id FROM acceso WHERE correo_electronico = '" + autorizacion[0] + "' AND contrasena = '" + autorizacion[1] + "'";
+	                DataTable t = conexion.Consultar("spuria", sql);
+					
+	                if (t.Rows.Count == 1)
+	                {
+	                    resultado = true;
+						Usuario = (int)t.Rows[0].ItemArray[0];
+					}
+					
+					Autentificado = resultado;
+					log.Debug("Saliendo de Autentificar()");
+					return resultado;
+	            }
+			}
+			catch (Exception ex)
+			{
+				log.Debug("Error de autentificacion: " + ex.Message);
+				throw new Exception("Error de autentificacion", ex);
+			}
 		}
 	}
 }
