@@ -24,7 +24,7 @@
     <DocumentationFile>bin\Debug\ContratoDocumentacion.XML</DocumentationFile>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="cp ${TargetFile} /home/nestor/Dropbox/lib2win/${TargetName}" workingdir="" />
+        <Command type="AfterBuild" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

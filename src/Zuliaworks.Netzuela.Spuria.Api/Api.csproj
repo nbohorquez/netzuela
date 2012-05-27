@@ -54,23 +54,23 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Comunes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Dropbox\lib2linux\Comunes.dll</HintPath>
+      <HintPath>..\..\lib\Comunes.dll</HintPath>
     </Reference>
     <Reference Include="Datos, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Dropbox\lib2linux\Datos.dll</HintPath>
-    </Reference>
-    <Reference Include="Logica, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Dropbox\lib2linux\Logica.dll</HintPath>
+      <HintPath>..\..\lib\Datos.dll</HintPath>
     </Reference>
     <Reference Include="Preferencias, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Dropbox\lib2linux\Preferencias.dll</HintPath>
+      <HintPath>..\..\lib\Preferencias.dll</HintPath>
+    </Reference>
+    <Reference Include="Logica, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Logica.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\opt\log4net-1.2.11\bin\mono\2.0\release\log4net.dll</HintPath>
+      <HintPath>..\..\lib\log4net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

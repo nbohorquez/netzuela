@@ -280,7 +280,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             catch (Exception ex)
             {
 				log.Fatal("Usuario: " + this.Cliente + ". Error de lectura de tabla: " + ex.Message);
-                throw new Exception("Error de lectura de tabla", ex.Message);
+                throw new Exception("Error de lectura de tabla", ex);
             }
 
             return datosAEnviar;
