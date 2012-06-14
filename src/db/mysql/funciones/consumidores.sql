@@ -74,7 +74,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarConsumidor` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), 
                                       a_Estatus CHAR(9), a_Sexo CHAR(6), a_FechaDeNacimiento DATE, 
                                       a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16), a_Ubicacion CHAR(16), 
-                                      a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
+                                      a_CorreoElectronico VARCHAR(45), a_Contrasena VARBINARY(60))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE Interlocutor_P, UsuarioID INT;

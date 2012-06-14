@@ -14,7 +14,7 @@ SELECT 'InsertarUsuario';
 
 DELIMITER $$
 
-CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), a_Estatus CHAR(9), a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), a_Contrasena VARCHAR(45))
+CREATE FUNCTION `InsertarUsuario` (a_Creador INT, a_Nombre VARCHAR(45), a_Apellido VARCHAR(45), a_Estatus CHAR(9), a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), a_Contrasena VARBINARY(60))
 RETURNS INT NOT DETERMINISTIC
 BEGIN
     DECLARE AccesoID, Rastreable_P, Describible_P INT;
@@ -83,7 +83,7 @@ SELECT 'InsertarAdministrador';
 DELIMITER $$
 
 CREATE FUNCTION `InsertarAdministrador` (a_Creador INT, a_Ubicacion CHAR(16), a_CorreoElectronico VARCHAR(45), 
-                                         a_Contrasena VARCHAR(45), a_Estatus CHAR(9), a_Privilegios VARCHAR(45), 
+                                         a_Contrasena VARBINARY(60), a_Estatus CHAR(9), a_Privilegios VARCHAR(45), 
                                          a_Nombre VARCHAR(45), a_Apellido VARCHAR(45))
 RETURNS INT NOT DETERMINISTIC
 BEGIN

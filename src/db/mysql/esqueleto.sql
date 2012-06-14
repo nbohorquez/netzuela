@@ -600,7 +600,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`acceso` (
   `acceso_id` INT NOT NULL ,
   `conectado` TINYINT(1) NOT NULL ,
   `correo_electronico` VARCHAR(45) NOT NULL ,
-  `contrasena` VARCHAR(45) NOT NULL ,
+  `contrasena` VARBINARY(60) NOT NULL ,
   `fecha_de_registro` DECIMAL(17,3) NOT NULL ,
   `fecha_de_ultimo_acceso` DECIMAL(17,3) NULL ,
   `duracion_de_ultimo_acceso` TIME NOT NULL ,

@@ -17,3 +17,5 @@ src/Zuliaworks.Netzuela.Spuria.Api/hibernate.cfg.xml
 src/Zuliaworks.Netzuela.Spuria.OAuth/bin/
 src/Zuliaworks.Netzuela.Spuria.OAuth/obj/
 src/Zuliaworks.Netzuela.Spuria.Auth/StyleCop.Cache
+
+src/daemon/env/

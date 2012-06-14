@@ -60,21 +60,21 @@ DELIMITER $$
 CREATE FUNCTION `RegistrarEliminacion` (a_Rastreable INT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE ActorActivo, Resultado INT;
+    DECLARE actorActivo, resultado INT;
 
     SELECT eliminado_por FROM rastreable
     WHERE rastreable_id = a_Rastreable
-    INTO ActorActivo;
+    INTO actorActivo;
 
     SELECT InsertarRegistro (
-        ActorActivo,
+        actorActivo,
 		'Eliminar',
         a_Rastreable,
         NULL,
         NULL
-    ) INTO Resultado;
+    ) INTO resultado;
 
-    RETURN Resultado;
+    RETURN resultado;
 END$$
 
 /*
@@ -126,21 +126,21 @@ DELIMITER $$
 CREATE FUNCTION `RegistrarActualizacion` (a_Rastreable INT, a_Columna TEXT, a_Valor TEXT)
 RETURNS INT NOT DETERMINISTIC
 BEGIN
-    DECLARE ActorActivo, Resultado INT;
+    DECLARE actorActivo, resultado INT;
 
    	SELECT modificado_por FROM rastreable
    	WHERE rastreable_id = a_Rastreable
-   	INTO ActorActivo;
+   	INTO actorActivo;
 
    	SELECT InsertarRegistro (
-        ActorActivo,
+        actorActivo,
 		'Actualizar',
         a_Rastreable,
         a_Columna,
       	a_Valor
-    ) INTO Resultado;
+    ) INTO resultado;
 
-    RETURN Resultado;
+    RETURN resultado;
 END$$
 
 /***********************************************************/

@@ -155,13 +155,23 @@ BEGIN
     INTO PrecioViejo, CantidadVieja;
 
     IF (PrecioViejo != Precio OR CantidadVieja != Cantidad) THEN 
-        SET Resultado = PrecioCantidadCrear(TiendaID, Codigo, Precio, Cantidad);
+        SET Resultado = InsertarPrecioCantidad(TiendaID, Codigo, Precio, Cantidad);
     END IF;
 
+	UPDATE rastreable AS r
+	JOIN inventario AS i ON r.rastreable_id = i.rastreable_p
+	SET modificado_por = (SELECT DISTINCT c.rastreable_p 
+		FROM cliente AS c
+		JOIN tienda AS t ON c.rif = t.cliente_p
+		JOIN inventario AS i ON t.tienda_id = i.tienda_id
+		WHERE i.tienda_id = TiendaID
+	), fecha_de_modificacion = DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f')
+	WHERE i.tienda_id = TiendaID AND i.codigo = Codigo;
+/*
     UPDATE inventario
     SET inventario.descripcion = Descripcion
     WHERE inventario.tienda_id = TiendaID AND inventario.codigo = Codigo;
-
+*/
     /*COMMIT;*/
 END$$
 
@@ -200,6 +210,16 @@ BEGIN
     SELECT CONVERT(Valor, DECIMAL(9,3)) FROM Parametros WHERE ID = 5 INTO Cantidad;
 	
     DROP TEMPORARY TABLE IF EXISTS Parametros;
+
+	UPDATE rastreable AS r
+	JOIN inventario AS i ON r.rastreable_id = i.rastreable_p
+	SET eliminado_por = (SELECT DISTINCT c.rastreable_p 
+		FROM cliente AS c
+		JOIN tienda AS t ON c.rif = t.cliente_p
+		JOIN inventario AS i ON t.tienda_id = i.tienda_id
+		WHERE i.tienda_id = TiendaID
+	), fecha_de_eliminacion = DATE_FORMAT(now_msec(), '%Y%m%d%H%i%S.%f')
+	WHERE i.tienda_id = TiendaID AND i.codigo = Codigo;
 
 	SET OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 	SET OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;

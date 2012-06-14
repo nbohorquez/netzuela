@@ -192,10 +192,11 @@ SELECT 'administrador';
 
 /* Las condiciones de borde (el primero y el ultimo) siempre joden. En este caso, el primer administrador... */
 
+/* Contraseña = 1asdXzp91 */
 SELECT InsertarAdministrador (
     1, NULL,
     'admin@netzuela.com', 
-    '1asdXzp91',
+    '$2a$12$MOM8uMGo9XmH1BDYPrTns.k/WLl6vt45qeKEXn5ZqoiBsQeBMfTQG',
     'Activo', 
     'Todos', 
     'Nestor',

@@ -104,14 +104,7 @@ Usuario ----- es ------> Administrador
 
 /* TIENDA 1 */
 
-/*
-SELECT parroquia_id 
-FROM parroquia JOIN region_geografica 
-ON parroquia.region_geografica_p = region_geografica.region_geografica_id
-WHERE region_geografica.nombre = 'Ambrosio'
-INTO @paAmbrosio;
-*/
-
+/* Contraseña = 41ssdas#ASX */
 SELECT InsertarUsuario (
 	@Creador, 
 	'Ursula', 
@@ -119,7 +112,7 @@ SELECT InsertarUsuario (
 	'Activo', 
 	@paCHerrera, 
 	'molleja@abc.com', 
-    '41ssdas#ASX'
+    '$2a$12$1wugqI8R4mC8MHEVPimxgO60m9Zoj.8P1BLj1kSrDTOIOgoaiEe0i'
 ) INTO @UsuarioTienda1;    
 
 SELECT InsertarTienda (
@@ -158,13 +151,6 @@ SELECT InsertarTurno(@TiendaID1, 'Sabado', '00:00:00', '00:00:00') INTO @HT6ID;
 SELECT InsertarTurno(@TiendaID1, 'Domingo', '00:00:00', '00:00:00') INTO @HT7ID;
 
 /* TIENDA 2 */
-/*
-SELECT parroquia_id 
-FROM parroquia JOIN region_geografica 
-ON parroquia.region_geografica_p = region_geografica.region_geografica_id
-WHERE region_geografica.nombre = 'La Rosa'
-INTO @LaRosaID;
-*/
 
 SELECT InsertarTienda (
     @UsuarioTienda1, 
@@ -222,19 +208,8 @@ SELECT InsertarInventario(@TiendaID2, 'PSDC-41C', 'Microfono en vivo SM57 XLR', 
 *														*
 *********************************************************
 */
-/*
-SELECT p.parroquia_id 
-FROM parroquia AS p
-LEFT JOIN region_geografica AS r ON p.region_geografica_p = r.region_geografica_id
-WHERE r.nombre = 'Punta Gorda'
-INTO @PuntaGordaID;
 
-SELECT p.parroquia_id 
-FROM parroquia AS p
-LEFT JOIN region_geografica AS r ON p.region_geografica_p = r.region_geografica_id
-WHERE r.nombre = 'San Benito'
-INTO @SanBenitoID;
-*/
+/* Contraseña = AceFoD_591dS */
 SELECT InsertarConsumidor (
     @Creador, 
     'Alberto',
@@ -246,9 +221,10 @@ SELECT InsertarConsumidor (
     'Universitaria',
     @paPtaGorda, 
     'mandoca@merey.com', 
-    'AceFoD_591dS'
+    '$2a$12$QWVsuxBClsziPjNwSbD9XOQ2dvpgUOeJrk0Yz73wQecCBMptqBPuC'
 ) INTO @ConsumidorID1;
 
+/* Contraseña = 14a1c5a1sc5as1c */
 SELECT InsertarConsumidor (
     @Creador, 
     'Alejandro',
@@ -260,9 +236,10 @@ SELECT InsertarConsumidor (
     'Universitaria',
     @paSBenito, 
     'asdfijnsad@dalepues.com', 
-    '14a1c5a1sc5as1c'
+    '$2a$12$xTWHSsODzmGI3l1unnlfCuFvErZRsUFtbcgVnn2Dn7CB5U1DT0Tlu'
 ) INTO @ConsumidorID2;
 
+/* Contraseña = 51asc011.as */
 SELECT InsertarConsumidor (
     @Creador, 
     'Alejandro',
@@ -274,9 +251,10 @@ SELECT InsertarConsumidor (
     'Universitaria',
     @paAmbrosio, 
     '41dx_asde@osdae.com', 
-    '51asc011.as'
+    '$2a$12$l81W0FstK/79PIlJMCbk6ePY/98BkhHcMpRAh1/6R03QwtU/VkA3i'
 ) INTO @ConsumidorID3;
 
+/* Contraseña = asdJA8sdSC!)m */
 SELECT InsertarConsumidor (
     @Creador, 
     'Snaillyn',
@@ -288,7 +266,7 @@ SELECT InsertarConsumidor (
     'Universitaria',
     @paLaRosa, 
     'quefuemarico@comoestais.com', 
-    'AceFoD_591dS'
+    '$2a$12$sNqgTN0xvMSWC6BulGjBV.JMdAs91MG4LKEQ/WclWvA/TAxpCdcUC'
 ) INTO @ConsumidorID4;
 
 /*
@@ -321,6 +299,7 @@ SELECT InsertarMensaje (
 *********************************************************
 */
 
+/* Contraseña = pAA101D54Om_4aidf18 */
 SELECT InsertarUsuario (
 	@Creador, 
 	'Maria', 
@@ -328,7 +307,7 @@ SELECT InsertarUsuario (
 	'Activo', 
 	@paAmbrosio, 
     'hola@comoestais.com', 
-    'pAA101D54Om_4aidf18'
+    '$2a$12$IkgN0Mklv/fUgi.KbDBLku/yZhI.kbjMDObY7zdMnr03t7Aigx3z.'
 ) INTO @UsuarioPatrocinante;
 
 SELECT InsertarPatrocinante (
@@ -482,12 +461,6 @@ SELECT InsertarDescripcion(@Tienda1Rastreable, @Tienda1Describible, 'Raw denim y
 *			               FOTO							*
 *														*
 *********************************************************
-*/
-
-/*
-SELECT describible_p FROM producto
-WHERE producto_id = @ProductoID1
-INTO @Producto1Describible;
 */
 
 SELECT describible_p FROM usuario

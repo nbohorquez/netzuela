@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="Zuliaworks.Netzuela.Spuria.Api.Servidor" CodeBehind="Servidor.svc.cs" %>
+﻿<%@ ServiceHost Factory="Zuliaworks.Netzuela.Spuria.Api.FabricaDeAnfitriones, Api" Language="C#" Debug="false" Service="Zuliaworks.Netzuela.Spuria.Api.Servidor, Api" CodeBehind="Servidor.svc.cs" %>

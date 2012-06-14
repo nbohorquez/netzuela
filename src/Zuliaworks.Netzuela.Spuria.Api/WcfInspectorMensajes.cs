@@ -15,7 +15,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	public class WcfInspectorMensajes : IDispatchMessageInspector
 	{
 		#region Variables y Constantes
-		
+
 		private readonly ILog log;
 		
 		#endregion
