@@ -533,7 +533,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`grado_de_instruccion` (
   `valor` CHAR(16) NOT NULL ,
-  PRIMARY KEY (`valor`) )
+  `orden` INT NOT NULL ,
+  PRIMARY KEY (`valor`) ,
+  UNIQUE INDEX `orden_UNIQUE` (`orden` ASC) )
 ENGINE = InnoDB;
 
 
@@ -1100,8 +1102,10 @@ ENGINE = InnoDB;
 -- Table `spuria`.`dia`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`dia` (
-  `Valor` CHAR(9) NOT NULL ,
-  PRIMARY KEY (`Valor`) )
+  `valor` CHAR(9) NOT NULL ,
+  `orden` INT NOT NULL ,
+  PRIMARY KEY (`valor`) ,
+  UNIQUE INDEX `orden_UNIQUE` (`orden` ASC) )
 ENGINE = InnoDB;
 
 
@@ -1122,7 +1126,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`horario_de_trabajo` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_HorarioDeTrabajo_Dia`
     FOREIGN KEY (`dia` )
-    REFERENCES `spuria`.`dia` (`Valor` )
+    REFERENCES `spuria`.`dia` (`valor` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

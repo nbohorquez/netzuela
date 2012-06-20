@@ -40,14 +40,14 @@ INSERT INTO sexo VALUES("Hombre");
 INSERT INTO sexo VALUES("Mujer");
 
 SELECT 'grado_de_instruccion';
-INSERT INTO grado_de_instruccion VALUES("Primaria");
-INSERT INTO grado_de_instruccion VALUES("Secundaria");
-INSERT INTO grado_de_instruccion VALUES("Tecnico Medio");
-INSERT INTO grado_de_instruccion VALUES("Tecnico Superior");
-INSERT INTO grado_de_instruccion VALUES("Universitaria");
-INSERT INTO grado_de_instruccion VALUES("Especializacion");
-INSERT INTO grado_de_instruccion VALUES("Maestria");
-INSERT INTO grado_de_instruccion VALUES("Doctorado");
+INSERT INTO grado_de_instruccion VALUES("Primaria", 1);
+INSERT INTO grado_de_instruccion VALUES("Secundaria", 2);
+INSERT INTO grado_de_instruccion VALUES("Tecnico Medio", 3);
+INSERT INTO grado_de_instruccion VALUES("Tecnico Superior", 4);
+INSERT INTO grado_de_instruccion VALUES("Universitaria", 5);
+INSERT INTO grado_de_instruccion VALUES("Especializacion", 6);
+INSERT INTO grado_de_instruccion VALUES("Maestria", 7);
+INSERT INTO grado_de_instruccion VALUES("Doctorado", 8);
 
 SELECT 'visibilidad';
 INSERT INTO visibilidad VALUES("Ninguno visible");
@@ -81,13 +81,13 @@ INSERT INTO estatus VALUES("Bloqueado");
 INSERT INTO estatus VALUES("Eliminado");
 
 SELECT 'dia';
-INSERT INTO dia VALUES("Lunes");
-INSERT INTO dia VALUES("Martes");
-INSERT INTO dia VALUES("Miercoles");
-INSERT INTO dia VALUES("Jueves");
-INSERT INTO dia VALUES("Viernes");
-INSERT INTO dia VALUES("Sabado");
-INSERT INTO dia VALUES("Domingo");
+INSERT INTO dia VALUES("Lunes", 1);
+INSERT INTO dia VALUES("Martes", 2);
+INSERT INTO dia VALUES("Miercoles", 3);
+INSERT INTO dia VALUES("Jueves", 4);
+INSERT INTO dia VALUES("Viernes", 5);
+INSERT INTO dia VALUES("Sabado", 6);
+INSERT INTO dia VALUES("Domingo", 7);
 
 /*
 *********************************************************
