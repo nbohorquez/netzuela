@@ -103,11 +103,12 @@ BEGIN
 
     INSERT INTO croquis VALUES (
         Rastreable_P,
+		NULL,
         a_Dibujable,
         -1, -1
     );
 
-    RETURN a_Dibujable;
+    RETURN LAST_INSERT_ID();
 END$$
 
 /*
@@ -146,6 +147,40 @@ BEGIN
     );
     
     RETURN TRUE;
+END$$
+
+/*
+*************************************************************
+*						InsertarPuntos						*
+*************************************************************
+*/
+
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS `InsertarPuntos`;
+SELECT 'InsertarPuntos';
+
+DELIMITER $$
+
+CREATE PROCEDURE `InsertarPuntos` (a_CroquisID INT)
+BEGIN
+    DECLARE completado INT DEFAULT 0;
+	DECLARE punto_id, bobo INT;
+	DECLARE lat, lon DECIMAL(9,6);
+  	DECLARE cur1 CURSOR FOR SELECT latitud, longitud FROM puntos;
+	DECLARE CONTINUE HANDLER FOR SQLSTATE '02000' SET completado = 1;
+  	
+  	OPEN cur1;
+
+  	REPEAT
+    	FETCH cur1 INTO lat, lon;
+    	IF NOT completado THEN
+       		SELECT InsertarPunto(lat, lon) INTO punto_id;
+			SELECT InsertarPuntoDeCroquis(a_CroquisID, punto_id) INTO bobo;
+    	END IF;
+  	UNTIL completado END REPEAT;
+
+  	CLOSE cur1;
 END$$
 
 /***********************************************************/

@@ -1265,15 +1265,16 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`croquis` (
   `rastreable_p` INT NOT NULL ,
-  `croquis_id` INT NOT NULL ,
+  `croquis_id` INT NOT NULL AUTO_INCREMENT ,
+  `dibujable` INT NOT NULL ,
   `area` FLOAT NULL ,
   `perimetro` FLOAT NULL ,
-  PRIMARY KEY (`croquis_id`) ,
-  INDEX `fk_Croquis_Dibujable` (`croquis_id` ASC) ,
+  INDEX `fk_Croquis_Dibujable` (`dibujable` ASC) ,
   INDEX `fk_Croquis_Rastreable` (`rastreable_p` ASC) ,
   UNIQUE INDEX `Rastreable_P_UNIQUE` (`rastreable_p` ASC) ,
+  PRIMARY KEY (`croquis_id`) ,
   CONSTRAINT `fk_Croquis_Dibujable`
-    FOREIGN KEY (`croquis_id` )
+    FOREIGN KEY (`dibujable` )
     REFERENCES `spuria`.`dibujable` (`dibujable_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
@@ -3821,6 +3822,9 @@ BEGIN
     IF NEW.croquis_id != OLD.croquis_id THEN
         SET NEW.croquis_id = OLD.croquis_id;
     END IF;
+    IF NEW.dibujable != OLD.dibujable THEN
+        SET NEW.dibujable = OLD.dibujable;
+    END IF;
 END $$
 
 USE `spuria`$$
@@ -3841,24 +3845,6 @@ END$$
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_insertar_croquis AFTER INSERT ON croquis
-FOR EACH ROW
-BEGIN
-    DECLARE columnas, valores TEXT;
-    DECLARE bobo INT;
-    
-    SELECT 'rastreable_p,croquis_id' INTO columnas;
-    SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.croquis_id AS CHAR)
-    ) INTO valores;
-    
-    SELECT RegistrarInsercion(NEW.rastreable_p, columnas, valores) INTO bobo;
-END $$
-
-USE `spuria`$$
-
-
 CREATE TRIGGER despues_de_actualizar_croquis AFTER UPDATE ON croquis
 FOR EACH ROW
 BEGIN
@@ -3868,6 +3854,25 @@ BEGIN
     IF(NEW.area != OLD.area, RegistrarActualizacion(NEW.rastreable_p, 'area', NEW.area), 0)
     + IF(NEW.perimetro != OLD.perimetro, RegistrarActualizacion(NEW.rastreable_p, 'perimetro', NEW.perimetro), 0)
     INTO bobo;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER despues_de_insertar_croquis AFTER INSERT ON croquis
+FOR EACH ROW
+BEGIN
+    DECLARE columnas, valores TEXT;
+    DECLARE bobo INT;
+    
+    SELECT 'rastreable_p,croquis_id,dibujable' INTO columnas;
+    SELECT CONCAT(
+        CAST(NEW.rastreable_p AS CHAR),',',
+        CAST(NEW.croquis_id AS CHAR),',',
+        CAST(NEW.dibujable AS CHAR)
+    ) INTO valores;
+    
+    SELECT RegistrarInsercion(NEW.rastreable_p, columnas, valores) INTO bobo;
 END $$
 
 
