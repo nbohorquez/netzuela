@@ -26,6 +26,36 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
    Se crea solo un producto para probar el funcionamiento de la base de datos
 */
 
+SELECT territorio_id
+FROM territorio
+WHERE nombre = 'Venezuela'
+INTO @pyVenezuela;
+
+SELECT territorio_id
+FROM territorio
+WHERE nombre = 'Carmen Herrera'
+INTO @paCHerrera;
+
+SELECT territorio_id
+FROM territorio
+WHERE nombre = 'La Rosa'
+INTO @paLaRosa;
+
+SELECT territorio_id
+FROM territorio
+WHERE nombre = 'Ambrosio'
+INTO @paAmbrosio;
+
+SELECT territorio_id
+FROM territorio
+WHERE nombre = 'San Benito'
+INTO @paSBenito;
+
+SELECT territorio_id
+FROM territorio
+WHERE nombre = 'Punta Gorda'
+INTO @paPtaGorda;
+
 SELECT InsertarProducto (
     @Creador,
     'GTIN-13', 
