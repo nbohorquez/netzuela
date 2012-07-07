@@ -130,7 +130,6 @@ def analizar_placemark(placemark, tipo_de_placemark):
 		sesion.execute('commit')
 
 		resultado = sesion.query(territorio.dibujable_p).filter_by(territorio_id = terro).first()[0]
-		print terr[ESTADO] + ':' + terr[MUNICIPIO] + ':' + terr[PARROQUIA]
 	except:
 		print "Error analizando el placemark"
 	finally:
@@ -157,20 +156,17 @@ def ingresar_silueta(silueta, dibujable):
 	)])
 	sesion.execute('begin')
 	croquis = sesion.execute(sql0, params = dict(a_creador = 1, a_dibujable = dibujable)).scalar()
-	print 'croquis_id: ' + str(croquis)
 	for coordenadas in silueta.LinearRing.coordinates.text.split(' '):
 		coo = coordenadas.split(',')
 		punto = sesion.execute(sql1, params = dict(
 			a_latitud = Decimal(coo[1]), 
 			a_longitud = Decimal(coo[0])
 		)).scalar()
-		print 'punto_id: ' + str(punto)
 		punto_de_croquis = sesion.execute(sql2, params = dict(
 			a_croquis_id = croquis,
 			a_punto_id = punto
 		)).scalar()
-		print 'punto_de_croquis: ' + str(punto_de_croquis)
-	sesion.execute('commit')		
+	sesion.execute('commit')
 
 motor = create_engine('mysql://chivo:#HK_@20MamA!pAPa13?#3864@localhost:3306/spuria', echo=True)
 cargar_tablas()
