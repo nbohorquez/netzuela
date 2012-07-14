@@ -12,7 +12,6 @@
     [ServiceContract(Namespace = Constantes.Namespace)]    
     public interface IApi
     {
-		
 		/// <summary>
 		/// Lista las tiendas que son propiedad del cliente.
 		/// </summary>

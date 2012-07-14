@@ -9,24 +9,19 @@
     using Zuliaworks.Netzuela.Valeria.Comunes;          // ParametrosDeConexion
     using Zuliaworks.Netzuela.Valeria.Preferencias;     // CargarGuardar
 	
-    public static class Sesion
+    public static class ConexionBaseDeDatos
     {
 		private static readonly ILog log;
 		private static readonly ParametrosDeConexion parametros;
         private static readonly SecureString[] credenciales;
-		private static Dictionary<string, object> propiedades;
 		
-        static Sesion()
+        static ConexionBaseDeDatos()
         {
 			try
 			{
-				log = LogManager.GetLogger(typeof(Sesion));
+				log = LogManager.GetLogger(typeof(ConexionBaseDeDatos));
 	            parametros = CargarGuardar.CargarParametrosDeConexion("Local");
 	            credenciales = CargarGuardar.CargarCredenciales("Local");
-				propiedades = new Dictionary<string, object>() 
-				{
-					{ "Usuario", Autentificacion.TipoDeUsuario.Anonimo }
-				};
 						
 				if (parametros == null || credenciales.Length != 2)
 	            {
@@ -35,8 +30,8 @@
 			}
 			catch (Exception ex)
 			{
-				log.Fatal("Error al iniciar la sesion en el servidor:" + ex.Message);
-				throw new Exception("Error al iniciar sesion en el servidor", ex);
+				log.Fatal("Error al obtener los datos de conexion de la base de datos: " + ex.Message);
+				throw new Exception("Error al obtener los datos de conexion de la base de datos", ex);
 			}
         }
 
@@ -48,11 +43,6 @@
         public static SecureString[] Credenciales
         {
             get { return credenciales; }
-		}
-		
-		public static Dictionary<string, object> Propiedades 
-		{ 
-			get { return propiedades; }
 		}
     }
 }

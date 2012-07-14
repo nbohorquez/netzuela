@@ -48,5 +48,5 @@
         public string Xml { get; set; }
 
         #endregion
-    }        
+    }
 }

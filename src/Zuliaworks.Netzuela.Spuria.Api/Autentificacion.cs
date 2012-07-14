@@ -1,3 +1,4 @@
+
 //-----------------------------------------------------------------------
 // <copyright file="AutentificacionExtensiones.cs" company="Zuliaworks">
 //     Copyright (c) Zuliaworks. All rights reserved.
@@ -14,96 +15,72 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.ServiceModel.Channels;				// HttpRequestMessageProperty
 	using System.Web;								// HttpContext, HttpRequest
 	
+	using BCrypt.Net;
 	using log4net;
+	using ServiceStack.ServiceInterface;			// IServiceBase
+	using ServiceStack.ServiceInterface.Auth;		// CredentialsAuthProvider
 	using Zuliaworks.Netzuela.Valeria.Comunes;
 	using Zuliaworks.Netzuela.Valeria.Logica;
-	
-	/* 
-     * Codigo importado
-     * ================
-     * 
-     * Autor: Stefan Severin
-     * Titulo: Secure your REST-based WCF service with WIF, part 1
-     * Licencia: No especificada
-     * Fuente: http://blog.jayway.com/2012/01/05/secure-your-rest-based-wcf-service-with-wif-part-1/
-     * 
-     * Tipo de uso
-     * ===========
-     * 
-     * Textual                                              []
-     * Adaptado                                             []
-     * Solo se cambiaron los nombres de las variables       [X]
-     * 
-     */
-	
-    /// <summary>
+		
+	/// <summary>
     /// Administra los credenciales enviados por el cliente.
     /// </summary>
-    public class Autentificacion
-    {
-		#region Variables y Constantes
+	public class Autentificacion : CredentialsAuthProvider
+	{
+		#region Variables
 		
 		private readonly ILog log;
-		private string[] autorizacion;
-		public enum TipoDeUsuario { Anonimo=-10 };
+		private string correo_electronico;
+		private int usuario_id;
 		
 		#endregion
 		
 		#region Constructores
 		
-		public Autentificacion(WebHeaderCollection encabezados)
+		public Autentificacion()
 		{
 			log = LogManager.GetLogger(typeof(Autentificacion));
-			Encabezados = encabezados;
-			Autentificado = false;
-			Usuario = (int)TipoDeUsuario.Anonimo;
+			this.correo_electronico = string.Empty;
+			this.usuario_id = -1;
+		}
+		
+		#endregion
+		
+		#region Funciones
+		
+	    public override bool TryAuthenticate(IServiceBase authService, string userName, string password)
+	    {
+			bool resultado = false;
 			
-			TieneEncabezadoAutorizacion = encabezados.ContieneEncabezado("Authorization");
-			if (TieneEncabezadoAutorizacion)
-			{
-				autorizacion = encabezados.ObtenerEncabezadoAutorizacion();
-			}
-		}
-		
-		#endregion
-		
-		#region Propiedades
-		
-		public WebHeaderCollection Encabezados { get; private set; }
-		public bool TieneEncabezadoAutorizacion { get; private set; }
-		public bool Autentificado { get; private set; }
-		public int Usuario { get; private set; }
-		
-		#endregion
-		
-		public bool Autentificar()
-		{
-			try
-			{
-				using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
-	            {
-					bool resultado = false;
-					
-					conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
-					string sql = "SELECT acceso_id FROM acceso WHERE correo_electronico = '" + autorizacion[0] + "' AND contrasena = '" + autorizacion[1] + "'";
-	                DataTable t = conexion.Consultar("spuria", sql);
-					
-	                if (t.Rows.Count == 1)
-	                {
-	                    resultado = true;
-						Usuario = (int)t.Rows[0].ItemArray[0];
+	        using (Conexion conexion = new Conexion(ConexionBaseDeDatos.CadenaDeConexion))
+            {
+				conexion.Conectar(ConexionBaseDeDatos.Credenciales[0], ConexionBaseDeDatos.Credenciales[1]);
+				string sql = "SELECT acceso_id, contrasena FROM acceso WHERE correo_electronico = '" + userName + "'";
+                DataTable t = conexion.Consultar("spuria", sql);
+				
+                if (t.Rows.Count == 1)
+                {
+					string contrasena = System.Text.Encoding.UTF8.GetString((byte[])t.Rows[0].ItemArray[1]);
+					resultado = BCrypt.Verify(password, contrasena);
+									
+					if (resultado)
+					{
+						this.correo_electronico = userName;
+						this.usuario_id = (int)t.Rows[0].ItemArray[0];
 					}
-					
-					Autentificado = resultado;
-					log.Debug("Saliendo de Autentificar()");
-					return resultado;
-	            }
-			}
-			catch (Exception ex)
-			{
-				log.Debug("Error de autentificacion: " + ex.Message);
-				throw new Exception("Error de autentificacion", ex);
-			}
+				}
+            }
+						
+			return resultado;
 		}
+	
+	    public override void OnAuthenticated(IServiceBase authService, IAuthSession session, IOAuthTokens tokens, Dictionary<string, string> authInfo)
+	    {
+			session.Email = this.correo_electronico;
+			session.UserName = this.usuario_id.ToString();
+	        authService.SaveSession(session, this.SessionExpiry);
+	    }
+			
+		#endregion
 	}
 }
