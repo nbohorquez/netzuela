@@ -49,12 +49,19 @@
     <Reference Include="WcfSamples.DynamicProxy">
       <HintPath>..\..\lib\WcfSamples.DynamicProxy.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack">
+      <HintPath>..\..\lib\ServiceStack.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.ServiceInterface">
+      <HintPath>..\..\lib\ServiceStack.ServiceInterface.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataTableXml.cs" />
-    <Compile Include="DataTableXmlDinamico.cs" />
     <Compile Include="DataTableXmlExtensiones.cs" />
-    <Compile Include="IApi.cs" />
     <Compile Include="Constantes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

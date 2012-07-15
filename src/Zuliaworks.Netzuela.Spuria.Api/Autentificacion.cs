@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------
 // <copyright file="AutentificacionExtensiones.cs" company="Zuliaworks">
 //     Copyright (c) Zuliaworks. All rights reserved.
@@ -29,7 +28,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	{
 		#region Variables
 		
-		private readonly ILog log;
+		//private readonly ILog log;
 		private string correo_electronico;
 		private int usuario_id;
 		
@@ -39,7 +38,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		
 		public Autentificacion()
 		{
-			log = LogManager.GetLogger(typeof(Autentificacion));
+			//log = LogManager.GetLogger(typeof(Autentificacion));
 			this.correo_electronico = string.Empty;
 			this.usuario_id = -1;
 		}
@@ -56,7 +55,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
             {
 				conexion.Conectar(ConexionBaseDeDatos.Credenciales[0], ConexionBaseDeDatos.Credenciales[1]);
 				string sql = "SELECT acceso_id, contrasena FROM acceso WHERE correo_electronico = '" + userName + "'";
-                DataTable t = conexion.Consultar("spuria", sql);
+                DataTable t = conexion.Consultar(Constantes.BaseDeDatos, sql);
 				
                 if (t.Rows.Count == 1)
                 {

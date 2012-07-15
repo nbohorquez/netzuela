@@ -69,26 +69,20 @@
     <Reference Include="ServiceStack">
       <HintPath>..\..\lib\ServiceStack.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces">
-      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Common">
-      <HintPath>..\..\lib\ServiceStack.Common.dll</HintPath>
-    </Reference>
     <Reference Include="ServiceStack.ServiceInterface">
       <HintPath>..\..\lib\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\..\lib\ServiceStack.Text.dll</HintPath>
-    </Reference>
     <Reference Include="BCrypt.Net">
       <HintPath>..\..\lib\BCrypt.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\..\lib\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
-	<Content Include="Web.Debug.config">
+    <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Web.Release.config">
@@ -102,6 +96,11 @@
     </Compile>
     <Compile Include="Autentificacion.cs" />
     <Compile Include="ConexionBaseDeDatos.cs" />
+    <Compile Include="Constantes.cs" />
+    <Compile Include="Anfitrion.cs" />
+    <Compile Include="ListarTiendasServicio.cs" />
+    <Compile Include="ListarBasesDeDatosServicio.cs" />
+    <Compile Include="Permisos.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

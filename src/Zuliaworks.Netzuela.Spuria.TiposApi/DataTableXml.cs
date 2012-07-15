@@ -26,14 +26,6 @@
             this.Xml = xml;
         }
 		
-		public DataTableXml(DataTableXmlDinamico dinamico)
-		{
-			this.BaseDeDatos = dinamico.BaseDeDatos;
-			this.NombreTabla = dinamico.NombreTabla;
-			this.EsquemaXml = dinamico.EsquemaXml;
-			this.Xml = dinamico.Xml;
-		}
-
         #endregion
 
         #region Propiedades

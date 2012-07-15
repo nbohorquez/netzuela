@@ -25,7 +25,7 @@
                 new string[] { "tienda_id", "codigo" },
                 "tienda_id");
 
-            entidadesPermitidas.Add(Servidor.BaseDeDatos, new DescriptorDeTabla[] { inventarioTienda });
+            entidadesPermitidas.Add(Constantes.BaseDeDatos, new DescriptorDeTabla[] { inventarioTienda });
         }
 
         #endregion
