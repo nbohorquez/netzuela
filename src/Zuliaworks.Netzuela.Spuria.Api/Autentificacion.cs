@@ -51,9 +51,9 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	    {
 			bool resultado = false;
 			
-	        using (Conexion conexion = new Conexion(ConexionBaseDeDatos.CadenaDeConexion))
+	        using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
             {
-				conexion.Conectar(ConexionBaseDeDatos.Credenciales[0], ConexionBaseDeDatos.Credenciales[1]);
+				conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
 				string sql = "SELECT acceso_id, contrasena FROM acceso WHERE correo_electronico = '" + userName + "'";
                 DataTable t = conexion.Consultar(Constantes.BaseDeDatos, sql);
 				
@@ -76,7 +76,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	    public override void OnAuthenticated(IServiceBase authService, IAuthSession session, IOAuthTokens tokens, Dictionary<string, string> authInfo)
 	    {
 			session.Email = this.correo_electronico;
-			session.UserName = this.usuario_id.ToString();
+			session.FirstName = this.usuario_id.ToString();
 	        authService.SaveSession(session, this.SessionExpiry);
 	    }
 			

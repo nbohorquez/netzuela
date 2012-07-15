@@ -48,18 +48,18 @@
             private readonly string nombre;
             private readonly string[] columnas;
             private readonly string[] clavePrimaria;
-            private readonly string tiendaID;
+            private readonly string tiendaId;
 
             #endregion
 
             #region Constructores
 
-            public DescriptorDeTabla(string nombre, string[] columnas, string[] clavePrimaria, string tiendaID)
+            public DescriptorDeTabla(string nombre, string[] columnas, string[] clavePrimaria, string tiendaId)
             {
                 this.nombre = nombre;
                 this.columnas = columnas;
                 this.clavePrimaria = clavePrimaria;
-                this.tiendaID = tiendaID;
+                this.tiendaId = tiendaId;
             }
 
             #endregion
@@ -81,9 +81,9 @@
                 get { return this.clavePrimaria; }
             }
 
-            public string TiendaID
+            public string TiendaId
             {
-                get { return this.tiendaID; }
+                get { return this.tiendaId; }
             }
 
             #endregion

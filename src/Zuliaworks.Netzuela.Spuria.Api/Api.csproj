@@ -95,12 +95,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Autentificacion.cs" />
-    <Compile Include="ConexionBaseDeDatos.cs" />
     <Compile Include="Constantes.cs" />
     <Compile Include="Anfitrion.cs" />
     <Compile Include="ListarTiendasServicio.cs" />
     <Compile Include="ListarBasesDeDatosServicio.cs" />
     <Compile Include="Permisos.cs" />
+    <Compile Include="ListarTablasServicio.cs" />
+    <Compile Include="LeerTablaServicio.cs" />
+    <Compile Include="Sesion.cs" />
+    <Compile Include="Validadores.cs" />
+    <Compile Include="EscribirTablaServicio.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

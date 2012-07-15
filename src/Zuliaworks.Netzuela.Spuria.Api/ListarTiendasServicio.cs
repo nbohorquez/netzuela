@@ -33,20 +33,20 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		
 		protected override object Run (ListarTiendas request)
 		{
-			AuthUserSession sesion = (AuthUserSession)this.GetSession();
+			Sesion.Usuario = int.Parse(this.GetSession().FirstName);
 			List<string> resultado = new List<string>();
 			
 			try
 			{
-				using (Conexion conexion = new Conexion(ConexionBaseDeDatos.CadenaDeConexion))
+				using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
 	            {
-					conexion.Conectar(ConexionBaseDeDatos.Credenciales[0], ConexionBaseDeDatos.Credenciales[1]);
+					conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
 					
 					string sql = "SELECT t.tienda_id, c.nombre_legal "
 								+ "FROM tienda AS t "
 								+ "JOIN cliente AS c ON t.cliente_p = c.rif "
 								+ "JOIN usuario AS u ON c.propietario = u.usuario_id "
-								+ "WHERE u.usuario_id = " + sesion.UserName;
+								+ "WHERE u.usuario_id = " + Sesion.Usuario.ToString();
 					DataTable t = conexion.Consultar(Constantes.BaseDeDatos, sql);
 					
 					foreach(DataRow r in t.Rows)

@@ -7,7 +7,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	
 	using ServiceStack.ServiceHost;							// RestService
 	using ServiceStack.ServiceInterface;
-	using ServiceStack.ServiceInterface.Auth;
 	using ServiceStack.ServiceInterface.ServiceModel;		// IHasResponseStatus
 	using Zuliaworks.Netzuela.Valeria.Logica;
 	
@@ -33,14 +32,14 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		
 		protected override object Run (ListarBasesDeDatos request)
 		{
-			//AuthUserSession sesion = (AuthUserSession)this.GetSession();
+			Sesion.Usuario = int.Parse(this.GetSession().FirstName);
 			List<string> resultado = new List<string>();
 
             try
             {
-                using (Conexion conexion = new Conexion(ConexionBaseDeDatos.CadenaDeConexion))
+                using (Conexion conexion = new Conexion(Sesion.CadenaDeConexion))
                 {
-                    conexion.Conectar(ConexionBaseDeDatos.Credenciales[0], ConexionBaseDeDatos.Credenciales[1]);
+                    conexion.Conectar(Sesion.Credenciales[0], Sesion.Credenciales[1]);
                     string[] basesDeDatos = conexion.ListarBasesDeDatos();
 
                     var basesDeDatosAMostrar = (from bd in basesDeDatos

@@ -5,10 +5,5 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	public class Constantes
 	{
 		public const string BaseDeDatos = "spuria";
-		
-		public Constantes ()
-		{
-		}
 	}
 }
-
