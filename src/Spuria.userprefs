@@ -1,18 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/Web.config">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/Anfitrion.cs">
     <Files>
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Global.asax.cs" Line="36" Column="2" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Autentificacion.cs" Line="22" Column="44" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Web.config" Line="57" Column="17" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Global.asax.cs" Line="10" Column="31" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Anfitrion.cs" Line="37" Column="9" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Api" expanded="True">
-            <Node name="Web.config" selected="True" />
+            <Node name="Anfitrion.cs" selected="True" />
+            <Node name="Global.asax" expanded="True" />
           </Node>
-          <Node name="TiposApi" expanded="True" />
+          <Node name="Tipos" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">

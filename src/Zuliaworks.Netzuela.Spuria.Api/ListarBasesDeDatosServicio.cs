@@ -5,26 +5,10 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.Linq;
 	using System.Runtime.Serialization;
 	
-	using ServiceStack.ServiceHost;							// RestService
 	using ServiceStack.ServiceInterface;
-	using ServiceStack.ServiceInterface.ServiceModel;		// IHasResponseStatus
+	using ServiceStack.ServiceInterface.ServiceModel;		// ResponseStatus
+	using Zuliaworks.Netzuela.Spuria.Tipos;
 	using Zuliaworks.Netzuela.Valeria.Logica;
-	
-	[DataContract]
-	[Authenticate()]
-	[RestService("/listarbasesdedatos")]
-	public class ListarBasesDeDatos
-	{
-	}
-
-	[DataContract]
-	public class ListarBasesDeDatosResponse : IHasResponseStatus
-	{
-		[DataMember]
-		public string[] BasesDeDatos { get; set; }
-		[DataMember]
-		public ResponseStatus ResponseStatus { get; set; }
-	}
 	
 	public class ListarBasesDeDatosServicio : ServiceBase<ListarBasesDeDatos>
 	{
@@ -55,7 +39,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                 throw new Exception("Error de listado de base de datos", ex);
             }
 			
-            return new ListarBasesDeDatosResponse { BasesDeDatos = resultado.ToArray() };
+            return new ListarBasesDeDatosResponse { BasesDeDatos = resultado.ToArray(), ResponseStatus = new ResponseStatus() };
 		}
 		
 		#endregion

@@ -7,24 +7,11 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.Runtime.Serialization;
 	
 	using ServiceStack.FluentValidation;
-	using ServiceStack.ServiceHost;							// RestService
 	using ServiceStack.ServiceInterface;
-	using ServiceStack.ServiceInterface.Auth;
-	using ServiceStack.ServiceInterface.ServiceModel;
-	using Zuliaworks.Netzuela.Spuria.TiposApi;
+	using ServiceStack.ServiceInterface.ServiceModel;		// ResponseStatus
+	using Zuliaworks.Netzuela.Spuria.Tipos;
 	using Zuliaworks.Netzuela.Valeria.Logica;
 		
-	[DataContract]
-	[Authenticate()]
-	[RestService("/escribirtabla")]
-	public class EscribirTabla
-	{
-		[DataMember]
-		public int TiendaId { get; set; }
-		[DataMember]
-		public DataTableXml TablaXml { get; set; }
-	}
-	
 	public class EscribirTablaValidador : AbstractValidator<EscribirTabla>
 	{		
 		public EscribirTablaValidador()
@@ -45,20 +32,15 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		}
 	}
 
-	[DataContract]
-	public class EscribirTablaResponse : IHasResponseStatus
-	{
-		[DataMember]
-		public bool Exito { get; set; }
-		[DataMember]
-		public ResponseStatus ResponseStatus { get; set; }
-	}
-			
 	public class EscribirTablaServicio : ServiceBase<EscribirTabla>
 	{
 		protected override object Run (EscribirTabla request)
 		{
-            bool resultado = false;
+			bool resultado = false;
+			
+			Sesion.Usuario = int.Parse(this.GetSession().FirstName);
+			EscribirTablaValidador validador = new EscribirTablaValidador();
+			validador.ValidateAndThrow(request);            
 
             try
             {
@@ -128,7 +110,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                 throw new Exception("Error de escritura de tabla", ex);
             }
 
-            return new EscribirTablaResponse { Exito = resultado };
+            return new EscribirTablaResponse { Exito = resultado, ResponseStatus = new ResponseStatus() };
 		}
 	}
 }

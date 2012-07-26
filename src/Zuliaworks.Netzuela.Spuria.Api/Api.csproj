@@ -141,12 +141,6 @@
   </Target>
   -->
   <ItemGroup>
-    <ProjectReference Include="..\Zuliaworks.Netzuela.Spuria.TiposApi\TiposApi.csproj">
-      <Project>{8DE4172C-BAE2-4320-A092-585077DBB33F}</Project>
-      <Name>TiposApi</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -154,5 +148,11 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\www.w3schools.com" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Zuliaworks.Netzuela.Spuria.Tipos\Tipos.csproj">
+      <Project>{8DE4172C-BAE2-4320-A092-585077DBB33F}</Project>
+      <Name>Tipos</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

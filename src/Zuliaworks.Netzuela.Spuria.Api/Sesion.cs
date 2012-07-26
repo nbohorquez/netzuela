@@ -20,9 +20,6 @@
         {
 			try
 			{
-				//log = LogManager.GetLogger(typeof(Sesion));
-				//parametros = CargarGuardar.CargarParametrosDeConexion("Local");
-				//credenciales = CargarGuardar.CargarCredenciales("Local");
 				propiedades = new Dictionary<string, object>() 
                 {
 					{ "usuario_id", -1 }

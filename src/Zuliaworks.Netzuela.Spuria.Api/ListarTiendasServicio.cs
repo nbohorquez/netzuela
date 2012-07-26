@@ -5,28 +5,11 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.Data;
 	using System.Runtime.Serialization;
 	
-	using ServiceStack.ServiceHost;							// RestService
 	using ServiceStack.ServiceInterface;
-	using ServiceStack.ServiceInterface.Auth;
-	using ServiceStack.ServiceInterface.ServiceModel;		// IHasResponseStatus
+	using ServiceStack.ServiceInterface.ServiceModel;		// ResponseStatus
+	using Zuliaworks.Netzuela.Spuria.Tipos;
 	using Zuliaworks.Netzuela.Valeria.Logica;
-	
-	[DataContract]
-	[Authenticate()]
-	[RestService("/listartiendas")]
-	public class ListarTiendas
-	{
-	}
-
-	[DataContract]
-	public class ListarTiendasResponse : IHasResponseStatus
-	{
-		[DataMember]
-		public string[] Tiendas { get; set; }
-		[DataMember]
-		public ResponseStatus ResponseStatus { get; set; }
-	}
-	
+		
 	public class ListarTiendasServicio : ServiceBase<ListarTiendas>
 	{
 		#region Implementacion de interfaces
@@ -60,8 +43,8 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 				//log.Fatal("Usuario: " + sesion.UserName + ". Error de listado de base de datos: " + ex.Message);
                 throw new Exception("Error de listado de base de datos", ex);
 			}
-			
-			return new ListarTiendasResponse { Tiendas = resultado.ToArray() };
+
+			return new ListarTiendasResponse { Tiendas = resultado.ToArray(), ResponseStatus = new ResponseStatus() };
 		}
 		
 		#endregion

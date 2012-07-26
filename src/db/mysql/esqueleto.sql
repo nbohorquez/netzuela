@@ -41,6 +41,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`categoria` (
   `categoria_id` CHAR(16) NOT NULL ,
   `nombre` CHAR(30) NOT NULL ,
   `hijo_de_categoria` CHAR(16) NOT NULL ,
+  `nivel` INT NULL ,
   PRIMARY KEY (`categoria_id`) ,
   INDEX `fk_Categoria_Etiquetable` (`etiquetable_p` ASC) ,
   INDEX `fk_Categoria_Categoria` (`hijo_de_categoria` ASC) ,
@@ -171,7 +172,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`usuario` (
   `ubicacion` CHAR(16) NULL ,
   PRIMARY KEY (`usuario_id`) ,
   INDEX `fk_Usuario_Rastreable` (`rastreable_p` ASC) ,
-  UNIQUE INDEX `rastreable_p_UNIQUE` (`rastreable_p` ASC) ,
+  UNIQUE INDEX `Rastreable_P_UNIQUE` (`rastreable_p` ASC) ,
   INDEX `fk_Usuario_Territorio` (`ubicacion` ASC) ,
   INDEX `fk_Usuario_Estatus` (`estatus` ASC) ,
   INDEX `fk_Usuario_Describible` (`describible_p` ASC) ,
@@ -232,7 +233,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`cliente` (
   PRIMARY KEY (`rif`) ,
   INDEX `fk_Cliente_Usuario` (`propietario` ASC) ,
   INDEX `fk_Cliente_Rastreable` (`rastreable_p` ASC) ,
-  UNIQUE INDEX `rastreable_p_UNIQUE` (`rastreable_p` ASC) ,
+  UNIQUE INDEX `Rastreable_P_UNIQUE` (`rastreable_p` ASC) ,
   INDEX `fk_Cliente_Territorio` (`ubicacion` ASC) ,
   CONSTRAINT `fk_Cliente_Categoria`
     FOREIGN KEY (`categoria` )
@@ -1813,6 +1814,15 @@ BEGIN
     END IF;
     IF NEW.categoria_id != OLD.categoria_id THEN
         SET NEW.categoria_id = OLD.categoria_id;
+    END IF;
+    IF NEW.nombre != OLD.nombre THEN
+        SET NEW.nombre = OLD.nombre;
+    END IF;
+    IF NEW.hijo_de_categoria != OLD.hijo_de_categoria THEN
+        SET NEW.hijo_de_categoria = OLD.hijo_de_categoria;
+    END IF;
+    IF NEW.nivel != OLD.nivel THEN
+        SET NEW.nivel = OLD.nivel;
     END IF;
 END $$
 

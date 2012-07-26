@@ -7,25 +7,10 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.Runtime.Serialization;
 	
 	using ServiceStack.FluentValidation;
-	using ServiceStack.ServiceHost;							// RestService
 	using ServiceStack.ServiceInterface;
-	using ServiceStack.ServiceInterface.Auth;
-	using ServiceStack.ServiceInterface.ServiceModel;
-	using Zuliaworks.Netzuela.Spuria.TiposApi;
+	using ServiceStack.ServiceInterface.ServiceModel;		// ResponseStatus
+	using Zuliaworks.Netzuela.Spuria.Tipos;
 	using Zuliaworks.Netzuela.Valeria.Logica;
-	
-	[DataContract]
-	[Authenticate()]
-	[RestService("/leertabla")]
-	public class LeerTabla
-	{
-		[DataMember]
-		public int TiendaId { get; set; }
-		[DataMember]
-		public string BaseDeDatos { get; set; }
-		[DataMember]
-		public string Tabla { get; set; }
-	}
 	
 	public class LeerTablaValidador : AbstractValidator<LeerTabla>
 	{		
@@ -37,15 +22,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		}
 	}
 
-	[DataContract]
-	public class LeerTablaResponse : IHasResponseStatus
-	{
-		[DataMember]
-		public DataTableXml Tabla { get; set; }
-		[DataMember]
-		public ResponseStatus ResponseStatus { get; set; }
-	}
-	
 	public class LeerTablaServicio : ServiceBase<LeerTabla>
 	{
 		#region Funciones
@@ -117,7 +93,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                 throw new Exception("Error de lectura de tabla", ex);
             }
 
-            return new LeerTablaResponse { Tabla = datosAEnviar };
+            return new LeerTablaResponse { Tabla = datosAEnviar, ResponseStatus = new ResponseStatus() };
 		}
 		
 		#endregion

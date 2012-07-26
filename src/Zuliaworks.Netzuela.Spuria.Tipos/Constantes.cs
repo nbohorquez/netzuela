@@ -1,4 +1,4 @@
-namespace Zuliaworks.Netzuela.Spuria.TiposApi
+namespace Zuliaworks.Netzuela.Spuria.Tipos
 {
 	using System;
 	

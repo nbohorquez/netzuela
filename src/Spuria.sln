@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Zuliaworks.Netzuela.Spuria.Api\Api.csproj", "{8BF0C892-2D11-4DBD-9EFB-E8EA38A2E290}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiposApi", "Zuliaworks.Netzuela.Spuria.TiposApi\TiposApi.csproj", "{8DE4172C-BAE2-4320-A092-585077DBB33F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tipos", "Zuliaworks.Netzuela.Spuria.Tipos\Tipos.csproj", "{8DE4172C-BAE2-4320-A092-585077DBB33F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

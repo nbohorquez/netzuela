@@ -118,6 +118,54 @@ BEGIN
     RETURN LAST_INSERT_ID();
 END$$
 
+/*
+*************************************************************
+*                    InsertarConsumidor						*
+*************************************************************
+*/
+
+DELIMITER ;
+
+DROP FUNCTION IF EXISTS `InsertarConsumidor2`;
+SELECT 'InsertarConsumidor2';
+
+DELIMITER $$
+
+CREATE FUNCTION `InsertarConsumidor2` (a_UsuarioID INT, a_Sexo CHAR(6), a_FechaDeNacimiento DATE, 
+                                       a_GrupoDeEdad CHAR(15), a_GradoDeInstruccion CHAR(16))
+RETURNS INT NOT DETERMINISTIC
+BEGIN
+    DECLARE Interlocutor_P INT;
+        
+    DECLARE EXIT HANDLER FOR 1048
+    BEGIN
+        SET @MensajeDeError = 'Error de valor nulo en InsertarConsumidor2()';
+        SET @CodigoDeError = 1048;
+        RETURN -1048;
+    END; 
+
+    DECLARE EXIT HANDLER FOR 1452
+    BEGIN
+        SET @MensajeDeError = 'Error de clave externa en InsertarConsumidor2()';
+        SET @CodigoDeError = 1452;
+        RETURN -1452;
+    END;
+
+    SELECT InsertarInterlocutor() INTO Interlocutor_P;
+
+    INSERT INTO consumidor VALUES (
+        Interlocutor_P,
+        a_UsuarioID,
+        NULL,
+        a_Sexo,
+        a_FechaDeNacimiento,
+        a_GrupoDeEdad,
+        a_GradoDeInstruccion
+    );
+
+    RETURN LAST_INSERT_ID();
+END$$
+
 /***********************************************************/
 DELIMITER ;
 /***********************************************************/

@@ -106,7 +106,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 /* La categoria 'Inicio' es hija de ella misma */
 SELECT InsertarEtiquetable() INTO @Etiquetable_P;
 SELECT '0.00.00.00.00.00' INTO @Cat_0000;
-INSERT INTO categoria VALUES (@Etiquetable_P, '0.00.00.00.00.00', 'Inicio', '0.00.00.00.00.00');
+INSERT INTO categoria VALUES (@Etiquetable_P, '0.00.00.00.00.00', 'Inicio', '0.00.00.00.00.00', 0);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

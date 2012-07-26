@@ -6,20 +6,11 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 	using System.Runtime.Serialization;
 	
 	using ServiceStack.FluentValidation;
-	using ServiceStack.ServiceHost;							// RestService
 	using ServiceStack.ServiceInterface;
-	using ServiceStack.ServiceInterface.ServiceModel;
+	using ServiceStack.ServiceInterface.ServiceModel;		// ResponseStatus
+	using Zuliaworks.Netzuela.Spuria.Tipos;
 	using Zuliaworks.Netzuela.Valeria.Logica;
 	
-	[DataContract]
-	[Authenticate()]
-	[RestService("/listartablas")]
-	public class ListarTablas
-	{
-		[DataMember]
-		public string BaseDeDatos { get; set; }
-	}
-
 	public class ListarTablasValidador : AbstractValidator<ListarTablas> 
 	{		
 		public ListarTablasValidador()
@@ -28,15 +19,6 @@ namespace Zuliaworks.Netzuela.Spuria.Api
 		}
 	}
 
-	[DataContract]
-	public class ListarTablasResponse : IHasResponseStatus
-	{
-		[DataMember]
-		public string[] Tablas { get; set; }
-		[DataMember]
-		public ResponseStatus ResponseStatus { get; set; }
-	}
-	
 	public class ListarTablasServicio : ServiceBase<ListarTablas>
 	{
 		#region Funciones
@@ -69,7 +51,7 @@ namespace Zuliaworks.Netzuela.Spuria.Api
                 throw new Exception("Error de listado de tablas", ex);
             }
 
-            return new ListarTablasResponse { Tablas = resultado.ToArray() };
+            return new ListarTablasResponse { Tablas = resultado.ToArray(), ResponseStatus = new ResponseStatus() };
 		}
 		
 		#endregion

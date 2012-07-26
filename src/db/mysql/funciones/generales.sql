@@ -17,7 +17,7 @@ DELIMITER $$
 CREATE FUNCTION `InsertarCategoria` (a_Nombre CHAR(30), a_HijoDeCategoria CHAR(16))
 RETURNS CHAR(16) NOT DETERMINISTIC
 BEGIN
-    DECLARE C, Etiquetable_P, Punto INT;
+    DECLARE C, Etiquetable_P, Punto, NivelPadre INT;
 	DECLARE N CHAR(2);
 	DECLARE ID, ACambiar, ADejarIgual CHAR(16);
 
@@ -40,6 +40,10 @@ BEGIN
 		WHERE hijo_de_categoria = a_HijoDeCategoria
 		INTO C;
 
+		SELECT nivel FROM categoria
+		WHERE categoria_id = a_HijoDeCategoria
+		INTO NivelPadre;
+
 		SELECT LPAD(HEX(C + 1), 2, '0') INTO N;
 		SELECT LOCATE('00', a_HijoDeCategoria) INTO Punto;
 		SELECT LEFT(a_HijoDeCategoria, Punto + 1) INTO ACambiar;
@@ -50,7 +54,8 @@ BEGIN
             Etiquetable_P,
             ID,
             a_Nombre,
-            a_HijoDeCategoria
+            a_HijoDeCategoria,
+			NivelPadre + 1
         );
 
 		RETURN ID;

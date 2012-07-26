@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, and_, MetaData, Table
 from sqlalchemy.orm import sessionmaker, aliased, mapper
 from sqlalchemy.sql import select, func, bindparam
 from sqlalchemy.types import Numeric
+from sys import stdout
 from decimal import *
 
 """
@@ -21,7 +22,11 @@ PAIS = 1
 ESTADO = 2
 MUNICIPIO = 3
 PARROQUIA = 4
-ARCHIVO = '../../../map/kronick/simplificado/kml/venezuela_parroquias.kml'
+ARCHIVOS = [
+	'../../../map/kronick/simplificado/kml/venezuela_estados.kml',
+	'../../../map/kronick/simplificado/kml/venezuela_municipios.kml',
+	'../../../map/kronick/simplificado/kml/venezuela_parroquias.kml'
+]
 
 def cargar_tablas():
 	metadata = MetaData(motor)
@@ -168,24 +173,37 @@ def ingresar_silueta(silueta, dibujable):
 		)).scalar()
 	sesion.execute('commit')
 
-motor = create_engine('mysql://chivo:#HK_@20MamA!pAPa13?#3864@localhost:3306/spuria', echo=True)
+motor = create_engine('mysql://chivo:#HK_@20MamA!pAPa13?#3864@localhost:3306/spuria', echo=False)
 cargar_tablas()
 conexion = motor.connect()
 Sesion = sessionmaker()
 Sesion.configure(bind=motor)
 sesion = Sesion()
-archivo = path.abspath(ARCHIVO)
-with open(archivo) as a:
-	doc = parser.parse(a).getroot()
-	tipo_de_placemark = analizar_esquema(doc.Document.Folder.Schema)
+cantidad_arch = len(ARCHIVOS)
 
-	if tipo_de_placemark is None:
-		print 'No se reconoce el esquema del documento'
-		exit()
+for num_arch, archivo in enumerate(ARCHIVOS):
+	archivo_corregido = path.abspath(archivo)
+	with open(archivo_corregido) as a:
+		print 'Archivo ({0},{1}): {2}'.format(num_arch, cantidad_arch, archivo_corregido)
+		doc = parser.parse(a).getroot()
+		tipo_de_placemark = analizar_esquema(doc.Document.Folder.Schema)
 
-	for pm in doc.Document.Folder.Placemark:
-		dibujable = analizar_placemark(pm, tipo_de_placemark)
-		if hasattr(pm, 'MultiGeometry'):
-			pm = pm.MultiGeometry
-		for poligono in pm.Polygon:
-			analizar_poligono(poligono, dibujable)
+		if tipo_de_placemark is None:
+			print 'No se reconoce el esquema del documento'
+			exit()
+
+		cantidad_i = len(doc.Document.Folder.Placemark)
+		for i, pm in enumerate(doc.Document.Folder.Placemark):
+			dibujable = analizar_placemark(pm, tipo_de_placemark)
+			if hasattr(pm, 'MultiGeometry'):
+				pm = pm.MultiGeometry
+			cantidad_j = len(pm.Polygon)	
+			for j, poligono in enumerate(pm.Polygon):
+				stdout.write("\r\t")
+				stdout.write("Analizando: Placemark(%d," % (i + 1))
+				stdout.write("%d) =>" % cantidad_i)
+				stdout.write(" Poligono(%d," % (j + 1))
+				stdout.write("%d)" % cantidad_j)
+				stdout.flush()
+				analizar_poligono(poligono, dibujable)
+		stdout.write("\n")
