@@ -466,24 +466,40 @@ SELECT InsertarSeguidor(@Producto4Calificable, @ConsumidorID3, 'TENEIS QUE REVIS
 *********************************************************
 */
 
-SELECT c.rastreable_p 
+SELECT c.rastreable_p, c.describible_p
 FROM cliente AS c
 LEFT JOIN tienda AS t ON c.rif = t.cliente_p
 WHERE t.tienda_id = @TiendaID1
-INTO @Tienda1Rastreable;
+INTO @Tienda1Rastreable, @Tienda1Describible;
+
+SELECT c.rastreable_p, c.describible_p
+FROM cliente AS c
+LEFT JOIN tienda AS t ON c.rif = t.cliente_p
+WHERE t.tienda_id = @TiendaID2
+INTO @Tienda2Rastreable, @Tienda2Describible;
 
 SELECT describible_p FROM producto
 WHERE producto_id = @ProductoID1
 INTO @Producto1Describible;
 
-SELECT c.describible_p 
-FROM cliente AS c
-JOIN tienda AS t ON c.rif = t.cliente_p
-WHERE t.tienda_id = @TiendaID1
-INTO @Tienda1Describible;
+SELECT describible_p FROM producto
+WHERE producto_id = @ProductoID2
+INTO @Producto2Describible;
 
-SELECT InsertarDescripcion(@Tienda1Rastreable, @Producto1Describible, 'El motor aeroespacial PAE-1516 de 20kN de empuje...');
+SELECT describible_p FROM producto
+WHERE producto_id = @ProductoID3
+INTO @Producto3Describible;
+
+SELECT describible_p FROM producto
+WHERE producto_id = @ProductoID4
+INTO @Producto4Describible;
+
+SELECT InsertarDescripcion(@Tienda1Rastreable, @Producto1Describible, 'Raw denim you probably haven\'t heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.');
+SELECT InsertarDescripcion(@Tienda1Rastreable, @Producto2Describible, 'Raw denim you probably haven\'t heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.');
+SELECT InsertarDescripcion(@Tienda2Rastreable, @Producto3Describible, 'Raw denim you probably haven\'t heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.');
+SELECT InsertarDescripcion(@Tienda2Rastreable, @Producto4Describible, 'Raw denim you probably haven\'t heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.');
 SELECT InsertarDescripcion(@Tienda1Rastreable, @Tienda1Describible, 'Raw denim you probably haven\'t heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.');
+SELECT InsertarDescripcion(@Tienda2Rastreable, @Tienda2Describible, 'Raw denim you probably haven\'t heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.');
 
 /*
 *********************************************************

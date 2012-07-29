@@ -23,9 +23,9 @@ ESTADO = 2
 MUNICIPIO = 3
 PARROQUIA = 4
 ARCHIVOS = [
-	'../../../map/kronick/simplificado/kml/venezuela_estados.kml',
-	'../../../map/kronick/simplificado/kml/venezuela_municipios.kml',
-	'../../../map/kronick/simplificado/kml/venezuela_parroquias.kml'
+	'../map/kronick/simplificado/kml/venezuela_estados.kml',
+	'../map/kronick/simplificado/kml/venezuela_municipios.kml',
+	'../map/kronick/simplificado/kml/venezuela_parroquias.kml'
 ]
 
 def cargar_tablas():

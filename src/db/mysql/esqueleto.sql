@@ -762,8 +762,8 @@ ENGINE = InnoDB;
 -- Table `spuria`.`calificacion`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `spuria`.`calificacion` (
-  `Valor` CHAR(4) NOT NULL ,
-  PRIMARY KEY (`Valor`) )
+  `valor` CHAR(4) NOT NULL ,
+  PRIMARY KEY (`valor`) )
 ENGINE = InnoDB;
 
 
@@ -807,7 +807,7 @@ CREATE  TABLE IF NOT EXISTS `spuria`.`calificacion_resena` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_CalificacionResena_Calificacion`
     FOREIGN KEY (`calificacion` )
-    REFERENCES `spuria`.`calificacion` (`Valor` )
+    REFERENCES `spuria`.`calificacion` (`valor` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -1657,14 +1657,14 @@ BEGIN
     WHERE c.rif = NEW.cliente_p
     INTO rastreable_p;
     
-    SELECT 'buscable_p,cliente_p,calificable_seguible_p,interlocutor_p,dibujable_p,tienda_id,abierto' INTO columnas;
+    SELECT 'buscable_p<|>cliente_p<|>calificable_seguible_p<|>interlocutor_p<|>dibujable_p<|>tienda_id<|>abierto' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.buscable_p AS CHAR),',',
-        CAST(NEW.cliente_p AS CHAR),',',
-        CAST(NEW.calificable_seguible_p AS CHAR),',',
-        CAST(NEW.interlocutor_p AS CHAR),',',
-        CAST(NEW.dibujable_p AS CHAR),',',
-        CAST(NEW.tienda_id AS CHAR),',',
+        CAST(NEW.buscable_p AS CHAR),'<|>',
+        CAST(NEW.cliente_p AS CHAR),'<|>',
+        CAST(NEW.calificable_seguible_p AS CHAR),'<|>',
+        CAST(NEW.interlocutor_p AS CHAR),'<|>',
+        CAST(NEW.dibujable_p AS CHAR),'<|>',
+        CAST(NEW.tienda_id AS CHAR),'<|>',
         CAST(NEW.abierto AS CHAR)
     ) INTO valores;
 
@@ -1693,6 +1693,38 @@ END $$
 DELIMITER ;
 
 DELIMITER $$
+USE `spuria`$$
+
+
+CREATE TRIGGER despues_de_insertar_producto AFTER INSERT ON producto
+FOR EACH ROW
+BEGIN
+    DECLARE valores, columnas TEXT;
+    DECLARE bobo INT;
+        
+    SELECT CONCAT(
+        'rastreable_p<|>describible_p<|>buscable_p<|>',
+        'calificable_seguible_p<|>producto_id<|>tipo_de_codigo<|>',
+        'codigo<|>estatus<|>fabricante<|>nombre<|>categoria'
+    ) INTO columnas;
+
+    SELECT CONCAT(
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.describible_p AS CHAR),'<|>',
+        CAST(NEW.buscable_p AS CHAR),'<|>',
+        CAST(NEW.calificable_seguible_p AS CHAR),'<|>',
+        CAST(NEW.producto_id AS CHAR),'<|>',
+        NEW.tipo_de_codigo,'<|>',
+        NEW.codigo,'<|>',
+        NEW.estatus,'<|>',
+        NEW.fabricante,'<|>',
+        NEW.nombre,'<|>',
+        NEW.categoria
+    ) INTO valores;
+    
+    SELECT RegistrarInsercion(NEW.rastreable_p, columnas, valores) INTO bobo;
+END $$
+
 USE `spuria`$$
 
 
@@ -1731,33 +1763,22 @@ END $$
 USE `spuria`$$
 
 
-CREATE TRIGGER despues_de_insertar_producto AFTER INSERT ON producto
+CREATE TRIGGER despues_de_actualizar_producto AFTER UPDATE ON producto
 FOR EACH ROW
 BEGIN
-    DECLARE valores, columnas TEXT;
     DECLARE bobo INT;
-        
-    SELECT CONCAT(
-        'rastreable_p,describible_p,buscable_p,',
-        'calificable_seguible_p,producto_id,tipo_de_codigo,',
-        'codigo,estatus,fabricante,nombre,categoria'
-    ) INTO columnas;
-
-    SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.describible_p AS CHAR),',',
-        CAST(NEW.buscable_p AS CHAR),',',
-        CAST(NEW.calificable_seguible_p AS CHAR),',',
-        CAST(NEW.producto_id AS CHAR),',',
-        NEW.tipo_de_codigo,',',
-        NEW.codigo,',',
-        NEW.estatus,',',
-        NEW.fabricante,',',
-        NEW.nombre,',',
-        NEW.categoria
-    ) INTO valores;
     
-    SELECT RegistrarInsercion(NEW.rastreable_p, columnas, valores) INTO bobo;
+    SELECT
+    IF(NEW.estatus != OLD.estatus, RegistrarActualizacion(NEW.rastreable_p, 'estatus', NEW.estatus), 0) +
+    IF(NEW.modelo != OLD.modelo, RegistrarActualizacion(NEW.rastreable_p, 'modelo', NEW.modelo), 0) +
+    IF(NEW.categoria != OLD.categoria, RegistrarActualizacion(NEW.rastreable_p, 'categoria', NEW.categoria), 0) +
+    IF(NEW.debut_en_el_mercado != OLD.debut_en_el_mercado, RegistrarActualizacion(NEW.rastreable_p, 'debut_en_el_mercado', NEW.debut_en_el_mercado), 0) +
+    IF(NEW.largo != OLD.largo, RegistrarActualizacion(NEW.rastreable_p, 'largo', NEW.largo), 0) +
+    IF(NEW.ancho != OLD.ancho, RegistrarActualizacion(NEW.rastreable_p, 'ancho', NEW.ancho), 0) +
+    IF(NEW.alto != OLD.alto, RegistrarActualizacion(NEW.rastreable_p, 'alto', NEW.alto), 0) +
+    IF(NEW.peso != OLD.peso, RegistrarActualizacion(NEW.rastreable_p, 'peso', NEW.peso), 0) +
+    IF(NEW.pais_de_origen != OLD.pais_de_origen, RegistrarActualizacion(NEW.rastreable_p, 'pais_de_origen', NEW.pais_de_origen), 0)
+    INTO bobo;
 END $$
 
 USE `spuria`$$
@@ -1776,27 +1797,6 @@ BEGIN
     DELETE FROM calificable_seguible WHERE calificable_seguible_id = OLD.calificable_seguible_p;
     /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
     DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_actualizar_producto AFTER UPDATE ON producto
-FOR EACH ROW
-BEGIN
-    DECLARE bobo INT;
-    
-    SELECT
-    IF(NEW.estatus != OLD.estatus, RegistrarActualizacion(NEW.rastreable_p, 'estatus', NEW.estatus), 0) +
-    IF(NEW.modelo != OLD.modelo, RegistrarActualizacion(NEW.rastreable_p, 'modelo', NEW.modelo), 0) +
-    IF(NEW.categoria != OLD.categoria, RegistrarActualizacion(NEW.rastreable_p, 'categoria', NEW.categoria), 0) +
-    IF(NEW.debut_en_el_mercado != OLD.debut_en_el_mercado, RegistrarActualizacion(NEW.rastreable_p, 'debut_en_el_mercado', NEW.debut_en_el_mercado), 0) +
-    IF(NEW.largo != OLD.largo, RegistrarActualizacion(NEW.rastreable_p, 'largo', NEW.largo), 0) +
-    IF(NEW.ancho != OLD.ancho, RegistrarActualizacion(NEW.rastreable_p, 'ancho', NEW.ancho), 0) +
-    IF(NEW.alto != OLD.alto, RegistrarActualizacion(NEW.rastreable_p, 'alto', NEW.alto), 0) +
-    IF(NEW.peso != OLD.peso, RegistrarActualizacion(NEW.rastreable_p, 'peso', NEW.peso), 0) +
-    IF(NEW.pais_de_origen != OLD.pais_de_origen, RegistrarActualizacion(NEW.rastreable_p, 'pais_de_origen', NEW.pais_de_origen), 0)
-    INTO bobo;
 END $$
 
 
@@ -1898,22 +1898,22 @@ BEGIN
     DECLARE bobo INT;
 
     SELECT CONCAT(
-        'describible_p,propietario,rif,categoria,',
-        'estatus,nombre_legal,nombre_comun,telefono,',
-        'calle,sector_urb_barrio,ubicacion'
+        'describible_p<|>propietario<|>rif<|>categoria<|>',
+        'estatus<|>nombre_legal<|>nombre_comun<|>telefono<|>',
+        'calle<|>sector_urb_barrio<|>ubicacion'
     ) INTO columnas;
         
     SELECT CONCAT(
-        CAST(NEW.describible_p AS CHAR),',',
-        CAST(NEW.propietario AS CHAR),',',
-        NEW.rif,',',
-        NEW.categoria,',',
-        NEW.estatus,',',
-        NEW.nombre_legal,',',
-        NEW.nombre_comun,',',
-        NEW.telefono,',',
-        NEW.calle,',',
-        NEW.sector_urb_barrio,',',
+        CAST(NEW.describible_p AS CHAR),'<|>',
+        CAST(NEW.propietario AS CHAR),'<|>',
+        NEW.rif,'<|>',
+        NEW.categoria,'<|>',
+        NEW.estatus,'<|>',
+        NEW.nombre_legal,'<|>',
+        NEW.nombre_comun,'<|>',
+        NEW.telefono,'<|>',
+        NEW.calle,'<|>',
+        NEW.sector_urb_barrio,'<|>',
         NEW.ubicacion
     ) INTO valores;
     
@@ -1980,13 +1980,13 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
     
-    SELECT 'rastreable_p,cobrable_p,tienda_id,codigo,visibilidad' INTO columnas;
+    SELECT 'rastreable_p<|>cobrable_p<|>tienda_id<|>codigo<|>visibilidad' INTO columnas;
 
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.cobrable_p AS CHAR),',',
-        CAST(NEW.tienda_id AS CHAR),',',
-        NEW.codigo,',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.cobrable_p AS CHAR),'<|>',
+        CAST(NEW.tienda_id AS CHAR),'<|>',
+        NEW.codigo,'<|>',
         NEW.visibilidad
     ) INTO valores;
         
@@ -2101,14 +2101,14 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
     
-    SELECT 'rastreable_p,etiquetable_p,mensaje_id,rastreable_p,remitente,destinatario,contenido' INTO columnas;
+    SELECT 'rastreable_p<|>etiquetable_p<|>mensaje_id<|>rastreable_p<|>remitente<|>destinatario<|>contenido' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR), ',',
-        CAST(NEW.etiquetable_p AS CHAR), ',',
-        CAST(NEW.mensaje_id AS CHAR), ',',
-        CAST(NEW.rastreable_p AS CHAR), ',',
-        CAST(NEW.remitente AS CHAR), ',',
-        CAST(NEW.destinatario AS CHAR), ',',
+        CAST(NEW.rastreable_p AS CHAR), '<|>',
+        CAST(NEW.etiquetable_p AS CHAR), '<|>',
+        CAST(NEW.mensaje_id AS CHAR), '<|>',
+        CAST(NEW.rastreable_p AS CHAR), '<|>',
+        CAST(NEW.remitente AS CHAR), '<|>',
+        CAST(NEW.destinatario AS CHAR), '<|>',
         NEW.contenido
     ) INTO valores;
 
@@ -2177,17 +2177,17 @@ BEGIN
     INTO rastreable_p;
         
     SELECT CONCAT(
-        'interlocutor_p,usuario_p,consumidor_id,',
-        'sexo,fecha_de_nacimiento,grupo_de_edad,grado_de_instruccion'
+        'interlocutor_p<|>usuario_p<|>consumidor_id<|>',
+        'sexo<|>fecha_de_nacimiento<|>grupo_de_edad<|>grado_de_instruccion'
     ) INTO columnas;
 
     SELECT CONCAT(
-        CAST(NEW.interlocutor_p AS CHAR),',',
-        CAST(NEW.usuario_p AS CHAR),',',
-        CAST(NEW.consumidor_id AS CHAR),',',
-        NEW.sexo,',',
-        CAST(NEW.fecha_de_nacimiento AS CHAR),',',
-        NEW.grupo_de_edad,',',
+        CAST(NEW.interlocutor_p AS CHAR),'<|>',
+        CAST(NEW.usuario_p AS CHAR),'<|>',
+        CAST(NEW.consumidor_id AS CHAR),'<|>',
+        NEW.sexo,'<|>',
+        CAST(NEW.fecha_de_nacimiento AS CHAR),'<|>',
+        NEW.grupo_de_edad,'<|>',
         NEW.grado_de_instruccion
     ) INTO valores;
     
@@ -2248,12 +2248,12 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
 
-    SELECT 'describible_p,usuario_id,nombre,apellido,estatus' INTO columnas;
+    SELECT 'describible_p<|>usuario_id<|>nombre<|>apellido<|>estatus' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.describible_p AS CHAR),',',
-        CAST(NEW.usuario_id AS CHAR),',',
-        NEW.nombre,',',
-        NEW.apellido,',',
+        CAST(NEW.describible_p AS CHAR),'<|>',
+        CAST(NEW.usuario_id AS CHAR),'<|>',
+        NEW.nombre,'<|>',
+        NEW.apellido,'<|>',
         NEW.estatus
     ) INTO valores;
     
@@ -2365,13 +2365,13 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
     
-    SELECT 'rastreable_p,etiquetable_p,busqueda_id,usuario,fecha_hora,contenido' INTO columnas;
+    SELECT 'rastreable_p<|>etiquetable_p<|>busqueda_id<|>usuario<|>fecha_hora<|>contenido' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.etiquetable_p AS CHAR),',',
-        CAST(NEW.busqueda_id AS CHAR),',',
-        CAST(NEW.usuario AS CHAR),',',
-        CAST(NEW.fecha_hora AS CHAR),',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.etiquetable_p AS CHAR),'<|>',
+        CAST(NEW.busqueda_id AS CHAR),'<|>',
+        CAST(NEW.usuario AS CHAR),'<|>',
+        CAST(NEW.fecha_hora AS CHAR),'<|>',
         NEW.contenido
     ) INTO valores;
     
@@ -2467,19 +2467,19 @@ BEGIN
     DECLARE rastreable_p, bobo INT;
     
     SELECT CONCAT(
-        'estadisticas_p,estadisticas_de_influencia_id,palabra,',
-        'numero_de_descripciones,numero_de_mensajes,numero_de_categorias,',
-        'numero_de_resenas,numero_de_publicidades'
+        'estadisticas_p<|>estadisticas_de_influencia_id<|>palabra<|>',
+        'numero_de_descripciones<|>numero_de_mensajes<|>numero_de_categorias<|>',
+        'numero_de_resenas<|>numero_de_publicidades'
     ) INTO columnas;
 
     SELECT CONCAT(
-        CAST(NEW.estadisticas_p AS CHAR),',',
-        CAST(NEW.estadisticas_de_influencia_id AS CHAR),',',
-        CAST(NEW.palabra AS CHAR),',',
-        CAST(NEW.numero_de_descripciones AS CHAR),',',
-        CAST(NEW.numero_de_mensajes AS CHAR),',',
-        CAST(NEW.numero_de_categorias AS CHAR),',',
-        CAST(NEW.numero_de_resenas AS CHAR),',',
+        CAST(NEW.estadisticas_p AS CHAR),'<|>',
+        CAST(NEW.estadisticas_de_influencia_id AS CHAR),'<|>',
+        CAST(NEW.palabra AS CHAR),'<|>',
+        CAST(NEW.numero_de_descripciones AS CHAR),'<|>',
+        CAST(NEW.numero_de_mensajes AS CHAR),'<|>',
+        CAST(NEW.numero_de_categorias AS CHAR),'<|>',
+        CAST(NEW.numero_de_resenas AS CHAR),'<|>',
         CAST(NEW.numero_de_publicidades AS CHAR)
     ) INTO valores;
     
@@ -2544,13 +2544,13 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
     
-    SELECT 'rastreable_p,etiquetable_p,calificacion_resena_id,consumidor_id,calificacion,resena' INTO columnas;
+    SELECT 'rastreable_p<|>etiquetable_p<|>calificacion_resena_id<|>consumidor_id<|>calificacion<|>resena' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.etiquetable_p AS CHAR),',',
-        CAST(NEW.calificacion_resena_id AS CHAR),',',
-        CAST(NEW.consumidor_id AS CHAR),',',
-        NEW.calificacion,',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.etiquetable_p AS CHAR),'<|>',
+        CAST(NEW.calificacion_resena_id AS CHAR),'<|>',
+        CAST(NEW.consumidor_id AS CHAR),'<|>',
+        NEW.calificacion,'<|>',
         NEW.resena
     ) INTO valores;
     
@@ -2642,11 +2642,11 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
         
-    SELECT 'rastreable_p,consumidor_id,calificable_seguible_id,avisar_si' INTO columnas;
+    SELECT 'rastreable_p<|>consumidor_id<|>calificable_seguible_id<|>avisar_si' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.consumidor_id AS CHAR),',',
-        CAST(NEW.calificable_seguible_id AS CHAR),',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.consumidor_id AS CHAR),'<|>',
+        CAST(NEW.calificable_seguible_id AS CHAR),'<|>',
         NEW.avisar_si
     ) INTO valores;
     
@@ -2722,18 +2722,18 @@ BEGIN
     DECLARE rastreable_p, bobo INT;
 
     SELECT CONCAT(
-        'estadisticas_p,estadisticas_de_popularidad_id,',
-        'calificable_seguible,numero_de_calificaciones,',
-        'numero_de_resenas,numero_de_seguidores,numero_de_menciones'
+        'estadisticas_p<|>estadisticas_de_popularidad_id<|>',
+        'calificable_seguible<|>numero_de_calificaciones<|>',
+        'numero_de_resenas<|>numero_de_seguidores<|>numero_de_menciones'
     ) INTO columnas;
 
     SELECT CONCAT(
-        CAST(NEW.estadisticas_p AS CHAR),'->',
-        CAST(NEW.estadisticas_de_popularidad_id AS CHAR),',',
-        CAST(NEW.calificable_seguible AS CHAR),',',
-        CAST(NEW.numero_de_calificaciones AS CHAR),',',
-        CAST(NEW.numero_de_resenas AS CHAR),',',
-        CAST(NEW.numero_de_seguidores AS CHAR),',',
+        CAST(NEW.estadisticas_p AS CHAR),'<|>',
+        CAST(NEW.estadisticas_de_popularidad_id AS CHAR),'<|>',
+        CAST(NEW.calificable_seguible AS CHAR),'<|>',
+        CAST(NEW.numero_de_calificaciones AS CHAR),'<|>',
+        CAST(NEW.numero_de_resenas AS CHAR),'<|>',
+        CAST(NEW.numero_de_seguidores AS CHAR),'<|>',
         CAST(NEW.numero_de_menciones AS CHAR)
     ) INTO valores;
     
@@ -2817,12 +2817,12 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
     
-    SELECT 'rastreable_p,etiquetable_p,descripcion_id,describible,contenido' INTO columnas;
+    SELECT 'rastreable_p<|>etiquetable_p<|>descripcion_id<|>describible<|>contenido' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.etiquetable_p AS CHAR),',',
-        CAST(NEW.descripcion_id AS CHAR),',',
-        CAST(NEW.describible AS CHAR),',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.etiquetable_p AS CHAR),'<|>',
+        CAST(NEW.descripcion_id AS CHAR),'<|>',
+        CAST(NEW.describible AS CHAR),'<|>',
         NEW.contenido
     ) INTO valores;
     
@@ -2922,15 +2922,15 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
     
-    SELECT 'buscable_p,describible_p,rastreable_p,etiquetable_p,cobrable_p,publicidad_id,patrocinante' INTO columnas;
+    SELECT 'buscable_p<|>describible_p<|>rastreable_p<|>etiquetable_p<|>cobrable_p<|>publicidad_id<|>patrocinante' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.buscable_p AS CHAR),',',
-        CAST(NEW.describible_p AS CHAR),',',
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.etiquetable_p AS CHAR),',',
-        CAST(NEW.cobrable_p AS CHAR),',',
-        CAST(NEW.publicidad_id AS CHAR),',',
-        CAST(NEW.patrocinante AS CHAR),',',
+        CAST(NEW.buscable_p AS CHAR),'<|>',
+        CAST(NEW.describible_p AS CHAR),'<|>',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.etiquetable_p AS CHAR),'<|>',
+        CAST(NEW.cobrable_p AS CHAR),'<|>',
+        CAST(NEW.publicidad_id AS CHAR),'<|>',
+        CAST(NEW.patrocinante AS CHAR),'<|>',
         NEW.nombre
     ) INTO valores;
     
@@ -3099,10 +3099,10 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE rastreable_p, bobo INT;
     
-    SELECT 'estadisticas_p,estadisticas_de_visitas_id,buscable' INTO columnas;
+    SELECT 'estadisticas_p<|>estadisticas_de_visitas_id<|>buscable' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.estadisticas_p AS CHAR),',',
-        CAST(NEW.estadisticas_de_visitas_id AS CHAR),',',
+        CAST(NEW.estadisticas_p AS CHAR),'<|>',
+        CAST(NEW.estadisticas_de_visitas_id AS CHAR),'<|>',
         CAST(NEW.buscable AS CHAR)
     ) INTO valores;
     
@@ -3160,10 +3160,10 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
 
-    SELECT 'rastreable_p,estadisticas_id,territorio' INTO columnas;
+    SELECT 'rastreable_p<|>estadisticas_id<|>territorio' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR), ',',
-        CAST(NEW.estadisticas_id AS CHAR), ',',
+        CAST(NEW.rastreable_p AS CHAR), '<|>',
+        CAST(NEW.estadisticas_id AS CHAR), '<|>',
         NEW.territorio
     ) INTO valores;
 
@@ -3203,9 +3203,9 @@ BEGIN
     WHERE ev.estadisticas_de_visitas_id = NEW.estadisticas_de_visitas_id
     INTO rastreable_p;
     
-    SELECT 'fecha_inicio,valor(contador_de_exhibiciones)' INTO columnas;
+    SELECT 'fecha_inicio<|>valor(contador_de_exhibiciones)' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.fecha_inicio AS CHAR),',',
+        CAST(NEW.fecha_inicio AS CHAR),'<|>',
         CAST(NEW.valor AS CHAR)
     ) INTO valores;
     
@@ -3263,18 +3263,18 @@ BEGIN
     DECLARE bobo INT;
     
     SELECT CONCAT(
-        'rastreable_p,dibujable_p,territorio_id,',
-        'nombre,poblacion,consumidores_poblacion,',
+        'rastreable_p<|>dibujable_p<|>territorio_id<|>',
+        'nombre<|>poblacion<|>consumidores_poblacion<|>',
         'tiendas_poblacion'
     ) INTO columnas;
 
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.dibujable_p AS CHAR),',' ,
-        NEW.territorio_id,',' ,
-        NEW.nombre,',',
-        CAST(NEW.poblacion AS CHAR),',',
-        CAST(NEW.consumidores_poblacion AS CHAR),',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.dibujable_p AS CHAR),'<|>' ,
+        NEW.territorio_id,'<|>' ,
+        NEW.nombre,'<|>',
+        CAST(NEW.poblacion AS CHAR),'<|>',
+        CAST(NEW.consumidores_poblacion AS CHAR),'<|>',
         CAST(NEW.tiendas_poblacion AS CHAR)
     ) INTO valores;
     
@@ -3354,9 +3354,9 @@ BEGIN
     WHERE t.tienda_id = NEW.tienda_id
     INTO rastreable_p;
 
-    SELECT 'fecha_inicio,numero_total_de_productos' INTO columnas;
+    SELECT 'fecha_inicio<|>numero_total_de_productos' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.fecha_inicio AS CHAR),',',
+        CAST(NEW.fecha_inicio AS CHAR),'<|>',
         CAST(NEW.numero_total_de_productos AS CHAR)
     ) INTO valores;
     
@@ -3418,10 +3418,10 @@ BEGIN
     WHERE t.tienda_id = NEW.tienda_id
     INTO rastreable_p;
 
-    SELECT 'dia,hora_de_apertura,hora_de_cierre' INTO columnas;
+    SELECT 'dia<|>hora_de_apertura<|>hora_de_cierre' INTO columnas;
     SELECT CONCAT(
-        NEW.dia,',',
-        CAST(NEW.hora_de_apertura AS CHAR),',',
+        NEW.dia,'<|>',
+        CAST(NEW.hora_de_apertura AS CHAR),'<|>',
         CAST(NEW.hora_de_cierre AS CHAR)
     ) INTO valores;
     
@@ -3481,8 +3481,8 @@ BEGIN
     WHERE t.tienda_id = NEW.tienda_id
     INTO rastreable_p;
 
-    SELECT 'dia,laborable' INTO columnas;
-    SELECT CONCAT(NEW.dia,',',CAST(NEW.laborable AS CHAR)) INTO valores;
+    SELECT 'dia<|>laborable' INTO columnas;
+    SELECT CONCAT(NEW.dia,'<|>',CAST(NEW.laborable AS CHAR)) INTO valores;
     
     SELECT RegistrarActualizacion(rastreable_p, columnas, valores) INTO bobo;
 END $$
@@ -3557,9 +3557,9 @@ BEGIN
     WHERE c.rif = NEW.cliente_p
     INTO rastreable_p;
     
-    SELECT 'cliente_p,patrocinante_id' INTO columnas;
+    SELECT 'cliente_p<|>patrocinante_id' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.cliente_p AS CHAR),',',
+        CAST(NEW.cliente_p AS CHAR),'<|>',
         CAST(NEW.patrocinante_id AS CHAR)
     ) INTO valores;
     
@@ -3875,10 +3875,10 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
     
-    SELECT 'rastreable_p,croquis_id,dibujable' INTO columnas;
+    SELECT 'rastreable_p<|>croquis_id<|>dibujable' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.croquis_id AS CHAR),',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.croquis_id AS CHAR),'<|>',
         CAST(NEW.dibujable AS CHAR)
     ) INTO valores;
     
@@ -4023,15 +4023,15 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE bobo INT;
 
-    SELECT 'rastreable_p,factura_id,cliente,inicio_de_medicion,fin_de_medicion,subtotal,impuestos,total' INTO columnas;
+    SELECT 'rastreable_p<|>factura_id<|>cliente<|>inicio_de_medicion<|>fin_de_medicion<|>subtotal<|>impuestos<|>total' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.rastreable_p AS CHAR),',',
-        CAST(NEW.factura_id AS CHAR),',',
-        NEW.cliente,',',
-        CAST(NEW.inicio_de_medicion AS CHAR),',',
-        CAST(NEW.fin_de_medicion AS CHAR),',',
-        CAST(NEW.subtotal AS CHAR),',',
-        CAST(NEW.impuestos AS CHAR),',',
+        CAST(NEW.rastreable_p AS CHAR),'<|>',
+        CAST(NEW.factura_id AS CHAR),'<|>',
+        NEW.cliente,'<|>',
+        CAST(NEW.inicio_de_medicion AS CHAR),'<|>',
+        CAST(NEW.fin_de_medicion AS CHAR),'<|>',
+        CAST(NEW.subtotal AS CHAR),'<|>',
+        CAST(NEW.impuestos AS CHAR),'<|>',
         CAST(NEW.total AS CHAR)
     ) INTO valores;
     
@@ -4080,9 +4080,9 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE rastreable_p, bobo INT;
     
-    SELECT 'cobrable_id,acumulado' INTO columnas;
+    SELECT 'cobrable_id<|>acumulado' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.cobrable_id AS CHAR),',',
+        CAST(NEW.cobrable_id AS CHAR),'<|>',
         CAST(NEW.acumulado AS CHAR)
     ) INTO valores;
     
@@ -4154,10 +4154,10 @@ BEGIN
     WHERE usuario_id = NEW.usuario_p
     INTO rastreable_p;
     
-    SELECT 'usuario_p,administrador_id,privilegios' INTO columnas;
+    SELECT 'usuario_p<|>administrador_id<|>privilegios' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.usuario_p AS CHAR),',',
-        CAST(NEW.administrador_id AS CHAR),',',
+        CAST(NEW.usuario_p AS CHAR),'<|>',
+        CAST(NEW.administrador_id AS CHAR),'<|>',
         NEW.privilegios
     ) INTO valores;
     
@@ -4243,11 +4243,11 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE rastreable_p, bobo INT;
     
-    SELECT 'busqueda_id,buscable_id,visitado,relevancia' INTO columnas;
+    SELECT 'busqueda_id<|>buscable_id<|>visitado<|>relevancia' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.busqueda_id AS CHAR),',',
-        CAST(NEW.buscable_id AS CHAR),',',
-        CAST(NEW.visitado AS CHAR),',',
+        CAST(NEW.busqueda_id AS CHAR),'<|>',
+        CAST(NEW.buscable_id AS CHAR),'<|>',
+        CAST(NEW.visitado AS CHAR),'<|>',
         CAST(NEW.relevancia AS CHAR)
     ) INTO valores;
     
@@ -4303,11 +4303,11 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE rastreable_p, bobo INT;
     
-    SELECT 'fecha_inicio,contador,ranking,indice' INTO columnas;
+    SELECT 'fecha_inicio<|>contador<|>ranking<|>indice' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.fecha_inicio AS CHAR),',',
-        CAST(NEW.contador AS CHAR),',',
-        CAST(NEW.ranking AS CHAR),',',
+        CAST(NEW.fecha_inicio AS CHAR),'<|>',
+        CAST(NEW.contador AS CHAR),'<|>',
+        CAST(NEW.ranking AS CHAR),'<|>',
         CAST(NEW.indice AS CHAR)
     ) INTO valores;
     
@@ -4368,10 +4368,10 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE rastreable_p, bobo INT;
     
-    SELECT 'fecha_inicio,precio,cantidad' INTO columnas;
+    SELECT 'fecha_inicio<|>precio<|>cantidad' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.fecha_inicio AS CHAR),',',
-        CAST(NEW.precio AS CHAR),',',
+        CAST(NEW.fecha_inicio AS CHAR),'<|>',
+        CAST(NEW.precio AS CHAR),'<|>',
         CAST(NEW.cantidad AS CHAR)
     ) INTO valores;
     
@@ -4428,10 +4428,10 @@ BEGIN
     DECLARE columnas, valores TEXT;
     DECLARE rastreable_p, bobo INT;
     
-    SELECT 'fecha_inicio,numero_de_tiendas,numero_de_consumidores' INTO columnas;
+    SELECT 'fecha_inicio<|>numero_de_tiendas<|>numero_de_consumidores' INTO columnas;
     SELECT CONCAT(
-        CAST(NEW.fecha_inicio AS CHAR),',',
-        CAST(NEW.numero_de_tiendas AS CHAR),',',
+        CAST(NEW.fecha_inicio AS CHAR),'<|>',
+        CAST(NEW.numero_de_tiendas AS CHAR),'<|>',
         CAST(NEW.numero_de_consumidores AS CHAR)
     ) INTO valores;
     

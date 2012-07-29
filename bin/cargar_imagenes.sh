@@ -2,5 +2,5 @@
 for i in "$1"/*
 do
 	echo "Procesando $i..."
-	./hash_file.sh "$i" "$2"
+	./procesar_imagen.sh "$i" "$2"
 done

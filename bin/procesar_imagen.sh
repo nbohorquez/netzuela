@@ -66,13 +66,20 @@ do
 	alto=`identify -format '%h' $1`
 	ruta_archivo="$base"/"$i"/"$dir1"/"$dir2"/"$archivo"."$extension"
 
-	if [ $ancho -gt $alto -a \( $i = 'pequenas' -o $i = 'miniaturas' \) ];
+	if [ $ancho -gt $alto -a \( $i = 'medianas' -o $i = 'pequenas' -o $i = 'miniaturas' \) ];
 	then
 		convert "$1" -resize x"${TAMANOS[$i]}" "$ruta_archivo"
 		ancho=`identify -format '%w' $ruta_archivo`
 		alto=`identify -format '%h' $ruta_archivo`
 		marco=$( echo "($ancho - $alto) / 2" | bc )
 		convert "$ruta_archivo" -shave "$marco"x0 "$ruta_archivo"
+	elif [ $alto -gt $ancho -a \( $i = 'medianas' -o $i = 'pequenas' -o $i = 'miniaturas' \) ];
+	then
+		convert "$1" -resize "${TAMANOS[$i]}"x "$ruta_archivo"
+		ancho=`identify -format '%w' $ruta_archivo`
+		alto=`identify -format '%h' $ruta_archivo`
+		marco=$( echo "($alto - $ancho) / 2" | bc )
+		convert "$ruta_archivo" -shave 0x"$marco" "$ruta_archivo"
 	else
 		convert -resize "${TAMANOS[$i]}" "$1" "$ruta_archivo"
 	fi
