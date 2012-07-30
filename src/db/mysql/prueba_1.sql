@@ -26,6 +26,8 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
    Se crea solo un producto para probar el funcionamiento de la base de datos
 */
 
+SELECT 1 INTO @Creador;
+
 SELECT territorio_id
 FROM territorio
 WHERE nombre = 'Venezuela'
@@ -55,6 +57,37 @@ SELECT territorio_id
 FROM territorio
 WHERE nombre = 'Punta Gorda'
 INTO @paPtaGorda;
+
+SELECT categoria_id
+FROM categoria
+WHERE nombre = 'Computacion - Electronica'
+INTO @Cat_2000;
+
+SELECT categoria_id
+FROM categoria
+WHERE nombre = 'Computadoras de escritorio'
+INTO @Cat_2B00;
+
+SELECT categoria_id
+FROM categoria
+WHERE nombre = 'Telefonos celulares'
+INTO @Cat_2A00;
+
+SELECT categoria_id
+FROM categoria
+WHERE nombre = 'Instrumentos musicales'
+INTO @Cat_2100;
+
+SELECT categoria_id
+FROM categoria
+WHERE nombre = 'Consolas de videojuegos'
+INTO @Cat_2200;
+
+SELECT categoria_id
+FROM categoria
+WHERE nombre = 'Alimentos - Hogar'
+INTO @Cat_3000;
+
 
 SELECT InsertarProducto (
     @Creador,
