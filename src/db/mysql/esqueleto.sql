@@ -1752,33 +1752,6 @@ BEGIN
     IF NEW.codigo != OLD.codigo THEN
         SET NEW.codigo = OLD.codigo;
     END IF;
-    IF NEW.fabricante != OLD.fabricante THEN
-        SET NEW.fabricante = OLD.fabricante;
-    END IF;
-    IF NEW.nombre != OLD.nombre THEN
-        SET NEW.nombre = OLD.nombre;
-    END IF;
-END $$
-
-USE `spuria`$$
-
-
-CREATE TRIGGER despues_de_actualizar_producto AFTER UPDATE ON producto
-FOR EACH ROW
-BEGIN
-    DECLARE bobo INT;
-    
-    SELECT
-    IF(NEW.estatus != OLD.estatus, RegistrarActualizacion(NEW.rastreable_p, 'estatus', NEW.estatus), 0) +
-    IF(NEW.modelo != OLD.modelo, RegistrarActualizacion(NEW.rastreable_p, 'modelo', NEW.modelo), 0) +
-    IF(NEW.categoria != OLD.categoria, RegistrarActualizacion(NEW.rastreable_p, 'categoria', NEW.categoria), 0) +
-    IF(NEW.debut_en_el_mercado != OLD.debut_en_el_mercado, RegistrarActualizacion(NEW.rastreable_p, 'debut_en_el_mercado', NEW.debut_en_el_mercado), 0) +
-    IF(NEW.largo != OLD.largo, RegistrarActualizacion(NEW.rastreable_p, 'largo', NEW.largo), 0) +
-    IF(NEW.ancho != OLD.ancho, RegistrarActualizacion(NEW.rastreable_p, 'ancho', NEW.ancho), 0) +
-    IF(NEW.alto != OLD.alto, RegistrarActualizacion(NEW.rastreable_p, 'alto', NEW.alto), 0) +
-    IF(NEW.peso != OLD.peso, RegistrarActualizacion(NEW.rastreable_p, 'peso', NEW.peso), 0) +
-    IF(NEW.pais_de_origen != OLD.pais_de_origen, RegistrarActualizacion(NEW.rastreable_p, 'pais_de_origen', NEW.pais_de_origen), 0)
-    INTO bobo;
 END $$
 
 USE `spuria`$$
@@ -1797,6 +1770,29 @@ BEGIN
     DELETE FROM calificable_seguible WHERE calificable_seguible_id = OLD.calificable_seguible_p;
     /* OJO: Rastreable tiene que ser obligatoriamente el ultimo en eliminarse... sino va a haber problemas con el registro */
     DELETE FROM rastreable WHERE rastreable_id = OLD.rastreable_p;
+END $$
+
+USE `spuria`$$
+
+
+CREATE TRIGGER despues_de_actualizar_producto AFTER UPDATE ON producto
+FOR EACH ROW
+BEGIN
+    DECLARE bobo INT;
+    
+    SELECT
+    IF(NEW.estatus != OLD.estatus, RegistrarActualizacion(NEW.rastreable_p, 'estatus', NEW.estatus), 0) +
+    IF(NEW.fabricante != OLD.fabricante, RegistrarActualizacion(NEW.rastreable_p, 'fabricante', NEW.fabricante), 0) +
+    IF(NEW.modelo != OLD.modelo, RegistrarActualizacion(NEW.rastreable_p, 'modelo', NEW.modelo), 0) +    
+    IF(NEW.nombre != OLD.nombre, RegistrarActualizacion(NEW.rastreable_p, 'nombre', NEW.nombre), 0) +
+    IF(NEW.categoria != OLD.categoria, RegistrarActualizacion(NEW.rastreable_p, 'categoria', NEW.categoria), 0) +
+    IF(NEW.debut_en_el_mercado != OLD.debut_en_el_mercado, RegistrarActualizacion(NEW.rastreable_p, 'debut_en_el_mercado', NEW.debut_en_el_mercado), 0) +
+    IF(NEW.largo != OLD.largo, RegistrarActualizacion(NEW.rastreable_p, 'largo', NEW.largo), 0) +
+    IF(NEW.ancho != OLD.ancho, RegistrarActualizacion(NEW.rastreable_p, 'ancho', NEW.ancho), 0) +
+    IF(NEW.alto != OLD.alto, RegistrarActualizacion(NEW.rastreable_p, 'alto', NEW.alto), 0) +
+    IF(NEW.peso != OLD.peso, RegistrarActualizacion(NEW.rastreable_p, 'peso', NEW.peso), 0) +
+    IF(NEW.pais_de_origen != OLD.pais_de_origen, RegistrarActualizacion(NEW.rastreable_p, 'pais_de_origen', NEW.pais_de_origen), 0)
+    INTO bobo;
 END $$
 
 
@@ -2161,6 +2157,9 @@ BEGIN
     IF NEW.fecha_de_nacimiento != OLD.fecha_de_nacimiento THEN
         SET NEW.fecha_de_nacimiento = OLD.fecha_de_nacimiento;
     END IF;
+    IF NEW.sexo != OLD.sexo THEN
+        SET NEW.sexo = OLD.sexo;
+    END IF;
 END $$
 
 USE `spuria`$$
@@ -2229,8 +2228,7 @@ BEGIN
     INTO rastreable_p;
 
     SELECT
-    IF(NEW.sexo != OLD.sexo, RegistrarActualizacion(rastreable_p, 'sexo', NEW.sexo), 0)
-    + IF(NEW.grado_de_instruccion != OLD.grado_de_instruccion, RegistrarActualizacion(rastreable_p, 'grado_de_instruccion', NEW.grado_de_instruccion), 0)
+    IF(NEW.grado_de_instruccion != OLD.grado_de_instruccion, RegistrarActualizacion(rastreable_p, 'grado_de_instruccion', NEW.grado_de_instruccion), 0)
     + IF(NEW.grupo_de_edad != OLD.grupo_de_edad, RegistrarActualizacion(rastreable_p, 'grupo_de_edad', NEW.grupo_de_edad), 0)
     INTO bobo;
 END $$
