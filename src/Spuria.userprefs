@@ -1,15 +1,14 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/Anfitrion.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Zuliaworks.Netzuela.Spuria.Api/EscribirTablaServicio.cs">
     <Files>
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Global.asax.cs" Line="10" Column="31" />
-      <File FileName="Zuliaworks.Netzuela.Spuria.Api/Anfitrion.cs" Line="37" Column="9" />
+      <File FileName="Zuliaworks.Netzuela.Spuria.Api/EscribirTablaServicio.cs" Line="33" Column="3" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Api" expanded="True">
-            <Node name="Anfitrion.cs" selected="True" />
+            <Node name="EscribirTablaServicio.cs" selected="True" />
             <Node name="Global.asax" expanded="True" />
           </Node>
           <Node name="Tipos" expanded="True" />

@@ -31,6 +31,7 @@ SELECT 1 INTO @Creador;
 SELECT territorio_id
 FROM territorio
 WHERE nombre = 'Venezuela'
+LIMIT 1
 INTO @pyVenezuela;
 
 SELECT territorio_id

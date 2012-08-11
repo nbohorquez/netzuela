@@ -1746,12 +1746,6 @@ BEGIN
     IF NEW.producto_id != OLD.producto_id THEN
         SET NEW.producto_id = OLD.producto_id;
     END IF;
-    IF NEW.tipo_de_codigo != OLD.tipo_de_codigo THEN
-        SET NEW.tipo_de_codigo = OLD.tipo_de_codigo;
-    END IF;
-    IF NEW.codigo != OLD.codigo THEN
-        SET NEW.codigo = OLD.codigo;
-    END IF;
 END $$
 
 USE `spuria`$$
@@ -1781,6 +1775,8 @@ BEGIN
     DECLARE bobo INT;
     
     SELECT
+    IF(NEW.tipo_de_codigo != OLD.tipo_de_codigo, RegistrarActualizacion(NEW.rastreable_p, 'tipo_de_codigo', NEW.tipo_de_codigo), 0) +
+    IF(NEW.codigo != OLD.codigo, RegistrarActualizacion(NEW.rastreable_p, 'codigo', NEW.codigo), 0) +
     IF(NEW.estatus != OLD.estatus, RegistrarActualizacion(NEW.rastreable_p, 'estatus', NEW.estatus), 0) +
     IF(NEW.fabricante != OLD.fabricante, RegistrarActualizacion(NEW.rastreable_p, 'fabricante', NEW.fabricante), 0) +
     IF(NEW.modelo != OLD.modelo, RegistrarActualizacion(NEW.rastreable_p, 'modelo', NEW.modelo), 0) +    
