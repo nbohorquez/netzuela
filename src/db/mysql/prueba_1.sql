@@ -89,7 +89,6 @@ FROM categoria
 WHERE nombre = 'Alimentos - Hogar'
 INTO @Cat_3000;
 
-
 SELECT InsertarProducto (
     @Creador,
     'GTIN-13', 

@@ -1,4 +1,5 @@
 *.*~
+*.pyc
 *.bak
 bin/env
 map/
@@ -20,4 +21,4 @@ src/Zuliaworks.Netzuela.Spuria.OAuth/bin/
 src/Zuliaworks.Netzuela.Spuria.OAuth/obj/
 src/Zuliaworks.Netzuela.Spuria.Auth/StyleCop.Cache
 
-src/daemon/env/
+src/workers/env/
