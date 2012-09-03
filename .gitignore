@@ -1,24 +1,18 @@
 *.*~
 *.pyc
 *.bak
-bin/env
 map/
 
-src/Zuliaworks.Netzuela.Spuria.TiposApi/bin/
-src/Zuliaworks.Netzuela.Spuria.TiposApi/obj/
-src/Zuliaworks.Netzuela.Spuria.TiposApi/StyleCop.Cache
+bin/env/
+
+src/mapas/build/
+src/mapas/dist/
+src/mapas/env/
+src/mapas/mapas.egg-info
 
 src/db/mysql/modelo_de_datos_relacional.mwb.bak
 
-src/Zuliaworks.Netzuela.Spuria.Api/bin/
-src/Zuliaworks.Netzuela.Spuria.Api/obj/
-src/Zuliaworks.Netzuela.Spuria.Api/StyleCop.Cache
-src/Zuliaworks.Netzuela.Spuria.Api/ServidorApi.publish.xml
-src/Zuliaworks.Netzuela.Spuria.Api/*.svclog
-src/Zuliaworks.Netzuela.Spuria.Api/hibernate.cfg.xml
-
-src/Zuliaworks.Netzuela.Spuria.OAuth/bin/
-src/Zuliaworks.Netzuela.Spuria.OAuth/obj/
-src/Zuliaworks.Netzuela.Spuria.Auth/StyleCop.Cache
-
+src/workers/build/
+src/workers/dist/
 src/workers/env/
+src/workers/workers.egg-info

@@ -6,8 +6,9 @@ from sqlalchemy import create_engine, and_, MetaData, Table
 from sqlalchemy.orm import sessionmaker, aliased, mapper
 from sqlalchemy.sql import select, func, bindparam
 from sqlalchemy.types import Numeric
-from sys import stdout
+from sys import argv, stdout
 from decimal import *
+import ConfigParser
 
 """
 TERRITORIO esta ordenado deliberadamente de esta forma para que para cualquier 
@@ -22,11 +23,7 @@ PAIS = 1
 ESTADO = 2
 MUNICIPIO = 3
 PARROQUIA = 4
-ARCHIVOS = [
-	'../map/kronick/simplificado/kml/venezuela_estados.kml',
-	'../map/kronick/simplificado/kml/venezuela_municipios.kml',
-	'../map/kronick/simplificado/kml/venezuela_parroquias.kml'
-]
+ARCHIVOS = []
 sesion = None
 
 def cargar_tablas(motor):
@@ -135,7 +132,8 @@ def analizar_placemark(placemark, tipo_de_placemark):
 		)).scalar()
 		sesion.execute('commit')
 
-		resultado = sesion.query(territorio.dibujable_p).filter_by(territorio_id = terro).first()[0]
+		resultado = sesion.query(territorio.dibujable_p).\
+			filter_by(territorio_id = terro).first()[0]
 	except:
 		print "Error analizando el placemark"
 	finally:
@@ -161,7 +159,10 @@ def ingresar_silueta(silueta, dibujable):
 		bindparam('a_punto_id')
 	)])
 	sesion.execute('begin')
-	croquis = sesion.execute(sql0, params = dict(a_creador = 1, a_dibujable = dibujable)).scalar()
+	croquis = sesion.execute(
+                sql0, 
+		params = dict(a_creador = 1, a_dibujable = dibujable)
+	).scalar()
 	for coordenadas in silueta.LinearRing.coordinates.text.split(' '):
 		coo = coordenadas.split(',')
 		punto = sesion.execute(sql1, params = dict(
@@ -174,17 +175,26 @@ def ingresar_silueta(silueta, dibujable):
 		)).scalar()
 	sesion.execute('commit')
 
-def configurar():
+def configurar(arch_config):
 	global sesion
-	motor = create_engine('mysql://chivo:#HK_@20MamA!pAPa13?#3864@localhost:3306/spuria', echo=False)
+	global ARCHIVOS
+	
+	config = ConfigParser.ConfigParser()
+	config.read(arch_config)
+
+	motor = create_engine(
+		config.get('base_de_datos', 'mysql'),
+            	echo=False
+        )
 	cargar_tablas(motor)
 	conexion = motor.connect()
 	Sesion = sessionmaker()
 	Sesion.configure(bind=motor)
 	sesion = Sesion()
+	ARCHIVOS = config.get('mapas', 'archivos').split(',')
 	
 def main():
-	configurar()
+	configurar(argv[1])
 	cantidad_arch = len(ARCHIVOS)
 
 	for num_arch, archivo in enumerate(ARCHIVOS):
