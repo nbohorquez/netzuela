@@ -1,8 +1,9 @@
 #!/bin/bash
 
-crear_db="source ../src/db/mysql/spuria.sql"
-prueba="source ../src/db/mysql/prueba_1.sql"
-ingresar_mysql="mysql -u chivo -p'#HK_@20MamA!pAPa13?#3864'"
+contrasena='#HK_@20MamA!pAPa13?#3864'
+crear_db='source ../src/db/mysql/spuria.sql'
+prueba='source ../src/db/mysql/prueba_1.sql'
+ingresar_mysql="mysql -u chivo -p'$contrasena'"
 
 crear_env() {
 	virtualenv --no-site-packages --distribute env
@@ -15,11 +16,11 @@ crear_env() {
 }
 
 instalar_libxml() {
-	apt-get install libxml2-dev
+	apt-get install -y libxml2-dev
 }
 
 instalar_libxslt() {
-	apt-get install libxslt1-dev
+	apt-get install -y libxslt1-dev
 }
 
 # Chequeamos root

@@ -1,4 +1,5 @@
 #!/bin/bash
+
 declare -A TAMANOS=(["grandes"]="500" ["medianas"]="300" ["pequenas"]="160" ["miniaturas"]="70")
 
 # Hacemos las comprobaciones necesarias sobre el primer argumento
