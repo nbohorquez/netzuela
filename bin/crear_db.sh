@@ -1,9 +1,15 @@
 #!/bin/bash
 
 contrasena='#HK_@20MamA!pAPa13?#3864'
-crear_db='source ../src/db/mysql/spuria.sql'
-prueba='source ../src/db/mysql/prueba_1.sql'
 ingresar_mysql="mysql -u chivo -p'$contrasena'"
+crear_db="$ingresar_mysql << EOF
+source ../src/db/mysql/spuria.sql
+EOF
+"
+prueba="$ingresar_mysql << EOF
+source ../src/db/mysql/prueba_1.sql
+EOF
+"
 
 crear_env() {
 	virtualenv --no-site-packages --distribute env
@@ -23,6 +29,11 @@ instalar_libxslt() {
 	apt-get install -y libxslt1-dev
 }
 
+crear_db() {
+	# Mas adelante debe haber algo aqui que no sea SQL (inicializacion ORM)
+	eval "$crear_db"
+}
+
 # Chequeamos root
 if [ "$USER" != "root" ]; then
         echo "Error: Debe correr este script como root"
@@ -31,9 +42,7 @@ fi
 echo "Ejecutando script como root"
 
 # Creamos la base de datos
-eval $ingresar_mysql << eof
-$crear_db
-eof
+crear_db
 echo "Esquema de la base de datos creada"
 
 # Carga de los mapas
@@ -63,8 +72,10 @@ cargar_mapas mapas.ini
 deactivate
 echo "Mapas de Venezuela cargados"
 
-# Codigo de prueba
-eval $ingresar_mysql << eof
-$prueba
-eof
-echo "Datos de prueba instalados"
+source config.ini
+
+if [ $codigo_de_muestra == "si" ]; then
+	eval $prueba
+	./cargar_imagenes.sh "$directorio_entrada" "$directorio_salida"
+	echo "Datos de prueba instalados"
+fi

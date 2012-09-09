@@ -6,7 +6,7 @@ from sqlalchemy import create_engine, and_, MetaData, Table
 from sqlalchemy.orm import sessionmaker, aliased, mapper
 from sqlalchemy.sql import select, func, bindparam
 from sqlalchemy.types import Numeric
-from sys import argv, stdout
+from sys import stdout
 from decimal import *
 import ConfigParser
 
@@ -16,6 +16,7 @@ i dado, el TERRITORIO en i-1 representa el territorio contenedor. Ej:
 
 Para i = 1: TERRITORIO[i] = MUNICIPIO contenido en TERRITORIO[i-1] = ESTADO
 """
+ARCHIVO_CONFIG = 'config.ini'
 TERRITORIO = ['PLANETA', 'PAIS', 'ESTADO', 'MUNICIPIO', 'PARROQUIA']
 TABLAS = ['territorio']
 PLANETA = 0
@@ -194,7 +195,7 @@ def configurar(arch_config):
 	ARCHIVOS = config.get('mapas', 'archivos').split(',')
 	
 def main():
-	configurar(argv[1])
+	configurar(ARCHIVO_CONFIG)
 	cantidad_arch = len(ARCHIVOS)
 
 	for num_arch, archivo in enumerate(ARCHIVOS):
