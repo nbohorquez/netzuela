@@ -13,7 +13,6 @@ EOF
 "
 crear_now_msec="$ingresar_mysql << EOF
 CREATE FUNCTION now_msec RETURNS STRING SONAME 'now_msec.so';
-exit;
 EOF
 "
 
