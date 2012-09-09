@@ -11,6 +11,11 @@ prueba="$ingresar_mysql << EOF
 source ../src/db/mysql/prueba_1.sql
 EOF
 "
+crear_now_msec="$ingresar_mysql << EOF
+CREATE FUNCTION now_msec RETURNS STRING SONAME 'now_msec.so';
+exit;
+EOF
+"
 
 parse_config() {
 	if [ ! -f "$1" ]; then
@@ -54,12 +59,28 @@ crear_db() {
 	eval "$crear_db"
 }
 
+instalar_now_msec() {
+	dir=`pwd`
+	cd ../src/db/mysql
+	gcc -shared -o now_msec.so now_msec.cc -I /usr/include/mysql
+	mv now_msec.so /usr/lib/mysql/plugin
+	eval "$crear_now_msec"
+	cd "$dir"
+}
+
 # Chequeamos root
 if [ "$USER" != "root" ]; then
         echo "Error: Debe correr este script como root"
         exit 1;
 fi
 echo "Ejecutando script como root"
+
+# Chequeamos que now_msec.so este en su sitio
+if [ ! -f /usr/lib/mysql/plugin/now_msec.so ]; then
+	echo "La funcion 'now_msec()' no esta instalada, instalando..."
+	instalar_now_msec
+fi
+echo "now_msec() instalada"
 
 # Creamos la base de datos
 crear_db
