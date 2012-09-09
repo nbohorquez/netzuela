@@ -58,6 +58,11 @@ def analizar_esquema(esquema):
 	return resultado
 
 def analizar_placemark(placemark, tipo_de_placemark):
+	if placemark is None:
+		raise Exception("placemark no puede ser nulo")
+	if tipo_de_placemark is None:
+		raise Exception("tipo_de_placemark no puede ser nulo")
+
 	metadata = placemark.ExtendedData.SchemaData
 	terr = ['']*len(TERRITORIO)
 	resultado = None
@@ -103,42 +108,38 @@ def analizar_placemark(placemark, tipo_de_placemark):
 			bindparam('a_pib')
 	    )])
 
-	try:
-		sql = {
-			ESTADO: lambda: insertar_estado(),
-			MUNICIPIO: lambda: insertar_municipio(),
-			PARROQUIA: lambda: insertar_parroquia()
-		}[tipo_de_placemark]()
+	sql = {
+		ESTADO: lambda: insertar_estado(),
+		MUNICIPIO: lambda: insertar_municipio(),
+		PARROQUIA: lambda: insertar_parroquia()
+	}[tipo_de_placemark]()
 
-		padre = aliased(territorio)
-		abuelo = aliased(territorio)
+	padre = aliased(territorio)
+	abuelo = aliased(territorio)
 
-		territorio_padre = sesion.query(padre.territorio_id).\
-		join(abuelo, padre.territorio_padre == abuelo.territorio_id).\
-		filter(and_(
-			padre.nombre == terr[tipo_de_placemark-1],
-			padre.nivel == tipo_de_placemark-1,
-			abuelo.nombre == terr[tipo_de_placemark-2]
-		)).first()[0]
+	territorio_padre = sesion.query(padre.territorio_id).\
+	join(abuelo, padre.territorio_padre == abuelo.territorio_id).\
+	filter(and_(
+		padre.nombre == terr[tipo_de_placemark-1],
+		padre.nivel == tipo_de_placemark-1,
+		abuelo.nombre == terr[tipo_de_placemark-2]
+	)).first()[0]
 
-		sesion.execute('begin')
-		terro = sesion.execute(sql, params = dict(
-			a_creador = 1,
-	        a_nombre = terr[tipo_de_placemark],
-	        a_poblacion = 0,
-	        a_idioma = 'Espanol',
-	 		a_territorio_padre = territorio_padre,
+	sesion.execute('begin')
+	terro = sesion.execute(sql, params = dict(
+		a_creador = 1,
+	       	a_nombre = terr[tipo_de_placemark],
+		a_poblacion = 0,
+		a_idioma = 'Espanol',
+	 	a_territorio_padre = territorio_padre,
 	        a_codigo_postal = '',
-	        a_pib = 0
-		)).scalar()
-		sesion.execute('commit')
+		a_pib = 0
+	)).scalar()
+	sesion.execute('commit')
 
-		resultado = sesion.query(territorio.dibujable_p).\
-			filter_by(territorio_id = terro).first()[0]
-	except:
-		print "Error analizando el placemark"
-	finally:
-		return resultado
+	resultado = sesion.query(territorio.dibujable_p).\
+		filter_by(territorio_id = terro).first()[0]
+	return resultado
 		
 def analizar_poligono(poligono, dibujable):
 	ingresar_silueta(poligono.outerBoundaryIs, dibujable)
@@ -201,16 +202,27 @@ def main():
 	for num_arch, archivo in enumerate(ARCHIVOS):
 		archivo_corregido = path.abspath(archivo)
 		with open(archivo_corregido) as a:
-			print 'Archivo ({0},{1}): {2}'.format(num_arch, cantidad_arch, archivo_corregido)
+			print "Archivo ({0},{1}): {2}".format(
+				num_arch, cantidad_arch, archivo_corregido
+			)
 			doc = parser.parse(a).getroot()
-			tipo_de_placemark = analizar_esquema(doc.Document.Folder.Schema)
+			tipo_de_placemark = analizar_esquema(
+				doc.Document.Folder.Schema
+			)
 
 			if tipo_de_placemark is None:
-				print 'No se reconoce el esquema del documento'
+				print "No se reconoce el esquema del documento"
 				exit()
+
 			cantidad_i = len(doc.Document.Folder.Placemark)
 			for i, pm in enumerate(doc.Document.Folder.Placemark):
-				dibujable = analizar_placemark(pm, tipo_de_placemark)
+				try:
+					dibujable = analizar_placemark(
+						pm, tipo_de_placemark
+					)
+				except Exception, e:
+					print "Error analizando el placemark: %s" % e
+					continue
 				if hasattr(pm, 'MultiGeometry'):
 					pm = pm.MultiGeometry
 				cantidad_j = len(pm.Polygon)	
@@ -221,7 +233,13 @@ def main():
 					stdout.write(" Poligono(%d," % (j + 1))
 					stdout.write("%d)" % cantidad_j)
 					stdout.flush()
-					analizar_poligono(poligono, dibujable)
+					try:
+						analizar_poligono(
+							poligono, dibujable
+						)
+					except Exception, e:
+						print "Error analizando el poligono: %s" % e
+						continue
 			stdout.write("\n")
 
 if __name__ == '__main__':

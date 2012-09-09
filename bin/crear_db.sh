@@ -1,5 +1,6 @@
 #!/bin/bash
 
+configuracion="config.ini"
 contrasena='#HK_@20MamA!pAPa13?#3864'
 ingresar_mysql="mysql -u chivo -p'$contrasena'"
 crear_db="$ingresar_mysql << EOF
@@ -10,6 +11,25 @@ prueba="$ingresar_mysql << EOF
 source ../src/db/mysql/prueba_1.sql
 EOF
 "
+
+parse_config() {
+	if [ ! -f "$1" ]; then
+		echo "$1 no existe"
+		return 
+	fi
+
+	# En este enlace hay muchas formas de leer un config file sin usar source:
+	# http://stackoverflow.com/questions/4434797/read-a-config-file-in-bash-without-using-source
+	while read linea; do
+	if [[ "$linea" =~ ^[^#]*= ]]; then
+		variable=`echo $linea | cut -d'=' -f 1 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+		#variable=`echo $linea | cut -d'=' -f 1 | tr -d ' '`
+		valor=`echo $linea | cut -d'=' -f 2- | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+		#valor=`echo $linea | cut -d'=' -f 2- | tr -d ' '`
+		eval "$variable"="$valor"
+	fi
+	done < "$1"
+}
 
 crear_env() {
 	virtualenv --no-site-packages --distribute env
@@ -72,10 +92,10 @@ cargar_mapas mapas.ini
 deactivate
 echo "Mapas de Venezuela cargados"
 
-source config.ini
+parse_config $configuracion
 
-if [ $codigo_de_muestra == "si" ]; then
-	eval $prueba
+if [ "$codigo_de_muestra" == "si" ]; then
+	eval "$prueba"
 	./cargar_imagenes.sh "$directorio_entrada" "$directorio_salida"
 	echo "Datos de prueba instalados"
 fi
