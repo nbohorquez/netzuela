@@ -3,7 +3,7 @@
 contrasena='#HK_@20MamA!pAPa13?#3864'
 ingresar_mysql="mysql -u chivo -p'$contrasena'"
 crear_db="$ingresar_mysql << EOF
-source ../src/db/mysql/spuria.sql
+source ../src/db/mysql/spuria_srv.sql
 EOF
 "
 prueba="$ingresar_mysql << EOF
