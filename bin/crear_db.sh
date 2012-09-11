@@ -1,7 +1,8 @@
 #!/bin/bash
 
 configuracion="config.ini"
-contrasena='#HK_@20MamA!pAPa13?#3864'
+parse_config $configuracion
+
 ingresar_mysql="mysql -u chivo -p'$contrasena'"
 crear_db="$ingresar_mysql << EOF
 source ../src/db/mysql/spuria_srv.sql
@@ -111,8 +112,6 @@ source env/bin/activate
 cargar_mapas mapas.ini
 deactivate
 echo "Mapas de Venezuela cargados"
-
-parse_config $configuracion
 
 if [ "$codigo_de_muestra" == "si" ]; then
 	eval "$prueba"
