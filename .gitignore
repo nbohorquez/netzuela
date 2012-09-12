@@ -4,6 +4,8 @@
 map/
 
 bin/env/
+bin/config_dev.ini
+bin/crear_db_dev.sh
 
 src/mapas/build/
 src/mapas/dist/

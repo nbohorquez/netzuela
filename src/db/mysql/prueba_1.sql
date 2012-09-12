@@ -205,13 +205,13 @@ SELECT InsertarHorarioDeTrabajo(@TiendaID1, 'Viernes', TRUE) INTO @HT5ID;
 SELECT InsertarHorarioDeTrabajo(@TiendaID1, 'Sabado', FALSE) INTO @HT6ID;
 SELECT InsertarHorarioDeTrabajo(@TiendaID1, 'Domingo', FALSE) INTO @HT7ID;
 
-SELECT InsertarTurno(@TiendaID1, 'Lunes', '08:00:00', '16:00:00') INTO @HT1ID;
-SELECT InsertarTurno(@TiendaID1, 'Martes', '08:00:00', '16:00:00') INTO @HT2ID;
-SELECT InsertarTurno(@TiendaID1, 'Miercoles', '08:00:00', '16:00:00') INTO @HT3ID;
-SELECT InsertarTurno(@TiendaID1, 'Jueves', '08:00:00', '16:00:00') INTO @HT4ID;
-SELECT InsertarTurno(@TiendaID1, 'Viernes', '08:00:00', '16:00:00') INTO @HT5ID;
-SELECT InsertarTurno(@TiendaID1, 'Sabado', '00:00:00', '00:00:00') INTO @HT6ID;
-SELECT InsertarTurno(@TiendaID1, 'Domingo', '00:00:00', '00:00:00') INTO @HT7ID;
+SELECT InsertarTurno(@TiendaID1, 'Lunes', '08:00', '16:00') INTO @HT1ID;
+SELECT InsertarTurno(@TiendaID1, 'Martes', '08:00', '16:00') INTO @HT2ID;
+SELECT InsertarTurno(@TiendaID1, 'Miercoles', '08:00', '16:00') INTO @HT3ID;
+SELECT InsertarTurno(@TiendaID1, 'Jueves', '08:00', '16:00') INTO @HT4ID;
+SELECT InsertarTurno(@TiendaID1, 'Viernes', '08:00', '16:00') INTO @HT5ID;
+SELECT InsertarTurno(@TiendaID1, 'Sabado', '00:00', '00:00') INTO @HT6ID;
+SELECT InsertarTurno(@TiendaID1, 'Domingo', '00:00', '00:00') INTO @HT7ID;
 
 /* TIENDA 2 */
 
@@ -242,13 +242,13 @@ SELECT InsertarHorarioDeTrabajo(@TiendaID2, 'Viernes', TRUE) INTO @HT5ID;
 SELECT InsertarHorarioDeTrabajo(@TiendaID2, 'Sabado', TRUE) INTO @HT6ID;
 SELECT InsertarHorarioDeTrabajo(@TiendaID2, 'Domingo', TRUE) INTO @HT7ID;
 
-SELECT InsertarTurno(@TiendaID2, 'Lunes', '11:00:00', '22:00:00') INTO @HT1ID;
-SELECT InsertarTurno(@TiendaID2, 'Martes', '11:00:00', '22:00:00') INTO @HT2ID;
-SELECT InsertarTurno(@TiendaID2, 'Miercoles', '11:00:00', '22:00:00') INTO @HT3ID;
-SELECT InsertarTurno(@TiendaID2, 'Jueves', '11:00:00', '22:00:00') INTO @HT4ID;
-SELECT InsertarTurno(@TiendaID2, 'Viernes', '11:00:00', '23:30:00') INTO @HT5ID;
-SELECT InsertarTurno(@TiendaID2, 'Sabado', '11:00:00', '23:30:00') INTO @HT6ID;
-SELECT InsertarTurno(@TiendaID2, 'Domingo', '11:00:00', '22:00:00') INTO @HT7ID;
+SELECT InsertarTurno(@TiendaID2, 'Lunes', '11:00', '22:00') INTO @HT1ID;
+SELECT InsertarTurno(@TiendaID2, 'Martes', '11:00', '22:00') INTO @HT2ID;
+SELECT InsertarTurno(@TiendaID2, 'Miercoles', '11:00', '22:00') INTO @HT3ID;
+SELECT InsertarTurno(@TiendaID2, 'Jueves', '11:00', '22:00') INTO @HT4ID;
+SELECT InsertarTurno(@TiendaID2, 'Viernes', '11:00', '23:30') INTO @HT5ID;
+SELECT InsertarTurno(@TiendaID2, 'Sabado', '11:00', '23:30') INTO @HT6ID;
+SELECT InsertarTurno(@TiendaID2, 'Domingo', '11:00', '22:00') INTO @HT7ID;
 
 /*
 *********************************************************

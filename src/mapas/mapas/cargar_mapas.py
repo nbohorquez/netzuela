@@ -16,7 +16,13 @@ i dado, el TERRITORIO en i-1 representa el territorio contenedor. Ej:
 
 Para i = 1: TERRITORIO[i] = MUNICIPIO contenido en TERRITORIO[i-1] = ESTADO
 """
+
 ARCHIVO_CONFIG = 'config.ini'
+
+config = ConfigParser.ConfigParser()
+with open(ARCHIVO_CONFIG) as fp:
+	config.readfp(fp)
+
 TERRITORIO = ['PLANETA', 'PAIS', 'ESTADO', 'MUNICIPIO', 'PARROQUIA']
 TABLAS = ['territorio']
 PLANETA = 0
@@ -24,8 +30,7 @@ PAIS = 1
 ESTADO = 2
 MUNICIPIO = 3
 PARROQUIA = 4
-ARCHIVOS = []
-sesion = None
+ARCHIVOS = config.get('mapas', 'archivos').split(',')
 
 def cargar_tablas(motor):
 	metadata = MetaData(motor)
@@ -36,7 +41,8 @@ def cargar_tablas(motor):
 		mixIn(objeto, [object])
 		mapper(globals()[objeto], esquema_tabla)
 
-# Codigo tomado de: http://danielkaes.wordpress.com/2009/07/30/create-new-classes-with-python-at-runtime/	
+# Codigo tomado de: 
+# http://danielkaes.wordpress.com/2009/07/30/create-new-classes-with-python-at-runtime/	
 def mixIn(classname, parentclasses):
 	if len(parentclasses) > 0:
 		parents = map(lambda p:p.__name__, parentclasses)
@@ -45,6 +51,13 @@ def mixIn(classname, parentclasses):
 		createclass = "class %s:\n\tpass" % classname
 	exec createclass
 	globals()[classname] = eval(classname)
+
+motor = create_engine(config.get('base_de_datos', 'mysql'), echo=False)
+cargar_tablas(motor)
+conexion = motor.connect()
+Sesion = sessionmaker()
+Sesion.configure(bind=motor)
+sesion = Sesion()
 
 def analizar_esquema(esquema):
 	resultado = None
@@ -176,27 +189,8 @@ def ingresar_silueta(silueta, dibujable):
 			a_punto_id = punto
 		)).scalar()
 	sesion.execute('commit')
-
-def configurar(arch_config):
-	global sesion
-	global ARCHIVOS
-	
-	config = ConfigParser.ConfigParser()
-	config.read(arch_config)
-
-	motor = create_engine(
-		config.get('base_de_datos', 'mysql'),
-            	echo=False
-        )
-	cargar_tablas(motor)
-	conexion = motor.connect()
-	Sesion = sessionmaker()
-	Sesion.configure(bind=motor)
-	sesion = Sesion()
-	ARCHIVOS = config.get('mapas', 'archivos').split(',')
 	
 def main():
-	configurar(ARCHIVO_CONFIG)
 	cantidad_arch = len(ARCHIVOS)
 
 	for num_arch, archivo in enumerate(ARCHIVOS):
