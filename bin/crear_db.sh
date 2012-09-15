@@ -3,7 +3,7 @@
 source comunes.sh
 parse_config $archivo_config
 
-ingresar_mysql="mysql -u chivo -p'$contrasena'"
+ingresar_mysql="mysql -u $usuario -p'$contrasena'"
 crear_db="$ingresar_mysql << EOF
 source ../src/db/mysql/spuria_srv.sql
 EOF
