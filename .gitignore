@@ -12,7 +12,12 @@ src/mapas/dist/
 src/mapas/env/
 src/mapas/mapas.egg-info
 
-src/db/mysql/modelo_de_datos_relacional.mwb.bak
+src/orm/build/
+src/orm/dist/
+src/orm/env/
+src/orm/orm.egg-info
+
+src/sql/mysql/modelo_de_datos_relacional.mwb.bak
 
 src/workers/build/
 src/workers/dist/

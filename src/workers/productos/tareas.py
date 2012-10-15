@@ -7,25 +7,28 @@ import urllib2, sys
 
 @celery.task
 def registrar_producto(upc):
-	sitio = 'http://yoopsie.com/query.php'
-	query = upc
-	locale = 'US'
-	index = 'All'
-	address = "{0}?query={1}&locale={2}&index={3}".format(sitio, query, locale, index)
+        sitio = 'http://yoopsie.com/query.php'
+        query = upc
+        locale = 'US'
+        index = 'All'
+        address = "{0}?query={1}&locale={2}&index={3}".format(
+                sitio, query, locale, index
+        )
 
-	try:
-		html = urllib2.urlopen(address).read()
-	except HTTPError, e:
-		return None
-		#print "Error HTTP: %d" % e.code
-	except URLError, e:
-		return None
-		#print "Error de red: %s" % e.reason.args[1]
+        try:
+                html = urllib2.urlopen(address).read()
+        except HTTPError, e:
+                return None
+                #print "Error HTTP: %d" % e.code
+        except URLError, e:
+                return None
+                #print "Error de red: %s" % e.reason.args[1]
 
-	soup = BeautifulSoup(html)
-	producto = {}
-	producto['img'] = soup.find('td', attrs={'class': "info_image"}).a.img['src']
-	td_info = soup.find('td', attrs={'class': "info"}).table
-	producto['info'] = td_info.tr.td.a.string
-	producto['upc']  = td_info.find('td', attrs={'class': "upc"}).string
-	return producto
+        soup = BeautifulSoup(html)
+        producto = {}
+        producto['img'] = soup.find('td', attrs={'class': "info_image"}).\
+        a.img['src']
+        td_info = soup.find('td', attrs={'class': "info"}).table
+        producto['info'] = td_info.tr.td.a.string
+        producto['upc']  = td_info.find('td', attrs={'class': "upc"}).string
+        return producto

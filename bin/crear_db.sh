@@ -5,11 +5,11 @@ parse_config $archivo_config
 
 ingresar_mysql="mysql -u $usuario -p'$contrasena'"
 crear_db="$ingresar_mysql << EOF
-source ../src/db/mysql/spuria_srv.sql
+source ../src/sql/mysql/spuria_srv.sql
 EOF
 "
 prueba="$ingresar_mysql << EOF
-source ../src/db/mysql/prueba_1.sql
+source ../src/sql/mysql/prueba_1.sql
 EOF
 "
 crear_now_msec="$ingresar_mysql << EOF
@@ -22,6 +22,8 @@ crear_env() {
 	rm *.tar.gz
 	source env/bin/activate
 	cd ../src/mapas
+	python setup.py install
+	cd ../src/orm
 	python setup.py install
 	deactivate
 	cd ../../bin
