@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from comunes import ahorita, Base, DBSession
-from sqlalchemy import Column, Integer, Numeric, Boolean, ForeignKey
+from sqlalchemy import *
 from sqlalchemy.orm import relationship, backref
 
 class Accion(Base):
@@ -23,32 +23,34 @@ class CodigoDeError(Base):
         self.valor = valor
 
 class Registro(Base):
-    __tablename__ = 'registro_id'
+    __tablename__ = 'registro'
     
     # Columnas
     registro_id = Column(Integer, primary_key=True, autoincrement=True)
     fecha_hora = Column(Numeric(17,3), nullable=False)
-    actor_activo = Column(Integer, nullable=False, index=True)
+    actor_activo_id = Column(Integer, nullable=False, index=True)
     accion = Column(CHAR(13), ForeignKey('accion.valor'), nullable=False)
-    actor_pasivo = Column(Integer, nullable=True, index=True)
+    actor_pasivo_id = Column(Integer, nullable=True, index=True)
     columna = Column(Text)
     valor = Column(Text)
 
     # Propiedades
-    actor_activo_x = relationship(
-        "Rastreable", backref="registro_activo",
-        primaryjoin="Registro.actor_activo == Rastreable.rastreable_id"
+    actor_activo = relationship(
+        "Rastreable", backref="registro_activo", 
+		foreign_keys='Rastreable.rastreable_id',
+        primaryjoin="Registro.actor_activo_id == Rastreable.rastreable_id"
     )
-    actor_pasivo_x = relationship(
+    actor_pasivo = relationship(
         "Rastreable", backref="registro_pasivo",
-        primaryjoin="Registro.actor_pasivo == Rastreable.rastreable_id"
+		foreign_keys='Rastreable.rastreable_id',
+        primaryjoin="Registro.actor_pasivo_id == Rastreable.rastreable_id"
     )
     
-    def __init__(self, actor_activo=None, accion=None, actor_pasivo=None, 
+    def __init__(self, actor_activo_id=None, accion=None, actor_pasivo_id=None, 
                  columna='', valor=''):
         self.fecha_hora = ahorita()
-        self.actor_activo = actor_activo
+        self.actor_activo_id = actor_activo_id
         self.accion = accion
-        self.actor_pasivo = actor_pasivo
+        self.actor_pasivo_id = actor_pasivo_id
         self.columna = columna
         self.valor = valor

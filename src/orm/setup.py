@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 here = path.abspath(path.dirname(__file__))
 README = open(path.join(here, 'README.rst')).read()
 CHANGES = open(path.join(here, 'CHANGES.txt')).read()
-requires=['mysql-python', 'SQLAlchemy']
+requires=['mysql-python', 'SQLAlchemy', 'zope.sqlalchemy', 'transaction']
 
 setup(name='orm', 
       version='0.0.1', 
@@ -13,6 +13,6 @@ setup(name='orm',
       install_requires=requires,
       entry_points="""
       [console_scripts]
-      cargar_modelos = models.cargar_modelos:main
+      cargar_modelos = orm.inicializar:main
       """
 )

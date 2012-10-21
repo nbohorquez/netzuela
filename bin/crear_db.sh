@@ -24,7 +24,7 @@ crear_env() {
 	cd ../src/mapas
 	python setup.py install
 	cd ../src/orm
-	python setup.py install
+	python setup.py develop
 	deactivate
 	cd ../../bin
 }
@@ -39,7 +39,8 @@ instalar_libxslt() {
 
 crear_db() {
 	# Mas adelante debe haber algo aqui que no sea SQL (inicializacion ORM)
-	eval "$crear_db"
+	# eval "$crear_db"
+	cargar_modelos
 }
 
 instalar_now_msec() {

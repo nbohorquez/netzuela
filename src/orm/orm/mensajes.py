@@ -1,59 +1,118 @@
 # -*- coding: utf-8 -*-
 
 from comunes import Base, DBSession
-from sqlalchemy import Column, Integer, Text, ForeignKey
+from palabras import EsEtiquetable
+from rastreable import EsRastreable
+from sqlalchemy import *
+from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship, backref
+
+class InterlocutorAsociacion(Base):
+    __tablename__ = 'interlocutor_asociacion'
+
+    # Columnas
+    interlocutor_asociacion_id = Column(
+        Integer, primary_key=True, autoincrement=True
+    )
+    discriminante = Column(String(45))
+
+    # Propiedades
+    @property
+    def padre(self):
+        return getattr(self, "{}_padre".format(self.discriminante))
+
+    # Funciones
+    @classmethod
+    def creador(cls, discriminante):
+        return lambda interlocutor:InterlocutorAsociacion(
+            interlocutor=interlocutor, discriminante=discriminante
+        )
 
 class Interlocutor(Base):
     __tablename__ = 'interlocutor'
-    __mapper_args__ = {'polymorphic_on': tipo}
     
     # Columnas
     interlocutor_id = Column(Integer, primary_key=True, autoincrement=True)
-    tipo = Column(String(45), nullable=False)
+    asociacion_id = Column(
+        Integer, 
+        ForeignKey('interlocutor_asociacion.interlocutor_asociacion_id')
+    )
+    #tipo = Column(String(45), nullable=False)
 
-class Mensaje(Rastreable, Etiquetable):
+	# Propiedades
+    asociacion = relationship(
+        'InterlocutorAsociacion', backref=backref('interlocutor', uselist=False)
+    )
+    padre = association_proxy('asociacion', 'padre')
+    #__mapper_args__ = {'polymorphic_on': tipo}
+
+class EsInterlocutor(object):
+    @declared_attr
+    def interlocutor_asociacion_id(cls):
+        return Column(
+            Integer, 
+            ForeignKey("interlocutor_asociacion.interlocutor_asociacion_id")
+        )
+
+    @declared_attr
+    def interlocutor_asociacion(cls):
+        discriminante = cls.__tablename__
+        cls.interlocutor = association_proxy(
+            'interlocutor_asociacion', 'interlocutor', 
+            creator=InterlocutorAsociacion.creador(discriminante)
+        )
+        return relationship(
+            'InterlocutorAsociacion', backref=backref(
+                "{}_padre".format(discriminante), uselist=False
+            )
+        )
+
+class Mensaje(EsRastreable, EsEtiquetable, Base):
     __tablename__ = 'mensaje'
-    __mapper_args__ = {'polymorphic_identity': 'mensaje'}
+    #__mapper_args__ = {'polymorphic_identity': 'mensaje'}
     
     # Columnas
+    """
     rastreable_p = Column(
-        Integer, nullable=False, unique=True, index=True
-        ForeignKey('rastreable.rastreable_id')
+        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
+		unique=True, index=True
     )
     etiquetable_p = Column(
-        Integer, nullable=False, unique=True, index=True
-        ForeignKey('etiquetable.etiquetable_id')
+        Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
+		unique=True, index=True
     )
+    """
     mensaje_id = Column(Integer, primary_key=True, autoincrement=True)
-    remitente = Column(
+    remitente_id = Column(
         Integer, ForeignKey('interlocutor.interlocutor_id'), nullable=False
     )
-    destinatario = Column(
+    destinatario_id = Column(
         Integer, ForeignKey('interlocutor.interlocutor_id'), nullable=False
     )
     contenido = Column(Text, nullable=False)
 
     # Propiedades
-    remitente_x = relationship(
+    remitente = relationship(
         "Interlocutor", backref="mensajes_enviados",
-        primaryjoin="Mensaje.remitente == Interlocutor.interlocutor_id"
+        primaryjoin="Mensaje.remitente_id == Interlocutor.interlocutor_id"
     )
-    destinatario_x = relationship(
+    destinatario = relationship(
         "Interlocutor", backref="mensajes_recibidos",
-        primaryjoin="Mensaje.destinatario == Interlocutor.interlocutor_id"
+        primaryjoin="Mensaje.destinatario_id == Interlocutor.interlocutor_id"
         
     )
 
-    def __init__(self, remitente=None, destinatario=None, contenido='', 
-                 *args, **kwargs):
+    def __init__(self, remitente_id=None, destinatario_id=None, contenido=''):
         # Yo creia que debia hacer algo como esto para poder acceder a 
         # 'remitente_x':
         # http://techspot.zzzeek.org/2007/05/29/polymorphic-associations-with-sqlalchemy/
         # Sin embargo, me di cuenta que con relaciones simples bastaba y sobraba
+        """
         super(Mensaje, self).__init__(
-            creador=remitente_x.rastreable_p, *args, **kwargs
+			creador=remitente_x.rastreable_p, *args, **kwargs
         )
-        self.remitente = remitente
-        self.destinatario = destinatario
+        """
+        self.remitente_id = remitente_id
+        self.destinatario_id = destinatario_id
         self.contenido = contenido

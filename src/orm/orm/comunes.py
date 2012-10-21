@@ -1,18 +1,49 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from decimal import Decimal
 from sqlalchemy import Table
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.sql.expression import Executable, ClauseElement
-from time import strftime
 from zope.sqlalchemy import ZopeTransactionExtension
+from time import strftime
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
-Base = declarative_base()
 
-def ahorita()
+# Toma en cuenta lo que dice esta pagina para cuando vayais a utilizar el Base 
+# que aqui se define:
+# http://xion.org.pl/2012/06/12/interesting-problem-with-mysql-sqlalchemy/
+class _Base(object):
+    __table_args__ = {'mysql_engine': 'InnoDB'}
+
+    @staticmethod
+    def antes_de_insertar(mapper, connection, target):
+        pass
+
+    @staticmethod
+    def despues_de_insertar(mapper, connection, target):
+        pass
+
+    @staticmethod
+    def antes_de_actualizar(mapper, connection, target):
+        pass
+
+    @staticmethod
+    def ante_de_eliminar(mapper, connection, target):
+        pass
+
+    @classmethod
+    def registrar_eventos(cls):
+        event.listen(cls, 'before_insert', cls.antes_de_insertar)
+        event.listen(cls, 'after_insert', cls.despues_de_insertar)
+        event.listen(cls, 'before_update', cls.antes_de_actualizar)
+        event.listen(cls, 'before_delete', cls.antes_de_eliminar)
+
+Base = declarative_base(cls=_Base)
+
+def ahorita():
     ahora = datetime.now()
     return "{}.{}".format(
         ahora.strftime("%Y%m%d%H%M%S"), 
