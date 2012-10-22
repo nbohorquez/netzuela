@@ -40,7 +40,7 @@ class Interlocutor(Base):
     )
     #tipo = Column(String(45), nullable=False)
 
-	# Propiedades
+    # Propiedades
     asociacion = relationship(
         'InterlocutorAsociacion', backref=backref('interlocutor', uselist=False)
     )
@@ -68,6 +68,15 @@ class EsInterlocutor(object):
             )
         )
 
+    def __init__(self, *args, **kwargs):
+        # Aqui la explicacion de por que tengo que llamar a super desde este
+        # constructor para que esta clase sea inicializada en la cadaena de
+        # inicializacion:
+        # http://stackoverflow.com/questions/9575409/python-calling-parent-class-init-with-multiple-inheritance-whats-the-righ
+        # http://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+        super(EsInterlocutor, self).__init__(*args, **kwargs)
+        self.interlocutor = Interlocutor()
+
 class Mensaje(EsRastreable, EsEtiquetable, Base):
     __tablename__ = 'mensaje'
     #__mapper_args__ = {'polymorphic_identity': 'mensaje'}
@@ -76,11 +85,11 @@ class Mensaje(EsRastreable, EsEtiquetable, Base):
     """
     rastreable_p = Column(
         Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     etiquetable_p = Column(
         Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     """
     mensaje_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -110,7 +119,7 @@ class Mensaje(EsRastreable, EsEtiquetable, Base):
         # Sin embargo, me di cuenta que con relaciones simples bastaba y sobraba
         """
         super(Mensaje, self).__init__(
-			creador=remitente_x.rastreable_p, *args, **kwargs
+            creador=remitente_x.rastreable_p, *args, **kwargs
         )
         """
         self.remitente_id = remitente_id

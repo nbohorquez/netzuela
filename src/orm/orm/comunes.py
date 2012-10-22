@@ -41,6 +41,9 @@ class _Base(object):
         event.listen(cls, 'before_update', cls.antes_de_actualizar)
         event.listen(cls, 'before_delete', cls.antes_de_eliminar)
 
+	def __init__(self, *args, **kwargs):
+		super(_Base, self).__init__(*args, **kwargs)
+
 Base = declarative_base(cls=_Base)
 
 def ahorita():

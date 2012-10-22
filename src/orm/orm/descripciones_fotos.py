@@ -39,7 +39,7 @@ class Describible(Base):
     )
     #tipo = Column(String(45), nullable=False)
 
-	# Propiedades
+    # Propiedades
     asociacion = relationship(
         'DescribibleAsociacion', backref=backref('describible', uselist=False)
     )
@@ -67,6 +67,10 @@ class EsDescribible(object):
             )
         )
 
+    def __init__(self, *args, **kwargs):
+        super(EsDescribible, self).__init__(*args, **kwargs)
+        self.describible = Describible()
+
 class Foto(Base):
     __tablename__ = 'foto'
 
@@ -92,11 +96,11 @@ class Descripcion(EsRastreable, EsEtiquetable, Base):
     """
     rastreable_p = Column(
         Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     etiquetable_p = Column(
         Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     """
     descripcion_id = Column(Integer, primary_key=True, autoincrement=True)

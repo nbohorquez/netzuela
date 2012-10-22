@@ -28,8 +28,8 @@ class Estadisticas(EsRastreable, Base):
         primaryjoin='Estadisticas.territorio_id == Territorio.territorio_id' 
     )
     
-    def __init__(self, territorio_id=None):
-        #super(Estadisticas, self).__init__(*args, **kwargs)
+    def __init__(self, territorio_id=None, *args, **kwargs):
+        super(Estadisticas, self).__init__(*args, **kwargs)
         self.territorio_id = territorio_id
         estadisticas_temporales = EstadisticasTemporales(
             self.estadisticas_id, 0, 0, 0

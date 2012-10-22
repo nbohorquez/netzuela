@@ -27,7 +27,8 @@ class CalificableSeguibleAsociacion(Base):
     @classmethod
     def creador(cls, discriminante):
         return lambda calificable_seguible:CalificableSeguibleAsociacion(
-            rastreable=rastreable, discriminante=discriminante
+            calificable_seguible=calificable_seguible, 
+            discriminante=discriminante
         )
 
 class CalificableSeguible(Base):
@@ -56,7 +57,7 @@ class CalificableSeguible(Base):
     )
     calificadores = relationship(
         "Consumidor", secondary=lambda:CalificacionResena.__table__,
-		backref="calificados"
+        backref="calificados"
     )
 
     def __init__(self, calificable_seguible_id=None, calificacion_general=0):
@@ -82,6 +83,10 @@ class EsCalificableSeguible(object):
             backref=backref("{}_padre".format(discriminante), uselist=False)
         )
 
+    def __init__(self, *args, **kwargs):
+        super(EsCalificableSeguible, self).__init__(*args, **kwargs)
+        self.calificable_seguible = CalificableSeguible()
+
 class Calificacion(Base):
     __tablename__ = 'calificacion'
 
@@ -99,11 +104,11 @@ class CalificacionResena(EsRastreable, EsEtiquetable, Base):
     """
     rastreable_p = Column(
         Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     etiquetable_p = Column(
         Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     """
     calificable_seguible_id = Column(
@@ -135,7 +140,7 @@ class Seguidor(EsRastreable, Base):
     """
     rastreable_p = Column(
         Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     """
     consumidor_id = Column(
@@ -144,7 +149,7 @@ class Seguidor(EsRastreable, Base):
     )
     calificable_seguible_id = Column(
         Integer,
-		ForeignKey('calificable_seguible.calificable_seguible_id'), 
+        ForeignKey('calificable_seguible.calificable_seguible_id'), 
         primary_key=True, autoincrement=False
     )
     avisar_si = Column(String(45), nullable=False)

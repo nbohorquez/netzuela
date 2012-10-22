@@ -56,28 +56,53 @@ class Territorio(EsRastreable, EsDibujable, Base):
         backref="territorios"
     )
     
-    def __init__(self, nombre=None, poblacion=None, idioma='Espanol', 
-                 territorio_padre_id=None, codigo_postal=None, pib=None):
+    def __init__(self, raiz=False, nombre=None, poblacion=None, 
+                 territorio_id=None, idioma='Espanol', territorio_padre_id=None,
+                 codigo_postal=None, pib=None, nivel=-1, *args, **kwargs):
+        if raiz:
+            super(Territorio, self).__init__(*args, **kwargs)
+            self.territorio_id = territorio_id
+            self.nombre = nombre
+            self.poblacion = poblacion
+            self.idioma = idioma
+            self.nivel = nivel
+            self.territorio_padre_id = territorio_padre_id
+            self.consumidores_poblacion = 0
+            self.tiendas_poblacion = 0
+            self.tiendas_consumidores = None
+            self.codigo_postal = codigo_postal
+            self.pib = pib
+            return
+        
         territorio = Territorio.__table__
-        es_territorio_duplicado = DBSession.execute(
-            exists().where(and_(
-                territorio.c.nombre == nombre,
-                territorio.c.territorio_padre_id == territorio_padre_id
-            ))
-        ).scalar()
+        es_territorio_duplicado = select([
+            func.IF(
+                exists().where(and_(
+                    territorio.c.nombre == nombre,
+                    territorio.c.territorio_padre_id == territorio_padre_id
+                )),
+                True, False
+            )
+        ])
+        es_territorio_duplicado = DBSession.execute(es_territorio_duplicado).\
+        scalar()
         c = DBSession.query(Territorio).filter(
             Territorio.territorio_padre_id == territorio_padre_id
         ).count()
         nivel_padre = DBSession.execute(
             select([territorio.c.nivel]).\
             where(territorio.c.territorio_id == territorio_padre_id)
-        )
+        ).scalar()
         n = '{0:02X}'.format(c + 1)
         i = territorio_padre_id.find('00') + 2
         _id = territorio_padre_id[:i].replace('00', n) + territorio_padre_id[i:]
 
-        #super(Territorio, self).__init__(*args, **kwargs)
-        self.territorio_id = _id if not es_territorio_duplicado else None
+        if not es_territorio_duplicado:
+            super(Territorio, self).__init__(*args, **kwargs)
+            self.territorio_id = _id 
+        else:
+            self.territorio_id =  None
+
         self.nombre = nombre
         self.poblacion = poblacion
         self.idioma = idioma

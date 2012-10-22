@@ -24,8 +24,8 @@ class DibujableAsociacion(Base):
     # Funciones
     @classmethod
     def creador(cls, discriminante):
-        return lambda croquis:CroquisAsociacion(
-            croquis=croquis, discriminante=discriminante
+        return lambda dibujable:DibujableAsociacion(
+            dibujable=dibujable, discriminante=discriminante
         )
 
 class Dibujable(Base):
@@ -38,7 +38,7 @@ class Dibujable(Base):
     )
     #tipo = Column(String(45), nullable=False)
 
-	# Propiedades
+    # Propiedades
     asociacion = relationship(
         'DibujableAsociacion', backref=backref('dibujable', uselist=False)
     )
@@ -65,6 +65,10 @@ class EsDibujable(object):
                 "{}_padre".format(discriminante), uselist=False
             )
         )
+    
+    def __init__(self, *args, **kwargs):
+        super(EsDibujable, self).__init__(*args, **kwargs)
+        self.dibujable = Dibujable()
 
 class Croquis(EsRastreable, Base):
     __tablename__ = 'croquis'
@@ -74,7 +78,7 @@ class Croquis(EsRastreable, Base):
     """
     rastreable_p = Column(
         Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     """
     croquis_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -91,9 +95,9 @@ class Croquis(EsRastreable, Base):
         backref="croquis"
     )
 
-    def __init__(self, dibujable_id=None):
-        #super(Croquis, self).__init__(*args, **kwargs)
-        self.dibujable_id = dibujable_id
+    def __init__(self, *args, **kwargs):
+        super(Croquis, self).__init__(*args, **kwargs)
+        #self.dibujable_id = dibujable_id
         self.area = -1
         self.perimetro = -1
 

@@ -38,7 +38,7 @@ class Cobrable(Base):
     )
     #tipo = Column(String(45), nullable=False)
 
-	# Propiedades
+    # Propiedades
     asociacion = relationship(
         'CobrableAsociacion', backref=backref('cobrable', uselist=False)
     )
@@ -66,6 +66,10 @@ class EsCobrable(object):
             )
         )
 
+    def __init__(self, *args, **kwargs):
+        super(EsCobrable, self).__init__(*args, **kwargs)
+        self.cobrable = Cobrable()
+
 class Factura(EsRastreable, Base):
     __tablename__ = 'factura'
     #__mapper_args__ = {'polymorphic_identity': 'factura'}
@@ -74,7 +78,7 @@ class Factura(EsRastreable, Base):
     """
     rastreable_p = Column(
         Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-		unique=True, index=True
+        unique=True, index=True
     )
     """
     factura_id = Column(Integer, primary_key=True, autoincrement=True)
@@ -87,9 +91,9 @@ class Factura(EsRastreable, Base):
 
     # Propiedades
     cliente = relationship(
-		'Cliente', primaryjoin='Factura.cliente_id==Cliente.rif', 
-		backref='facturas'
-	)
+        'Cliente', primaryjoin='Factura.cliente_id==Cliente.rif', 
+        backref='facturas'
+    )
     cobrables = relationship(
         "Cobrable", secondary=lambda:ServicioVendido.__table__, 
         backref="facturas"

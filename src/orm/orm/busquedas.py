@@ -25,7 +25,7 @@ class BuscableAsociacion(Base):
     # Funciones
     @classmethod
     def creador(cls, discriminante):
-        return lambda buscable:DescribibleAsociacion(
+        return lambda buscable:BuscableAsociacion(
             buscable=buscable, discriminante=discriminante
         )
 
@@ -66,6 +66,10 @@ class EsBuscable(object):
                 "{}_padre".format(discriminante), uselist=False
             )
         )
+    
+    def __init__(self, *args, **kwargs):
+        super(EsBuscable, self).__init__(*args, **kwargs)
+        self.buscable = Buscable()
 
 class Busqueda(EsRastreable, EsEtiquetable, Base):
     __tablename__ = 'busqueda'

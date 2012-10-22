@@ -102,5 +102,6 @@ class EsRastreable(object):
             )
         )
     
-    def __init__(self, creador=None):
+    def __init__(self, creador=None, *args, **kwargs):
+        super(EsRastreable, self).__init__(*args, **kwargs)
         self.rastreable = Rastreable(creador)

@@ -253,10 +253,10 @@ class Inventario(EsRastreable, EsCobrable, Base):
     producto_id = Column(Integer, ForeignKey('producto.producto_id'))
 
     # Propiedades
-    tienda = relationship('Tienda', backref='inventarios')
+    tienda = relationship('Tienda', backref='inventario')
     producto = relationship(
 		'Producto', primaryjoin='Inventario.producto_id==Producto.producto_id',
-		 backref='inventarios'
+		 backref='inventario'
 	)
 
     def __init__(self, tienda_id=None, codigo=None, descripcion='', 

@@ -65,6 +65,10 @@ class EsEtiquetable(object):
             )
         )
 
+    def __init__(self, *args, **kwargs):
+        super(EsEtiquetable, self).__init__(*args, **kwargs)
+        self.etiquetable = Etiquetable()
+
 class Etiqueta(Base):
     __tablename__ = 'etiqueta'
 
