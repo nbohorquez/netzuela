@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from comunes import ahorita, Base, CreateView, DBSession
+from datetime import date
 from rastreable import EsRastreable
 from ventas import EsCobrable
 from descripciones_fotos import EsDescribible
@@ -53,11 +54,11 @@ class PrecioCantidad(Base):
         
         expirar_precio_cantidad_anterior = precio_cantidad.update().\
         values(fecha_fin = func.IF(
-            exists(precio_cantidad.select()), ya, fecha_fin
+            exists(precio_cantidad.select()), ya, precio_cantidad.c.fecha_fin
         )).where(and_(
             precio_cantidad.c.tienda_id == tienda_id,
             precio_cantidad.c.codigo == codigo,
-            precio_cantidad.c.fecha_fin is None
+            precio_cantidad.c.fecha_fin == None
         ))
         DBSession.execute(expirar_precio_cantidad_anterior)
 
@@ -82,20 +83,30 @@ class Tamano(Base):
     cantidad_total_de_productos = Column(Integer)
     valor = Column(Integer)
 
+
     def __init__(self, tienda_id=None, numero_total_de_productos=0,
                  cantidad_total_de_productos=None, valor=0):
         tamano = Tamano.__table__
+        tamano_alias = tamano.alias()
         ya = ahorita()
         
         expirar_tamano_anterior = tamano.update().\
-        values(fecha_fin = func.IF(
-            exists(tamano.select()), ya, fecha_fin
-        )).where(and_(
-            tamano.c.tienda_id == tienda_id,
-            tamano.c.fecha_fin is None
-        ))
+        values(
+            fecha_fin = func.IF(
+                select(
+                    [func.count('*')], 
+                    from_obj=[tamano_alias]
+                ) > 0, 
+                ya, tamano.c.fecha_fin
+            )
+        ).where(
+            and_(
+                tamano.c.tienda_id == tienda_id,
+                tamano.c.fecha_fin == None
+            )
+        )
         DBSession.execute(expirar_tamano_anterior)
-
+        
         self.tienda_id = tienda_id
         self.fecha_inicio = ahorita()
         self.fecha_fin = None
@@ -163,30 +174,10 @@ class Tienda(EsBuscable, EsCalificableSeguible, EsInterlocutor, EsDibujable,
     __mapper_args__ = {'polymorphic_identity': 'tienda'}
 
     # Columnas
-    """
-    buscable_p = Column(
-        Integer, ForeignKey('buscable.buscable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     cliente_p = Column(
         CHAR(10), ForeignKey('cliente.rif'), nullable=False, unique=True, 
         index=True
     )
-    """
-    calificable_seguible_p = Column(
-        Integer, ForeignKey('calificable_seguible.calificable_seguible_id'), 
-        nullable=False, unique=True, index=True
-    )
-    interlocutor_p = Column(
-        Integer, ForeignKey('interlocutor.interlocutor_id'), nullable=False, 
-        unique=True, index=True
-    )
-    dibujable_p = Column(
-        Integer, ForeignKey('dibujable.dibujable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     tienda_id = Column(Integer, primary_key=True, autoincrement=True)
     abierto = Column(Boolean, nullable=False)
     
@@ -199,28 +190,17 @@ class Tienda(EsBuscable, EsCalificableSeguible, EsInterlocutor, EsDibujable,
         "Dia", secondary=lambda:HorarioDeTrabajo.__table__, 
         backref="tiendas"
     )
+    tamanos = relationship('Tamano', backref='tienda')
 
     def __init__(self, abierto=True, *args, **kwargs):
         super(Tienda, self).__init__(*args, **kwargs)
         self.abierto = abierto
-        tamano_nuevo = Tamano(self.tienda_id, 0, 0, 0)
-        DBSession.add(tamano_nuevo)
+        self.tamanos.append(Tamano(self.tienda_id, 0, 0, 0))
 
 class Inventario(EsRastreable, EsCobrable, Base):
     __tablename__ = 'inventario'
-    #__mapper_args__ = {'polymorphic_identity': 'inventario'}
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    cobrable_p = Column(
-        Integer, ForeignKey('cobrable.cobrable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     """
     Tanto 'tienda_id' como 'codigo' tienen que ser indices por lo que se 
     explica en la documentacion de MySQL:
@@ -255,14 +235,14 @@ class Inventario(EsRastreable, EsCobrable, Base):
     # Propiedades
     tienda = relationship('Tienda', backref='inventario')
     producto = relationship(
-		'Producto', primaryjoin='Inventario.producto_id==Producto.producto_id',
-		 backref='inventario'
-	)
+        'Producto', primaryjoin='Inventario.producto_id==Producto.producto_id',
+         backref='inventario'
+    )
 
     def __init__(self, tienda_id=None, codigo=None, descripcion='', 
                  visibilidad="Ambos visibles", producto_id=None, precio=0, 
                  cantidad=0):
-        #super(Inventario, self).__init__(*args, **kwargs)
+        super(Inventario, self).__init__(*args, **kwargs)
         self.tienda_id = tienda_id
         self.codigo = codigo
         self.descripcion = descripcion
@@ -288,30 +268,11 @@ class Inventario(EsRastreable, EsCobrable, Base):
 class Producto(EsRastreable, EsDescribible, EsBuscable, EsCalificableSeguible,
                Base):
     __tablename__ = 'producto'
-    #__mapper_args__ = {'polymorphic_identity': 'producto'}
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    describible_p = Column(
-        Integer, ForeignKey('describible.describible_id'), nullable=False, 
-        unique=True, index=True
-    )
-    buscable_p = Column(
-        Integer, ForeignKey('buscable.buscable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    calificable_seguible_p = Column(
-        Integer, ForeignKey('calificable_seguible.calificable_seguible_id'), 
-        nullable=False, unique=True, index=True
-    )
-    """
     producto_id = Column(
-		Integer, autoincrement=True, primary_key=True, index=True
-	)
+        Integer, autoincrement=True, primary_key=True, index=True
+    )
     tipo_de_codigo = Column(
         CHAR(7), ForeignKey('tipo_de_codigo.valor'), nullable=False
     )
@@ -320,7 +281,7 @@ class Producto(EsRastreable, EsDescribible, EsBuscable, EsCalificableSeguible,
     fabricante = Column(String(45), nullable=False)
     modelo = Column(String(45))
     nombre = Column(String(45), nullable=False)
-    categoria = Column(
+    categoria_id = Column(
         CHAR(16), ForeignKey('categoria.categoria_id'), nullable=False
     )
     debut_en_el_mercado = Column(Date)
@@ -330,17 +291,18 @@ class Producto(EsRastreable, EsDescribible, EsBuscable, EsCalificableSeguible,
     peso = Column(Float)
     pais_de_origen = Column(CHAR(16), ForeignKey('territorio.territorio_id'))
 
-    def __init__(self, tipo_de_codigo, codigo, estatus, fabricante, 
-                 modelo, nombre, categoria, debut_en_el_mercado, largo, ancho,
-                 alto, peso, pais_de_origen):
-        #super(Producto, self).__init__(*args, **kwargs)
+    def __init__(self, tipo_de_codigo=None, codigo=None, estatus='Activo', 
+                 fabricante=None, modelo='', nombre=None, 
+                 debut_en_el_mercado=date(1999,9,9), largo=0, ancho=0, alto=0, 
+                 peso=0, pais_de_origen='0.00.00.00.00.00', *args, **kwargs):
+        super(Producto, self).__init__(*args, **kwargs)
         self.tipo_de_codigo = tipo_de_codigo
         self.codigo = codigo
         self.estatus = estatus
         self.fabricante = fabricante
         self.modelo = modelo
         self.nombre = nombre
-        self.categoria = categoria
+        #self.categoria_id = categoria_id
         self.largo = largo
         self.ancho = ancho
         self.alto = alto

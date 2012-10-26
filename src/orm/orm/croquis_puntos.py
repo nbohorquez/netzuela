@@ -43,7 +43,6 @@ class Dibujable(Base):
         'DibujableAsociacion', backref=backref('dibujable', uselist=False)
     )
     padre = association_proxy('asociacion', 'padre')
-    #__mapper_args__ = {'polymorphic_on': tipo}
 
 class EsDibujable(object):
     @declared_attr
@@ -72,15 +71,8 @@ class EsDibujable(object):
 
 class Croquis(EsRastreable, Base):
     __tablename__ = 'croquis'
-    #__mapper_args__ = {'polymorphic_identity': 'croquis'}
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     croquis_id = Column(Integer, primary_key=True, autoincrement=True)
     dibujable_id = Column(
         Integer, ForeignKey('dibujable.dibujable_id'), nullable=False
@@ -97,7 +89,6 @@ class Croquis(EsRastreable, Base):
 
     def __init__(self, *args, **kwargs):
         super(Croquis, self).__init__(*args, **kwargs)
-        #self.dibujable_id = dibujable_id
         self.area = -1
         self.perimetro = -1
 
@@ -106,8 +97,8 @@ class Punto(Base):
     
     # Columnas
     punto_id = Column(Integer, primary_key=True, autoincrement=True)
-    latitud = Numeric(9,6)
-    longitud = Numeric(9,6)
+    latitud = Column(Numeric(9,6))
+    longitud = Column(Numeric(9,6))
 
     def __init__(self, latitud=None, longitud=None):
         self.latitud = latitud
@@ -128,10 +119,9 @@ class PuntoDeCroquis(Base):
 
     # Propiedades
     """
-    croquis_x = relationship('Croquis', backref='puntos_de_croquis_x')
-    puntos_x = relationship('Punto', backref='puntos_de_croquis_x')
+    croquis = relationship('Croquis', backref='puntos_de_croquis_x')
+    punto = relationship('Punto', backref='puntos_de_croquis_x')
     """
-
     def __init__(self, croquis_id=None, punto_id=None):
         self.croquis_id = croquis_id
         self.punto_id = punto_id

@@ -41,7 +41,7 @@ arbol_categorias = [
     {
         'nombre': 'Libros', 
         'hijos': [
-            {'nombre': 'Noavelas', 'hijos': [] },
+            {'nombre': 'Novelas', 'hijos': [] },
             {'nombre': 'Poesia', 'hijos': [] },
             {'nombre': 'Tecnicos', 'hijos': [] },
             {'nombre': 'Negocios', 'hijos': [] },

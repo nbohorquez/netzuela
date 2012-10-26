@@ -6,6 +6,7 @@ from descripciones_fotos import EsDescribible
 from sqlalchemy import *
 from sqlalchemy import event
 #from sqlalchemy.event import listens_for
+from orm.rastreable import Rastreable, RastreableAsociacion
 from sqlalchemy.orm import relationship, backref
 from datetime import timedelta
 
@@ -13,16 +14,6 @@ class Usuario(EsRastreable, EsDescribible, Base):
     __tablename__ = 'usuario'
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    describible_p = Column(
-        Integer, ForeignKey('describible.describible_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     usuario_id = Column(
         Integer, primary_key=True, autoincrement=True, index=True
     )
@@ -35,7 +26,10 @@ class Usuario(EsRastreable, EsDescribible, Base):
     tipo = Column(String(45), nullable=False)
 
     # Propiedades
-    __mapper_args__ = {'polymorphic_on': tipo}
+    __mapper_args__ = {
+        'polymorphic_on': tipo, 
+        'polymorphic_identity': 'administrador'
+    }
     ubicacion = relationship(
         'Territorio', backref='usuarios',
         primaryjoin='Usuario.ubicacion_id==Territorio.territorio_id'
@@ -122,16 +116,6 @@ class Cliente(EsRastreable, EsDescribible, Base):
     __tablename__ = 'cliente'
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    describible_p = Column(
-        Integer, ForeignKey('describible.describible_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     rif = Column(CHAR(10), primary_key=True, autoincrement=False, index=True)
     propietario_id = Column(
         Integer, ForeignKey('usuario.usuario_id'), nullable=False
@@ -177,12 +161,16 @@ class Cliente(EsRastreable, EsDescribible, Base):
                  nombre_comun='', telefono=None, edificio_cc='', piso='', 
                  apartamento='', local='', casa='', calle=None, 
                  sector_urb_barrio=None, pagina_web='', facebook='', twitter='',
-                 correo_electronico_publico=''):
-        """
-        super(Cliente, self).__init__(
-            creador=self.propietario_x.rastreable_p, *args, **kwargs
-        )
-        """
+                 correo_electronico_publico='', *args, **kwargs):
+        if propietario_id is None:
+            raise Exception('propietario_id no puede ser nulo')
+
+        creador = DBSession.query(Rastreable.rastreable_id).\
+        join(RastreableAsociacion).\
+        join(Usuario).\
+        filter(Usuario.usuario_id == propietario_id).first()[0]
+
+        super(Cliente, self).__init__(creador=creador, *args, **kwargs)
         self.propietario_id = propietario_id
         self.ubicacion_id = ubicacion_id
         self.rif = rif

@@ -32,7 +32,9 @@ class Categoria(EsEtiquetable, Base):
         backref=backref('padre', remote_side='Categoria.categoria_id')
     )
 
-    # 
+    clientes = relationship('Cliente')
+    productos = relationship('Producto')
+
     def __init__(self, raiz=False, categoria_id=None, nombre=None, 
                  hijo_de_categoria=None, nivel=-1):
         if raiz:

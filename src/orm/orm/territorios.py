@@ -8,19 +8,8 @@ from sqlalchemy.orm import relationship, backref
 
 class Territorio(EsRastreable, EsDibujable, Base):
     __tablename__ = 'territorio'
-    #__mapper_args__ = {'polymorphic_identity': 'territorio'}
     
     # Columnas  
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    dibujable_p = Column(
-        Integer, ForeignKey('dibujable.dibujable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     territorio_id = Column(
         CHAR(16), primary_key=True, autoincrement=False, index=True
     )

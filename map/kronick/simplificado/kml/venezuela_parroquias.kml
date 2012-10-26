@@ -649,7 +649,7 @@
 		<SimpleData name="CAP_MUNIC">PUERTO PIRITU</SimpleData>
 		<SimpleData name="MUNICIPIO">FERNANDO DE PEÑALVER</SimpleData>
 		<SimpleData name="COD_PARROQ">01</SimpleData>
-		<SimpleData name="PARROQUIA">CAPITAL FERNANDO DE PE�ALVER</SimpleData>
+		<SimpleData name="PARROQUIA">CAPITAL FERNANDO DE PEÑALVER</SimpleData>
 		<SimpleData name="CAP_PARROQ">PUERTO PIRITU</SimpleData>
 		<SimpleData name="ID">030301</SimpleData>
 		<SimpleData name="ID_MUNICIP">0303</SimpleData>
@@ -976,7 +976,7 @@
 		<SimpleData name="CAP_MUNIC">MAPIRE</SimpleData>
 		<SimpleData name="MUNICIPIO">JOSE GREGORIO MONAGAS</SimpleData>
 		<SimpleData name="COD_PARROQ">01</SimpleData>
-		<SimpleData name="PARROQUIA">CAPITAL JOS� GREGORIO MONAGAS</SimpleData>
+		<SimpleData name="PARROQUIA">CAPITAL JOSÉ GREGORIO MONAGAS</SimpleData>
 		<SimpleData name="CAP_PARROQ">MAPIRE</SimpleData>
 		<SimpleData name="ID">031001</SimpleData>
 		<SimpleData name="ID_MUNICIP">0310</SimpleData>
@@ -2076,7 +2076,7 @@
 		<SimpleData name="CAP_MUNIC">SAN FERNANDO DE APURE</SimpleData>
 		<SimpleData name="MUNICIPIO">SAN FERNANDO</SimpleData>
 		<SimpleData name="COD_PARROQ">03</SimpleData>
-		<SimpleData name="PARROQUIA">PE�ALVER</SimpleData>
+		<SimpleData name="PARROQUIA">PEÑALVER</SimpleData>
 		<SimpleData name="CAP_PARROQ">ARICHUNA</SimpleData>
 		<SimpleData name="ID">040703</SimpleData>
 		<SimpleData name="ID_MUNICIP">0407</SimpleData>
@@ -2510,7 +2510,7 @@
 		<SimpleData name="CAP_MUNIC">PALO NEGRO</SimpleData>
 		<SimpleData name="MUNICIPIO">LIBERTADOR</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">NO URBANA SAN MARTIN DE PORRES</SimpleData>
+		<SimpleData name="PARROQUIA">NO URBANA SAN MARTIN DE PORRES 2</SimpleData>
 		<SimpleData name="CAP_PARROQ">LA PICA</SimpleData>
 		<SimpleData name="ID">050702</SimpleData>
 		<SimpleData name="ID_MUNICIP">0507</SimpleData>
@@ -2549,7 +2549,7 @@
 		<SimpleData name="MUNICIPIO">MARIO BRICEÑO IRAGORRY</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
 		<SimpleData name="PARROQUIA">URBANA CAÑA DE AZUCAR</SimpleData>
-		<SimpleData name="CAP_PARROQ">CA�A DE AZUCAR</SimpleData>
+		<SimpleData name="CAP_PARROQ">CAÑA DE AZUCAR</SimpleData>
 		<SimpleData name="ID">050802</SimpleData>
 		<SimpleData name="ID_MUNICIP">0508</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA URBANA CA�A DE AZUCAR</SimpleData>
@@ -2869,8 +2869,8 @@
 		<SimpleData name="CAP_MUNIC">BARBACOAS</SimpleData>
 		<SimpleData name="MUNICIPIO">URDANETA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">NO URBANA LAS PE�ITAS</SimpleData>
-		<SimpleData name="CAP_PARROQ">LAS PE�ITAS</SimpleData>
+		<SimpleData name="PARROQUIA">NO URBANA LAS PEÑITAS</SimpleData>
+		<SimpleData name="CAP_PARROQ">LAS PEÑITAS</SimpleData>
 		<SimpleData name="ID">051502</SimpleData>
 		<SimpleData name="ID_MUNICIP">0515</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA NO URBANA LAS PE�ITAS</SimpleData>
@@ -2945,7 +2945,7 @@
 		<SimpleData name="CAP_MUNIC">VILLA DE CURA</SimpleData>
 		<SimpleData name="MUNICIPIO">ZAMORA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO</SimpleData>
+		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO 1</SimpleData>
 		<SimpleData name="CAP_PARROQ">MAGDALENO</SimpleData>
 		<SimpleData name="NOTA">LAGO DE VALENCIA - ARAGUA</SimpleData>
 		<SimpleData name="ID">051602</SimpleData>
@@ -2965,7 +2965,7 @@
 		<SimpleData name="CAP_MUNIC">VILLA DE CURA</SimpleData>
 		<SimpleData name="MUNICIPIO">ZAMORA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO</SimpleData>
+		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO 2</SimpleData>
 		<SimpleData name="CAP_PARROQ">MAGDALENO</SimpleData>
 		<SimpleData name="NOTA">ISLA EN EL LAGO DE VALENCIA -</SimpleData>
 		<SimpleData name="ID">051602</SimpleData>
@@ -2985,7 +2985,7 @@
 		<SimpleData name="CAP_MUNIC">VILLA DE CURA</SimpleData>
 		<SimpleData name="MUNICIPIO">ZAMORA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO</SimpleData>
+		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO 3</SimpleData>
 		<SimpleData name="CAP_PARROQ">MAGDALENO</SimpleData>
 		<SimpleData name="ID">051602</SimpleData>
 		<SimpleData name="ID_MUNICIP">0516</SimpleData>
@@ -3004,7 +3004,7 @@
 		<SimpleData name="CAP_MUNIC">VILLA DE CURA</SimpleData>
 		<SimpleData name="MUNICIPIO">ZAMORA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO</SimpleData>
+		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO 4</SimpleData>
 		<SimpleData name="CAP_PARROQ">MAGDALENO</SimpleData>
 		<SimpleData name="NOTA">ISLA EN EL LAGO DE VALENCIA -</SimpleData>
 		<SimpleData name="ID">051602</SimpleData>
@@ -3024,7 +3024,7 @@
 		<SimpleData name="CAP_MUNIC">VILLA DE CURA</SimpleData>
 		<SimpleData name="MUNICIPIO">ZAMORA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO</SimpleData>
+		<SimpleData name="PARROQUIA">NO URBANA MAGDALENO 5</SimpleData>
 		<SimpleData name="CAP_PARROQ">MAGDALENO</SimpleData>
 		<SimpleData name="NOTA">ISLA EN EL LAGO DE VALENCIA -</SimpleData>
 		<SimpleData name="ID">051602</SimpleData>
@@ -5660,7 +5660,7 @@
 		<SimpleData name="CAP_MUNIC">VALENCIA</SimpleData>
 		<SimpleData name="MUNICIPIO">VALENCIA</SimpleData>
 		<SimpleData name="COD_PARROQ">04</SimpleData>
-		<SimpleData name="PARROQUIA">URBANA MIGUEL PE�A</SimpleData>
+		<SimpleData name="PARROQUIA">URBANA MIGUEL PEÑA</SimpleData>
 		<SimpleData name="CAP_PARROQ">VALENCIA</SimpleData>
 		<SimpleData name="ID">081404</SimpleData>
 		<SimpleData name="ID_MUNICIP">0814</SimpleData>
@@ -6401,7 +6401,7 @@
 		<SimpleData name="CAP_MUNIC">TUCUPITA</SimpleData>
 		<SimpleData name="MUNICIPIO">TUCUPITA</SimpleData>
 		<SimpleData name="COD_PARROQ">06</SimpleData>
-		<SimpleData name="PARROQUIA">MONSE�OR ARGIMIRO GARCIA</SimpleData>
+		<SimpleData name="PARROQUIA">MONSEÑOR ARGIMIRO GARCIA</SimpleData>
 		<SimpleData name="CAP_PARROQ">URB. DELFIN MENDOZA</SimpleData>
 		<SimpleData name="ID">100406</SimpleData>
 		<SimpleData name="ID_MUNICIP">1004</SimpleData>
@@ -6572,8 +6572,8 @@
 		<SimpleData name="CAP_MUNIC">SAN LUIS</SimpleData>
 		<SimpleData name="MUNICIPIO">BOLIVAR</SimpleData>
 		<SimpleData name="COD_PARROQ">03</SimpleData>
-		<SimpleData name="PARROQUIA">LA PE�A</SimpleData>
-		<SimpleData name="CAP_PARROQ">LA PE�A</SimpleData>
+		<SimpleData name="PARROQUIA">LA PEÑA</SimpleData>
+		<SimpleData name="CAP_PARROQ">LA PEÑA</SimpleData>
 		<SimpleData name="ID">110203</SimpleData>
 		<SimpleData name="ID_MUNICIP">1102</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA LA PE�A</SimpleData>
@@ -10631,7 +10631,7 @@
 		<SimpleData name="CAP_MUNIC">MERIDA</SimpleData>
 		<SimpleData name="MUNICIPIO">LIBERTADOR</SimpleData>
 		<SimpleData name="COD_PARROQ">04</SimpleData>
-		<SimpleData name="PARROQUIA">DOMINGO PE�A</SimpleData>
+		<SimpleData name="PARROQUIA">DOMINGO PEÑA</SimpleData>
 		<SimpleData name="CAP_PARROQ">MERIDA</SimpleData>
 		<SimpleData name="ID">141204</SimpleData>
 		<SimpleData name="ID_MUNICIP">1412</SimpleData>
@@ -10916,8 +10916,8 @@
 		<SimpleData name="CAP_MUNIC">TIMOTES</SimpleData>
 		<SimpleData name="MUNICIPIO">MIRANDA</SimpleData>
 		<SimpleData name="COD_PARROQ">04</SimpleData>
-		<SimpleData name="PARROQUIA">PI�ANGO</SimpleData>
-		<SimpleData name="CAP_PARROQ">PI�ANGO</SimpleData>
+		<SimpleData name="PARROQUIA">PIÑANGO</SimpleData>
+		<SimpleData name="CAP_PARROQ">PIÑANGO</SimpleData>
 		<SimpleData name="ID">141304</SimpleData>
 		<SimpleData name="ID_MUNICIP">1413</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA PI�ANGO</SimpleData>
@@ -11464,8 +11464,8 @@
 		<SimpleData name="CAP_MUNIC">ZEA</SimpleData>
 		<SimpleData name="MUNICIPIO">ZEA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">CA�O EL TIGRE</SimpleData>
-		<SimpleData name="CAP_PARROQ">CA�O EL TIGRE</SimpleData>
+		<SimpleData name="PARROQUIA">CAÑO EL TIGRE</SimpleData>
+		<SimpleData name="CAP_PARROQ">CAÑO EL TIGRE</SimpleData>
 		<SimpleData name="ID">142302</SimpleData>
 		<SimpleData name="ID_MUNICIP">1423</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA CA�O EL TIGRE</SimpleData>
@@ -11670,11 +11670,11 @@
 		<SimpleData name="ESTADO">MIRANDA</SimpleData>
 		<SimpleData name="CAP_ESTADO">LOS TEQUES</SimpleData>
 		<SimpleData name="COD_MUNIC">03</SimpleData>
-		<SimpleData name="CAP_MUNIC">NUESTRA SE�ORA DEL ROSARIO</SimpleData>
+		<SimpleData name="CAP_MUNIC">NUESTRA SEÑORA DEL ROSARIO</SimpleData>
 		<SimpleData name="MUNICIPIO">BARUTA</SimpleData>
 		<SimpleData name="COD_PARROQ">01</SimpleData>
 		<SimpleData name="PARROQUIA">BARUTA</SimpleData>
-		<SimpleData name="CAP_PARROQ">NUESTRA SE�ORA DEL ROSARIO</SimpleData>
+		<SimpleData name="CAP_PARROQ">NUESTRA SEÑORA DEL ROSARIO</SimpleData>
 		<SimpleData name="ID">150301</SimpleData>
 		<SimpleData name="ID_MUNICIP">1503</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA BARUTA</SimpleData>
@@ -11689,7 +11689,7 @@
 		<SimpleData name="ESTADO">MIRANDA</SimpleData>
 		<SimpleData name="CAP_ESTADO">LOS TEQUES</SimpleData>
 		<SimpleData name="COD_MUNIC">03</SimpleData>
-		<SimpleData name="CAP_MUNIC">NUESTRA SE�ORA DEL ROSARIO</SimpleData>
+		<SimpleData name="CAP_MUNIC">NUESTRA SEÑORA DEL ROSARIO</SimpleData>
 		<SimpleData name="MUNICIPIO">BARUTA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
 		<SimpleData name="PARROQUIA">EL CAFETAL</SimpleData>
@@ -11708,7 +11708,7 @@
 		<SimpleData name="ESTADO">MIRANDA</SimpleData>
 		<SimpleData name="CAP_ESTADO">LOS TEQUES</SimpleData>
 		<SimpleData name="COD_MUNIC">03</SimpleData>
-		<SimpleData name="CAP_MUNIC">NUESTRA SE�ORA DEL ROSARIO</SimpleData>
+		<SimpleData name="CAP_MUNIC">NUESTRA SEÑORA DEL ROSARIO</SimpleData>
 		<SimpleData name="MUNICIPIO">BARUTA</SimpleData>
 		<SimpleData name="COD_PARROQ">03</SimpleData>
 		<SimpleData name="PARROQUIA">LAS MINAS DE BARUTA</SimpleData>
@@ -11920,8 +11920,8 @@
 		<SimpleData name="CAP_MUNIC">LOS TEQUES</SimpleData>
 		<SimpleData name="MUNICIPIO">GUAICAIPURO</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">ALTAGRACIA DE LA MONTA�A</SimpleData>
-		<SimpleData name="CAP_PARROQ">ALTAGRACIA DE LA MONTA�A</SimpleData>
+		<SimpleData name="PARROQUIA">ALTAGRACIA DE LA MONTAÑA</SimpleData>
+		<SimpleData name="CAP_PARROQ">ALTAGRACIA DE LA MONTAÑA</SimpleData>
 		<SimpleData name="ID">151002</SimpleData>
 		<SimpleData name="ID_MUNICIP">1510</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA ALTAGRACIA DE LA MONTA�A</SimpleData>
@@ -13908,7 +13908,7 @@
 		<SimpleData name="MUNICIPIO">GUANARE</SimpleData>
 		<SimpleData name="COD_PARROQ">03</SimpleData>
 		<SimpleData name="PARROQUIA">SAN JOSE DE LA MONTAÑA</SimpleData>
-		<SimpleData name="CAP_PARROQ">SAN JOSE DE LA MONTA�A</SimpleData>
+		<SimpleData name="CAP_PARROQ">SAN JOSE DE LA MONTAÑA</SimpleData>
 		<SimpleData name="ID">180403</SimpleData>
 		<SimpleData name="ID_MUNICIP">1804</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA SAN JOSE DE LA MONTA�A</SimpleData>
@@ -14041,7 +14041,7 @@
 		<SimpleData name="MUNICIPIO">MONSEÑOR JOSE VICENTE DE UNDA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
 		<SimpleData name="PARROQUIA">PEÑA BLANCA</SimpleData>
-		<SimpleData name="CAP_PARROQ">PE�A BLANCA</SimpleData>
+		<SimpleData name="CAP_PARROQ">PEÑA BLANCA</SimpleData>
 		<SimpleData name="ID">180602</SimpleData>
 		<SimpleData name="ID_MUNICIP">1806</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA PE�A BLANCA</SimpleData>
@@ -14212,7 +14212,7 @@
 		<SimpleData name="MUNICIPIO">PAPELON</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
 		<SimpleData name="PARROQUIA">CAÑO DELGADITO</SimpleData>
-		<SimpleData name="CAP_PARROQ">CA�O DELGADITO</SimpleData>
+		<SimpleData name="CAP_PARROQ">CAÑO DELGADITO</SimpleData>
 		<SimpleData name="ID">180902</SimpleData>
 		<SimpleData name="ID_MUNICIP">1809</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA CA�O DELGADITO</SimpleData>
@@ -14553,7 +14553,7 @@
 		<SimpleData name="CAP_MUNIC">CASANAY</SimpleData>
 		<SimpleData name="MUNICIPIO">ANDRES ELOY BLANCO</SimpleData>
 		<SimpleData name="COD_PARROQ">01</SimpleData>
-		<SimpleData name="PARROQUIA">MARI�O</SimpleData>
+		<SimpleData name="PARROQUIA">MARIÑO</SimpleData>
 		<SimpleData name="CAP_PARROQ">CASANAY</SimpleData>
 		<SimpleData name="ID">190101</SimpleData>
 		<SimpleData name="ID_MUNICIP">1901</SimpleData>
@@ -15875,11 +15875,11 @@
 		<SimpleData name="ESTADO">TACHIRA</SimpleData>
 		<SimpleData name="CAP_ESTADO">SAN CRISTOBAL</SimpleData>
 		<SimpleData name="COD_MUNIC">07</SimpleData>
-		<SimpleData name="CAP_MUNIC">SAN RAFAEL DEL PI�AL</SimpleData>
+		<SimpleData name="CAP_MUNIC">SAN RAFAEL DEL PIÑAL</SimpleData>
 		<SimpleData name="MUNICIPIO">FERNANDEZ FEO</SimpleData>
 		<SimpleData name="COD_PARROQ">01</SimpleData>
 		<SimpleData name="PARROQUIA">FERNANDEZ FEO</SimpleData>
-		<SimpleData name="CAP_PARROQ">SAN RAFAEL DEL PI�AL</SimpleData>
+		<SimpleData name="CAP_PARROQ">SAN RAFAEL DEL PIÑAL</SimpleData>
 		<SimpleData name="ID">200701</SimpleData>
 		<SimpleData name="ID_MUNICIP">2007</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA FERNANDEZ FEO</SimpleData>
@@ -15894,7 +15894,7 @@
 		<SimpleData name="ESTADO">TACHIRA</SimpleData>
 		<SimpleData name="CAP_ESTADO">SAN CRISTOBAL</SimpleData>
 		<SimpleData name="COD_MUNIC">07</SimpleData>
-		<SimpleData name="CAP_MUNIC">SAN RAFAEL DEL PI�AL</SimpleData>
+		<SimpleData name="CAP_MUNIC">SAN RAFAEL DEL PIÑAL</SimpleData>
 		<SimpleData name="MUNICIPIO">FERNANDEZ FEO</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
 		<SimpleData name="PARROQUIA">ALBERTO ADRIANI</SimpleData>
@@ -15913,7 +15913,7 @@
 		<SimpleData name="ESTADO">TACHIRA</SimpleData>
 		<SimpleData name="CAP_ESTADO">SAN CRISTOBAL</SimpleData>
 		<SimpleData name="COD_MUNIC">07</SimpleData>
-		<SimpleData name="CAP_MUNIC">SAN RAFAEL DEL PI�AL</SimpleData>
+		<SimpleData name="CAP_MUNIC">SAN RAFAEL DEL PIÑAL</SimpleData>
 		<SimpleData name="MUNICIPIO">FERNANDEZ FEO</SimpleData>
 		<SimpleData name="COD_PARROQ">03</SimpleData>
 		<SimpleData name="PARROQUIA">SANTO DOMINGO</SimpleData>
@@ -16460,11 +16460,11 @@
 		<SimpleData name="ESTADO">TACHIRA</SimpleData>
 		<SimpleData name="CAP_ESTADO">SAN CRISTOBAL</SimpleData>
 		<SimpleData name="COD_MUNIC">20</SimpleData>
-		<SimpleData name="CAP_MUNIC">URE�A</SimpleData>
+		<SimpleData name="CAP_MUNIC">UREÑA</SimpleData>
 		<SimpleData name="MUNICIPIO">PEDRO MARIA UREÑA</SimpleData>
 		<SimpleData name="COD_PARROQ">01</SimpleData>
 		<SimpleData name="PARROQUIA">PEDRO MARIA UREÑA</SimpleData>
-		<SimpleData name="CAP_PARROQ">URE�A</SimpleData>
+		<SimpleData name="CAP_PARROQ">UREÑA</SimpleData>
 		<SimpleData name="ID">202001</SimpleData>
 		<SimpleData name="ID_MUNICIP">2020</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA PEDRO MARIA URE�A</SimpleData>
@@ -16479,7 +16479,7 @@
 		<SimpleData name="ESTADO">TACHIRA</SimpleData>
 		<SimpleData name="CAP_ESTADO">SAN CRISTOBAL</SimpleData>
 		<SimpleData name="COD_MUNIC">20</SimpleData>
-		<SimpleData name="CAP_MUNIC">URE�A</SimpleData>
+		<SimpleData name="CAP_MUNIC">UREÑA</SimpleData>
 		<SimpleData name="MUNICIPIO">PEDRO MARIA UREÑA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
 		<SimpleData name="PARROQUIA">NUEVA ARCADIA</SimpleData>
@@ -16820,7 +16820,7 @@
 		<SimpleData name="CAP_MUNIC">PREGONERO</SimpleData>
 		<SimpleData name="MUNICIPIO">URIBANTE</SimpleData>
 		<SimpleData name="COD_PARROQ">03</SimpleData>
-		<SimpleData name="PARROQUIA">JUAN PABLO PE�ALOZA</SimpleData>
+		<SimpleData name="PARROQUIA">JUAN PABLO PEÑALOZA</SimpleData>
 		<SimpleData name="CAP_PARROQ">LAGUNA DE GARCIA</SimpleData>
 		<SimpleData name="ID">202803</SimpleData>
 		<SimpleData name="ID_MUNICIP">2028</SimpleData>
@@ -17883,8 +17883,8 @@
 		<SimpleData name="CAP_MUNIC">MOTATAN</SimpleData>
 		<SimpleData name="MUNICIPIO">MOTATAN</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">EL BA�O</SimpleData>
-		<SimpleData name="CAP_PARROQ">EL BA�O</SimpleData>
+		<SimpleData name="PARROQUIA">EL BAÑO</SimpleData>
+		<SimpleData name="CAP_PARROQ">EL BAÑO</SimpleData>
 		<SimpleData name="ID">211202</SimpleData>
 		<SimpleData name="ID_MUNICIP">2112</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA EL BA�O</SimpleData>
@@ -18149,7 +18149,7 @@
 		<SimpleData name="CAP_MUNIC">CARVAJAL</SimpleData>
 		<SimpleData name="MUNICIPIO">SAN RAFAEL DE CARVAJAL</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">ANTONIO NICOLAS BRICE�O</SimpleData>
+		<SimpleData name="PARROQUIA">ANTONIO NICOLAS BRICEÑO</SimpleData>
 		<SimpleData name="CAP_PARROQ">LA CEJITA</SimpleData>
 		<SimpleData name="ID">211602</SimpleData>
 		<SimpleData name="ID_MUNICIP">2116</SimpleData>
@@ -18510,8 +18510,8 @@
 		<SimpleData name="CAP_MUNIC">LA QUEBRADA</SimpleData>
 		<SimpleData name="MUNICIPIO">URDANETA</SimpleData>
 		<SimpleData name="COD_PARROQ">06</SimpleData>
-		<SimpleData name="PARROQUIA">TU�AME</SimpleData>
-		<SimpleData name="CAP_PARROQ">TU�AME</SimpleData>
+		<SimpleData name="PARROQUIA">TUÑAME</SimpleData>
+		<SimpleData name="CAP_PARROQ">TUÑAME</SimpleData>
 		<SimpleData name="ID">211906</SimpleData>
 		<SimpleData name="ID_MUNICIP">2119</SimpleData>
 		<SimpleData name="ETIQUETA">PARROQUIA TU�AME</SimpleData>
@@ -18864,7 +18864,7 @@
 		<SimpleData name="CAP_MUNIC">YARITAGUA</SimpleData>
 		<SimpleData name="MUNICIPIO">PEÑA</SimpleData>
 		<SimpleData name="COD_PARROQ">01</SimpleData>
-		<SimpleData name="PARROQUIA">CAPITAL PE�A</SimpleData>
+		<SimpleData name="PARROQUIA">CAPITAL PEÑA</SimpleData>
 		<SimpleData name="CAP_PARROQ">YARITAGUA</SimpleData>
 		<SimpleData name="ID">221001</SimpleData>
 		<SimpleData name="ID_MUNICIP">2210</SimpleData>
@@ -19053,7 +19053,7 @@
 		<SimpleData name="CAP_MUNIC">EL TORO</SimpleData>
 		<SimpleData name="MUNICIPIO">ALMIRANTE PADILLA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">MONAGAS</SimpleData>
+		<SimpleData name="PARROQUIA">MONAGAS 1</SimpleData>
 		<SimpleData name="CAP_PARROQ">SAN CARLOS</SimpleData>
 		<SimpleData name="ID">230102</SimpleData>
 		<SimpleData name="ID_MUNICIP">2301</SimpleData>
@@ -19072,7 +19072,7 @@
 		<SimpleData name="CAP_MUNIC">EL TORO</SimpleData>
 		<SimpleData name="MUNICIPIO">ALMIRANTE PADILLA</SimpleData>
 		<SimpleData name="COD_PARROQ">02</SimpleData>
-		<SimpleData name="PARROQUIA">MONAGAS</SimpleData>
+		<SimpleData name="PARROQUIA">MONAGAS 2</SimpleData>
 		<SimpleData name="CAP_PARROQ">SAN CARLOS</SimpleData>
 		<SimpleData name="NOTA">ISLAS DEL ESTADO ZULIA</SimpleData>
 		<SimpleData name="ID">230102</SimpleData>
