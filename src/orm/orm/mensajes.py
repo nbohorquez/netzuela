@@ -2,7 +2,7 @@
 
 from comunes import Base, DBSession
 from palabras import EsEtiquetable
-from rastreable import EsRastreable
+from rastreable import EsRastreable, RastreableAsociacion, Rastreable
 from sqlalchemy import *
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr
@@ -38,14 +38,12 @@ class Interlocutor(Base):
         Integer, 
         ForeignKey('interlocutor_asociacion.interlocutor_asociacion_id')
     )
-    #tipo = Column(String(45), nullable=False)
 
     # Propiedades
     asociacion = relationship(
         'InterlocutorAsociacion', backref=backref('interlocutor', uselist=False)
     )
     padre = association_proxy('asociacion', 'padre')
-    #__mapper_args__ = {'polymorphic_on': tipo}
 
 class EsInterlocutor(object):
     @declared_attr
@@ -79,19 +77,8 @@ class EsInterlocutor(object):
 
 class Mensaje(EsRastreable, EsEtiquetable, Base):
     __tablename__ = 'mensaje'
-    #__mapper_args__ = {'polymorphic_identity': 'mensaje'}
     
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    etiquetable_p = Column(
-        Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     mensaje_id = Column(Integer, primary_key=True, autoincrement=True)
     remitente_id = Column(
         Integer, ForeignKey('interlocutor.interlocutor_id'), nullable=False
@@ -109,19 +96,17 @@ class Mensaje(EsRastreable, EsEtiquetable, Base):
     destinatario = relationship(
         "Interlocutor", backref="mensajes_recibidos",
         primaryjoin="Mensaje.destinatario_id == Interlocutor.interlocutor_id"
-        
     )
 
-    def __init__(self, remitente_id=None, destinatario_id=None, contenido=''):
+    def __init__(self, remitente=None, destinatario=None, contenido='',
+                 *args, **kwargs):
         # Yo creia que debia hacer algo como esto para poder acceder a 
         # 'remitente_x':
         # http://techspot.zzzeek.org/2007/05/29/polymorphic-associations-with-sqlalchemy/
         # Sin embargo, me di cuenta que con relaciones simples bastaba y sobraba
-        """
         super(Mensaje, self).__init__(
-            creador=remitente_x.rastreable_p, *args, **kwargs
+            creador=remitente.padre.rastreable.rastreable_id, *args, **kwargs
         )
-        """
-        self.remitente_id = remitente_id
-        self.destinatario_id = destinatario_id
+        self.remitente = remitente
+        self.destinatario = destinatario
         self.contenido = contenido

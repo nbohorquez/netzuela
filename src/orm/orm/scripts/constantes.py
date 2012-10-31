@@ -10,7 +10,7 @@ grados_de_instruccion = [
     {'grado': 2, 'instruccion': "Secundaria"},
     {'grado': 3, 'instruccion': "Tecnico Medio"},
     {'grado': 4, 'instruccion': "Tecnico Superior"},
-    {'grado': 5, 'instruccion': "Universitario"},
+    {'grado': 5, 'instruccion': "Universitaria"},
     {'grado': 6, 'instruccion': "Especializacion"},
     {'grado': 7, 'instruccion': "Maestria"},
     {'grado': 8, 'instruccion': "Doctorado"}

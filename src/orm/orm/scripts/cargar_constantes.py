@@ -122,7 +122,7 @@ def main():
         
         print "Creando administrador"
         adm = Administrador(
-            creador=1, ubicacion_id=None, nombre='Nestor', apellido='Bohorquez',
+            creador=1, ubicacion=None, nombre='Nestor', apellido='Bohorquez',
             privilegios='Todos', correo_electronico='admin@netzuela.com',
             contrasena='$2a$12$MOM8uMGo9XmH1BDYPrTns.k/WLl6vt45qeKEXn5ZqoiBsQeBMfTQG'
         )

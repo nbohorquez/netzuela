@@ -4,6 +4,7 @@ from comunes import Base, DBSession
 from mensajes import EsInterlocutor
 from rastreable import EsRastreable
 from sqlalchemy import *
+from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import relationship, backref
 from usuarios import Usuario
 
@@ -50,12 +51,6 @@ class Consumidor(EsInterlocutor, Usuario):
     __mapper_args__ = {'polymorphic_identity': 'consumidor'}
     
     # Columnas
-    """
-    interlocutor_p = Column(
-        Integer, ForeignKey('interlocutor.interlocutor_id'), nullable=False, 
-		unique=True, index=True
-    )
-    """
     usuario_p = Column(
         Integer, ForeignKey('usuario.usuario_id'), nullable=False, unique=True,
 		index=True
@@ -71,6 +66,12 @@ class Consumidor(EsInterlocutor, Usuario):
     grado_de_instruccion = Column(
         CHAR(16), ForeignKey('grado_de_instruccion.valor'), nullable=False
     )
+
+    # Propiedades
+    calificados = association_proxy(
+        'calificaciones_resenas', 'calificable_seguible'
+    )
+    seguidos = association_proxy('seguimientos', 'calificable_seguible')
 
     def __init__(self, sexo=None, fecha_de_nacimiento=None, grupo_de_edad=None,
                  grado_de_instruccion=None, *args, **kwargs):

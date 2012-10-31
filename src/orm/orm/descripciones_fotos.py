@@ -37,14 +37,12 @@ class Describible(Base):
     asociacion_id = Column(
         Integer, ForeignKey('describible_asociacion.describible_asociacion_id')
     )
-    #tipo = Column(String(45), nullable=False)
 
     # Propiedades
     asociacion = relationship(
         'DescribibleAsociacion', backref=backref('describible', uselist=False)
     )
     padre = association_proxy('asociacion', 'padre')
-    #__mapper_args__ = {'polymorphic_on': tipo}
 
 class EsDescribible(object):
     @declared_attr
@@ -84,25 +82,14 @@ class Foto(Base):
     # Propiedades
     describle = relationship('Describible', backref='fotos')
 
-    def __init__(self, ruta_de_foto=None, describible_id=None):
+    def __init__(self, ruta_de_foto=None, describible=None):
         self.ruta_de_foto = ruta_de_foto
-        self.describible_id = describible_id
+        self.describible = describible
 
 class Descripcion(EsRastreable, EsEtiquetable, Base):
     __tablename__ = 'descripcion'
-    #__mapper_args__ = {'polymorphic_identity': 'descripcion'}
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    etiquetable_p = Column(
-        Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     descripcion_id = Column(Integer, primary_key=True, autoincrement=True)
     describible_id = Column(
         Integer, ForeignKey('describible.describible_id'), nullable=False
@@ -112,7 +99,9 @@ class Descripcion(EsRastreable, EsEtiquetable, Base):
     # Propiedades
     describle = relationship("Describible", backref="descripciones")
 
-    def __init__(self, describible_id=None, contenido=''):
-        #super(Descripcion, self).__init__(*args, **kwargs)
-        self.describible_id = describible_id
+    def __init__(self, describible=None, contenido=''):
+        super(Descripcion, self).__init__(
+            creador=describible.padre.rastreable.rastreable_id, *args, **kwargs
+        )
+        self.describible = describible
         self.contenido = contenido

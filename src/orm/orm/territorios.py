@@ -34,12 +34,6 @@ class Territorio(EsRastreable, EsDibujable, Base):
             'territorio_padre', remote_side='Territorio.territorio_id'
         )
     )
-    """
-    idioma = relationship(
-        'Idioma', backref='hablantes', 
-        primaryjoin='Territorio.idioma==Idioma.valor'
-    )
-    """
     regiones = relationship(
         "Region", secondary=lambda:RegionTerritorio.__table__, 
         backref="territorios"
@@ -196,6 +190,6 @@ class RegionTerritorio(Base):
     region = relationship('Region', backref='region_territorio')
     territorio = relationship('Territorio', backref='region_territorio')
 
-    def __init__(self, region_id=None, territorio_id=None):
-        self.region_id = region_id
-        self.territorio_id = territorio_id
+    def __init__(self, region=None, territorio=None):
+        self.region = region
+        self.territorio = territorio

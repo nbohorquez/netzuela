@@ -2,7 +2,7 @@
 
 from datetime import datetime
 from decimal import Decimal
-from sqlalchemy import Table
+from sqlalchemy import Table, event
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -31,7 +31,7 @@ class _Base(object):
         pass
 
     @staticmethod
-    def ante_de_eliminar(mapper, connection, target):
+    def antes_de_eliminar(mapper, connection, target):
         pass
 
     @classmethod

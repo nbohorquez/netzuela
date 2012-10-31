@@ -36,14 +36,13 @@ class Cobrable(Base):
     asociacion_id = Column(
         Integer, ForeignKey('cobrable_asociacion.cobrable_asociacion_id')
     )
-    #tipo = Column(String(45), nullable=False)
 
     # Propiedades
     asociacion = relationship(
         'CobrableAsociacion', backref=backref('cobrable', uselist=False)
     )
     padre = association_proxy('asociacion', 'padre')
-    #__mapper_args__ = {'polymorphic_on': tipo}
+    facturas = association_proxy('servicios_vendidos', 'factura')
 
 class EsCobrable(object):
     @declared_attr
@@ -72,15 +71,8 @@ class EsCobrable(object):
 
 class Factura(EsRastreable, Base):
     __tablename__ = 'factura'
-    #__mapper_args__ = {'polymorphic_identity': 'factura'}
     
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     factura_id = Column(Integer, primary_key=True, autoincrement=True)
     cliente_id = Column(CHAR(10), ForeignKey('cliente.rif'), nullable=False)
     inicio_de_medicion = Column(Numeric(17,3), nullable=False)
@@ -94,15 +86,14 @@ class Factura(EsRastreable, Base):
         'Cliente', primaryjoin='Factura.cliente_id==Cliente.rif', 
         backref='facturas'
     )
-    cobrables = relationship(
-        "Cobrable", secondary=lambda:ServicioVendido.__table__, 
-        backref="facturas"
-    )
+    cobrables = association_proxy('servicios_vendidos', 'cobrable')
 
-    def __init__(self, cliente_id=None, inicio_de_medicion=None, 
+    def __init__(self, cliente=None, inicio_de_medicion=None, 
                  fin_de_medicion=None):
-        #super(Factura, self).__init__(*args, **kwargs)
-        self.cliente_id = cliente_id
+        super(Factura, self).__init__(
+            creador=cliente.rastreable.rastreable_id,*args, **kwargs
+        )
+        self.cliente = cliente
         self.inicio_de_medicion = inicio_de_medicion
         self.fin_de_medicion = fin_de_medicion
         self.subtotal = 0
@@ -127,7 +118,7 @@ class ServicioVendido(Base):
     factura = relationship('Factura', backref='servicios_vendidos')
     cobrable = relationship('Cobrable', backref='servicios_vendidos')
 
-    def __init__(self, factura_id=None, cobrable_id=None):
-        self.factura_id = factura_id
-        self.cobrable_id = cobrable_id
-        self.acumulado = 0
+    def __init__(self, factura=None, cobrable=None, acumulado=0):
+        self.factura = factura
+        self.cobrable = cobrable
+        self.acumulado = acumulado

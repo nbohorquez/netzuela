@@ -35,14 +35,13 @@ class Etiquetable(Base):
     asociacion_id = Column(
         Integer, ForeignKey('etiquetable_asociacion.etiquetable_asociacion_id')
     )
-    #tipo = Column(String(45), nullable=False)
 
     # Propiedades
     asociacion = relationship(
         'EtiquetableAsociacion', backref=backref('etiquetable', uselist=False)
     )
     padre = association_proxy('asociacion', 'padre')
-    #__mapper_args__ = {'polymorphic_on': tipo}
+    palabras = association_proxy('etiquetas', 'palabra')
 
 class EsEtiquetable(object):
     @declared_attr
@@ -86,13 +85,13 @@ class Etiqueta(Base):
     etiquetable = relationship(
         "Etiquetable", foreign_keys=[etiquetable_id], backref="etiquetas"
     )
-    palabra_x = relationship(
+    palabra = relationship(
         "Palabra", foreign_keys=[palabra_id], backref="etiquetas"
     )
     
-    def __init__(self, etiquetable_id=None, palabra_id=None):
-        self.etiquetable_id = etiquetable_id
-        self.palabra_id = palabra_id
+    def __init__(self, etiquetable=None, palabra=None):
+        self.etiquetable = etiquetable
+        self.palabra = palabra
 
 class Palabra(Base):
     __tablename__ = 'palabra'
@@ -107,6 +106,7 @@ class Palabra(Base):
         primaryjoin='or_(Palabra.palabra_id == RelacionDePalabras.palabra1_id,'
         'Palabra.palabra_id == RelacionDePalabras.palabra2_id)'
     )
+    etiquetables = association_proxy('etiquetas', 'etiquetable')
 
     def __init__(self, palabra_frase=None):
         self.palabra_frase = palabra_frase
@@ -124,6 +124,16 @@ class RelacionDePalabras(Base):
         primary_key=True, autoincrement=False
     )
 
-    def __init__(self, palabra1_id=None, palabra2_id=None):
-        self.palabra1_id = palabra1_id
-        self.palabra2_id = palabra2_id
+    # Propiedades
+    palabra1 = relationship(
+        'Palabra', 
+        primaryjoin='Palabra.palabra_id==RelacionDePalabras.palabra1_id'
+    )
+    palabra2 = relationship(
+        'Palabra', 
+        primaryjoin='Palabra.palabra_id==RelacionDePalabras.palabra2_id'
+    )
+
+    def __init__(self, palabra1=None, palabra2=None):
+        self.palabra1 = palabra1
+        self.palabra2 = palabra2

@@ -31,7 +31,10 @@ from orm.tiendas_productos import (
     Tienda, 
     Dia, 
     HorarioDeTrabajo, 
-    Turno
+    Turno,
+	crear_inventario_tienda,
+	crear_inventario_reciente,
+	crear_tamano_reciente
 )
 from orm.croquis_puntos import Punto, Croquis, PuntoDeCroquis, Dibujable
 from orm.palabras import Etiquetable, Etiqueta, Palabra, RelacionDePalabras
@@ -70,3 +73,8 @@ with open(ARCHIVO_CONFIG) as fp:
 motor = create_engine(config.get('base_de_datos', 'mysql'), echo=True)
 DBSession.configure(bind=motor)
 Base.metadata.create_all(motor)
+"""
+DBSession.execute(crear_inventario_tienda)
+DBSession.execute(crear_inventario_reciente)
+DBSession.execute(crear_tamano_reciente)
+"""

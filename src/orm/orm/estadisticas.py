@@ -9,12 +9,6 @@ class Estadisticas(EsRastreable, Base):
     __tablename__ = 'estadisticas'
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), 
-        nullable=False, unique=True, index=True
-    )
-    """
     estadisticas_id = Column(Integer, primary_key=True, autoincrement=True)
     territorio_id = Column(
         CHAR(16), ForeignKey('territorio.territorio_id'), nullable=False
@@ -28,13 +22,15 @@ class Estadisticas(EsRastreable, Base):
         primaryjoin='Estadisticas.territorio_id == Territorio.territorio_id' 
     )
     
-    def __init__(self, territorio_id=None, *args, **kwargs):
-        super(Estadisticas, self).__init__(*args, **kwargs)
-        self.territorio_id = territorio_id
-        estadisticas_temporales = EstadisticasTemporales(
+    def __init__(self, territorio=None, *args, **kwargs):
+        super(Estadisticas, self).__init__(
+            creador=territorio.rastreable.rastreable_id, *args, **kwargs
+        )
+        self.territorio = territorio
+        self.estadisticas_temporales = EstadisticasTemporales(
             self.estadisticas_id, 0, 0, 0
         )
-        DBSession.add(estadisticas_temporales)
+        #DBSession.add(estadisticas_temporales)
 
 class EstadisticasTemporales(Base):
     __tablename__ = 'estadisticas_temporales'

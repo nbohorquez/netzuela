@@ -42,26 +42,17 @@ class CalificableSeguible(Base):
         Integer, ForeignKey('calificable_seguible_asociacion.calificable_seguible_asociacion_id')
     )
     calificacion_general = Column(Integer)
-    #tipo = Column(String(45), nullable=False)
 
     # Propiedades
-    #__mapper_args__ = {'polymorphic_on': tipo}
     asociacion = relationship(
         'CalificableSeguibleAsociacion', 
         backref=backref('calificable_seguible', uselist=False)
     )
     padre = association_proxy('asociacion', 'padre')
-    seguidores = relationship(
-        "Consumidor", secondary=lambda:Seguidor.__table__, 
-        backref="seguidos"
-    )
-    calificadores = relationship(
-        "Consumidor", secondary=lambda:CalificacionResena.__table__,
-        backref="calificados"
-    )
+    seguidores = association_proxy('seguimientos', 'consumidor')
+    calificadores = association_proxy('calificaciones_resenas','consumidor')
 
-    def __init__(self, calificable_seguible_id=None, calificacion_general=0):
-        self.calificable_seguible_id = calificable_seguible_id
+    def __init__(self, calificacion_general=0):
         self.calificacion_general = calificacion_general
 
 class EsCalificableSeguible(object):
@@ -98,19 +89,8 @@ class Calificacion(Base):
 
 class CalificacionResena(EsRastreable, EsEtiquetable, Base):
     __tablename__ = 'calificacion_resena'
-    #__mapper_args__ = {'polymorphic_identity': 'calificacion_resena'}
     
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    etiquetable_p = Column(
-        Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     calificable_seguible_id = Column(
         Integer, ForeignKey('calificable_seguible.calificable_seguible_id'), 
         primary_key=True, autoincrement=False
@@ -124,25 +104,26 @@ class CalificacionResena(EsRastreable, EsEtiquetable, Base):
     )
     resena = Column(Text)
 
-    def __init__(self, calificable_seguible_id=None, consumidor_id=None,
-                 calificacion='Bien', resena=''):
-        #super(CalificacionResena, self).__init__(*args, **kwargs)
-        self.calificable_seguible_id = calificable_seguible_id
-        self.consumidor_id = consumidor_id
+    # Propiedades
+    calificable_seguible = relationship(
+        'CalificableSeguible', backref='calificaciones_resenas'
+    )
+    consumidor = relationship('Consumidor', backref='calificaciones_resenas')
+
+    def __init__(self, calificable_seguible=None, consumidor=None, 
+                 calificacion='Bien', resena='', *args, **kwargs):
+        super(CalificacionResena, self).__init__(
+            creador=consumidor.rastreable.rastreable_id, *args, **kwargs
+        )
+        self.calificable_seguible = calificable_seguible
+        self.consumidor = consumidor
         self.calificacion = calificacion
         self.resena = resena
 
-class Seguidor(EsRastreable, Base):
-    __tablename__ = 'seguidor'
-    #__mapper_args__ = {'polymorphic_identity': 'seguidor'}
+class Seguimiento(EsRastreable, Base):
+    __tablename__ = 'seguimiento'
 
     # Columnas
-    """
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     consumidor_id = Column(
         Integer, ForeignKey('consumidor.consumidor_id'), 
         primary_key=True, autoincrement=False
@@ -154,9 +135,17 @@ class Seguidor(EsRastreable, Base):
     )
     avisar_si = Column(String(45), nullable=False)
 
-    def __init__(self, calificable_seguible_id=None, consumidor_id=None,
-                 avisar_si=''):
-        #super(Seguidor, self).__init__(*args, **kwargs)
-        self.calificable_seguible_id = calificable_seguible_id
-        self.consumidor_id = consumidor_id
+    # Propiedades
+    calificable_seguible = relationship(
+        'CalificableSeguible', backref='seguimientos'
+    )
+    consumidor = relationship('Consumidor', backref='seguimientos')
+
+    def __init__(self, calificable_seguible=None, consumidor=None,
+                 avisar_si='', *args, **kwargs):
+        super(Seguimiento, self).__init__(
+            creador=consumidor.rastreable.rastreable_id, *args, **kwargs
+        )
+        self.calificable_seguible = calificable_seguible
+        self.consumidor = consumidor
         self.avisar_si = avisar_si

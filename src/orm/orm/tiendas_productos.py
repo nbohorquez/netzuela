@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from comunes import ahorita, Base, CreateView, DBSession
-from datetime import date
-from rastreable import EsRastreable
+from datetime import date, time
+from rastreable import EsRastreable, Rastreable, RastreableAsociacion
 from ventas import EsCobrable
 from descripciones_fotos import EsDescribible
 from busquedas import EsBuscable
@@ -48,26 +48,45 @@ class PrecioCantidad(Base):
     precio = Column(Numeric(10,2), nullable=False)
     cantidad = Column(Numeric(9,3), nullable=False)
 
-    def __init__(self, tienda_id=None, codigo=None, precio=0, cantidad=0):
+    # Propiedades
+    inventario = relationship(
+        'Inventario', 
+        primaryjoin='(PrecioCantidad.tienda_id == Inventario.tienda_id) & '
+            '(PrecioCantidad.codigo == Inventario.codigo)',
+        backref='precios_cantidades'
+    )
+
+    # Metodos
+    @staticmethod
+    def despues_de_insertar(mapper, connection, target):
         precio_cantidad = PrecioCantidad.__table__
-        ya = ahorita()
+        precio_cantidad_alias = precio_cantidad.alias()
         
         expirar_precio_cantidad_anterior = precio_cantidad.update().\
-        values(fecha_fin = func.IF(
-            exists(precio_cantidad.select()), ya, precio_cantidad.c.fecha_fin
-        )).where(and_(
-            precio_cantidad.c.tienda_id == tienda_id,
-            precio_cantidad.c.codigo == codigo,
+        values(
+            fecha_fin = func.IF(
+                select(
+                    [func.count('*')], 
+                    from_obj=[precio_cantidad_alias]
+                ) > 0, 
+                ahorita(), precio_cantidad.c.fecha_fin
+            )
+        ).where(and_(
+            precio_cantidad.c.tienda_id == target.tienda_id,
+            precio_cantidad.c.codigo == target.codigo,
             precio_cantidad.c.fecha_fin == None
         ))
         DBSession.execute(expirar_precio_cantidad_anterior)
 
-        self.tienda_id = tienda_id
-        self.fecha_inicio = ya
+    def __init__(self, precio=0, cantidad=0):
+        #self.tienda_id = tienda.tienda_id
+        self.fecha_inicio = ahorita()
         self.fecha_fin = None
-        self.codigo = codigo
+        #self.codigo = codigo
         self.precio = precio
         self.cantidad = cantidad
+
+PrecioCantidad.registrar_eventos()
 
 class Tamano(Base):
     __tablename__ = 'tamano'
@@ -83,9 +102,12 @@ class Tamano(Base):
     cantidad_total_de_productos = Column(Integer)
     valor = Column(Integer)
 
+    # Propiedades
+    tienda = relationship('Tienda', backref='tamanos')
 
-    def __init__(self, tienda_id=None, numero_total_de_productos=0,
-                 cantidad_total_de_productos=None, valor=0):
+    # Metodos
+    @staticmethod
+    def despues_de_insertar(mapper, connection, target):
         tamano = Tamano.__table__
         tamano_alias = tamano.alias()
         ya = ahorita()
@@ -101,18 +123,22 @@ class Tamano(Base):
             )
         ).where(
             and_(
-                tamano.c.tienda_id == tienda_id,
+                tamano.c.tienda_id == target.tienda_id,
                 tamano.c.fecha_fin == None
             )
         )
         DBSession.execute(expirar_tamano_anterior)
-        
-        self.tienda_id = tienda_id
+
+    def __init__(self, numero_total_de_productos=0,
+                 cantidad_total_de_productos=None, valor=0):
+        #self.tienda = tienda
         self.fecha_inicio = ahorita()
         self.fecha_fin = None
         self.numero_total_de_productos = numero_total_de_productos
         self.cantidad_total_de_productos = cantidad_total_de_productos
         self.valor = valor
+
+Tamano.registrar_eventos()
 
 class Dia(Base):
     __tablename__ = 'dia'
@@ -139,10 +165,17 @@ class Turno(Base):
     hora_de_apertura = Column(Time, primary_key=True)
     hora_de_cierre = Column(Time, nullable=False)
 
-    def __init__(self, tienda_id=None, dia=None, hora_de_apertura="08:00:00",
-                 hora_de_cierre="16:00:00"):
-        self.tienda_id = tienda_id
-        self.dia = dia
+    # Propiedades
+    horario_de_trabajo = relationship(
+        'HorarioDeTrabajo', 
+        primaryjoin='(Turno.tienda_id == HorarioDeTrabajo.tienda_id) & '
+            '(Turno.dia == HorarioDeTrabajo.dia)', 
+        backref='turnos'
+    )
+
+    def __init__(self, hora_de_apertura=time(8), hora_de_cierre=time(16)):
+        #self.tienda = tienda
+        #self.dia = dia
         self.hora_de_apertura = hora_de_apertura
         self.hora_de_cierre = hora_de_cierre
 
@@ -160,11 +193,10 @@ class HorarioDeTrabajo(Base):
     laborable = Column(Boolean, nullable=False)
 
     # Propiedades
-    #dia = relationship('Dia', backref='horarios_de_trabajo')
     tienda = relationship('Tienda', backref='horarios_de_trabajo')
 
-    def __init__(self, tienda_id=None, dia=None, laborable=True):
-        self.tienda_id = tienda_id
+    def __init__(self, dia=None, laborable=True):
+        #self.tienda = tienda
         self.dia = dia
         self.laborable = laborable
 
@@ -180,22 +212,11 @@ class Tienda(EsBuscable, EsCalificableSeguible, EsInterlocutor, EsDibujable,
     )
     tienda_id = Column(Integer, primary_key=True, autoincrement=True)
     abierto = Column(Boolean, nullable=False)
-    
-    # Propiedades
-    productos = relationship(
-        "Producto", secondary=lambda:Inventario.__table__, 
-        backref="tiendas"
-    )
-    dias = relationship(
-        "Dia", secondary=lambda:HorarioDeTrabajo.__table__, 
-        backref="tiendas"
-    )
-    tamanos = relationship('Tamano', backref='tienda')
 
     def __init__(self, abierto=True, *args, **kwargs):
         super(Tienda, self).__init__(*args, **kwargs)
         self.abierto = abierto
-        self.tamanos.append(Tamano(self.tienda_id, 0, 0, 0))
+        self.tamanos.append(Tamano(0, 0, 0))
 
 class Inventario(EsRastreable, EsCobrable, Base):
     __tablename__ = 'inventario'
@@ -239,31 +260,43 @@ class Inventario(EsRastreable, EsCobrable, Base):
          backref='inventario'
     )
 
-    def __init__(self, tienda_id=None, codigo=None, descripcion='', 
-                 visibilidad="Ambos visibles", producto_id=None, precio=0, 
-                 cantidad=0):
-        super(Inventario, self).__init__(*args, **kwargs)
-        self.tienda_id = tienda_id
+    def __init__(self, tienda=None, codigo=None, descripcion='', 
+                 visibilidad="Ambos visibles", producto=None, precio=0, 
+                 cantidad=0, *args, **kwargs):
+        super(Inventario, self).__init__(
+            creador=tienda.rastreable.rastreable_id, *args, **kwargs
+        )
+        #self.tienda = tienda
         self.codigo = codigo
         self.descripcion = descripcion
         self.visibilidad = visibilidad
-        self.producto_id = producto_id
+        self.producto = producto
+
         # Agregamos una columna en precio_cantidad para seguir a este item
-        precio_cantidad_nuevo = PrecioCantidad(
-            tienda_id, codigo, precio, cantidad
-        )
-        # Actualizamos el tamano de la tienda
+        self.precios_cantidades.append(PrecioCantidad(precio, cantidad))
+
+        # Actualizamos el tamaño de la tienda
+        tamano_viejo = tienda.tamanos[-1]
+        """
         tamano_viejo = DBSession.query(Tamano).filter(and_(
-            tienda_id == tienda_id, 
-            fecha_fin is None
+            Tamano.tienda_id == target.tienda_id, 
+            Tamano.fecha_fin == None
         )).first()
+        """
         numero_nuevo = tamano_viejo.numero_total_de_productos + 1
         cantidad_nueva = tamano_viejo.cantidad_total_de_productos + cantidad
-        tamano_nuevo = Tamano(
-            tienda_id, numero_nuevo, cantidad_nueva, 
-            numero_nuevo*cantidad_nueva
+
+        """
+        tienda = DBSession.query(Tienda).filter(Tienda.tienda_id == tienda_id).\
+        first()
+        """
+
+        tienda.tamanos.append(
+            Tamano(
+                numero_nuevo, cantidad_nueva, 
+                numero_nuevo*cantidad_nueva
+            )
         )
-        DBSession.add_all(precio_cantidad_nuevo, tamano_nuevo)
 
 class Producto(EsRastreable, EsDescribible, EsBuscable, EsCalificableSeguible,
                Base):
@@ -289,12 +322,15 @@ class Producto(EsRastreable, EsDescribible, EsBuscable, EsCalificableSeguible,
     ancho = Column(Float)
     alto = Column(Float)
     peso = Column(Float)
-    pais_de_origen = Column(CHAR(16), ForeignKey('territorio.territorio_id'))
+    pais_de_origen_id = Column(CHAR(16), ForeignKey('territorio.territorio_id'))
+        
+    # Propiedades
+    pais_de_origen = relationship('Territorio')
 
     def __init__(self, tipo_de_codigo=None, codigo=None, estatus='Activo', 
                  fabricante=None, modelo='', nombre=None, 
                  debut_en_el_mercado=date(1999,9,9), largo=0, ancho=0, alto=0, 
-                 peso=0, pais_de_origen='0.00.00.00.00.00', *args, **kwargs):
+                 peso=0, pais_de_origen=None, categoria=None, *args, **kwargs):
         super(Producto, self).__init__(*args, **kwargs)
         self.tipo_de_codigo = tipo_de_codigo
         self.codigo = codigo
@@ -302,7 +338,7 @@ class Producto(EsRastreable, EsDescribible, EsBuscable, EsCalificableSeguible,
         self.fabricante = fabricante
         self.modelo = modelo
         self.nombre = nombre
-        #self.categoria_id = categoria_id
+        self.categoria = categoria
         self.largo = largo
         self.ancho = ancho
         self.alto = alto
@@ -363,9 +399,3 @@ crear_tamano_reciente = CreateView('tamano_reciente',
         tamano.c.valor
     ]).where(tamano.c.fecha_fin is None)
 )
-
-"""
-DBSession.execute(crear_inventario_tienda)
-DBSession.execute(crear_inventario_reciente)
-DBSession.execute(crear_tamano_reciente)
-"""

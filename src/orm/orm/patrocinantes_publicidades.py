@@ -20,8 +20,8 @@ class Patrocinante(Cliente):
         index=True
     )
     patrocinante_id = Column(
-		Integer, primary_key=True, autoincrement=True, index=True
-	)
+        Integer, primary_key=True, autoincrement=True, index=True
+    )
 
     def __init__(self, *args, **kwargs):
         super(Patrocinante, self).__init__(*args, **kwargs)
@@ -29,31 +29,8 @@ class Patrocinante(Cliente):
 class Publicidad(EsBuscable, EsDescribible, EsRastreable, EsEtiquetable, 
                  EsCobrable, Base):
     __tablename__ = 'publicidad'
-    #__mapper_args__ = {'polymorphic_identity': 'publicidad'}
 
     # Columnas
-    """
-    buscable_p = Column(
-        Integer, ForeignKey('buscable.buscable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    describible_p = Column(
-        Integer, ForeignKey('describible.describible_id'), nullable=False, 
-        unique=True, index=True
-    )
-    rastreable_p = Column(
-        Integer, ForeignKey('rastreable.rastreable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    etiquetable_p = Column(
-        Integer, ForeignKey('etiquetable.etiquetable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    cobrable_p = Column(
-        Integer, ForeignKey('cobrable.cobrable_id'), nullable=False, 
-        unique=True, index=True
-    )
-    """
     publicidad_id = Column(Integer, primary_key=True, autoincrement=True)
     patrocinante_id = Column(
         Integer, ForeignKey('patrocinante.patrocinante_id'), nullable=False
@@ -63,15 +40,15 @@ class Publicidad(EsBuscable, EsDescribible, EsRastreable, EsEtiquetable,
 
     # Propiedades
     patrocinante = relationship(
-		'Patrocinante', 
-		primaryjoin='Publicidad.patrocinante_id==Patrocinante.patrocinante_id', 
-		backref='publicidades'
-	)
+        'Patrocinante', 
+        primaryjoin='Publicidad.patrocinante_id==Patrocinante.patrocinante_id', 
+        backref='publicidades'
+    )
     consumidores = relationship(
         "Consumidor", secondary=lambda:ConsumidorObjetivo.__table__, 
         backref="publicidades"
     )
-    grupo_de_edades = relationship(
+    grupos_de_edades = relationship(
         "GrupoDeEdad", secondary=lambda:GrupoDeEdadObjetivo.__table__, 
         backref="publicidades"
     )
@@ -89,13 +66,11 @@ class Publicidad(EsBuscable, EsDescribible, EsRastreable, EsEtiquetable,
         backref="publicidades"
     )
 
-    def __init__(self, patrocinante_id=None, nombre=None):
-        """
+    def __init__(self, patrocinante=None, nombre=None, *args, **kwargs):
         super(Publicidad, self).__init__(
-            creador=self.patrocinante_x.rastreable_p, *args, **kwargs
+            creador=patrocinante.rastreable.rastreable_id, *args, **kwargs
         )
-        """
-        self.patrocinante_id = patrocinante_id
+        self.patrocinante = patrocinante
         self.nombre = nombre
         self.tamano_de_poblacion_objetivo = None
 

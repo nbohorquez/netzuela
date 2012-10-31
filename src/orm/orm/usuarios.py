@@ -5,7 +5,6 @@ from rastreable import EsRastreable
 from descripciones_fotos import EsDescribible
 from sqlalchemy import *
 from sqlalchemy import event
-#from sqlalchemy.event import listens_for
 from orm.rastreable import Rastreable, RastreableAsociacion
 from sqlalchemy.orm import relationship, backref
 from datetime import timedelta
@@ -40,14 +39,14 @@ class Usuario(EsRastreable, EsDescribible, Base):
     )
     
     def __init__(self, nombre='', apellido='', estatus='Activo', 
-                 ubicacion_id=None, correo_electronico=None, contrasena=None,
+                 ubicacion=None, correo_electronico=None, contrasena=None,
                  *args, **kwargs):
         super(Usuario, self).__init__(*args, **kwargs)
         self.nombre = nombre
         self.apellido = apellido
         self.estatus = estatus
-        self.ubicacion_id = ubicacion_id
-        self.acceso = Acceso(self.usuario_id, correo_electronico, contrasena)
+        self.ubicacion = ubicacion
+        self.acceso = Acceso(correo_electronico, contrasena)
 
 class Acceso(Base):
     __tablename__ = 'acceso'
@@ -69,9 +68,8 @@ class Acceso(Base):
     tiempo_total_de_accesos = Column(Interval, nullable=False)
     tiempo_promedio_por_acceso = Column(Interval, nullable=False)
 
-    def __init__(self, acceso_id=None, correo_electronico=None, 
-                 contrasena=None):
-        self.acceso_id = acceso_id
+    def __init__(self, correo_electronico=None, contrasena=None):
+        #self.acceso_id = acceso_id
         self.conectado = False
         self.correo_electronico = correo_electronico
         self.contrasena = contrasena
@@ -107,7 +105,7 @@ class Privilegios(Base):
     valor = Column(CHAR(7), primary_key=True, autoincrement=False)
 
     # Propiedades
-    administradores_x = relationship('Administrador')
+    administradores = relationship('Administrador')
 
     def __init__(self, valor=None):
         self.valor = valor
@@ -120,7 +118,7 @@ class Cliente(EsRastreable, EsDescribible, Base):
     propietario_id = Column(
         Integer, ForeignKey('usuario.usuario_id'), nullable=False
     )
-    categoria = Column(
+    categoria_id = Column(
         CHAR(16), ForeignKey('categoria.categoria_id'), nullable=False
     )
     estatus = Column(
@@ -156,27 +154,24 @@ class Cliente(EsRastreable, EsDescribible, Base):
         backref='propiedades'
     )
 
-    def __init__(self, propietario_id=None, ubicacion_id=None, rif=None, 
+    def __init__(self, propietario=None, ubicacion=None, rif=None, 
                  categoria=None, estatus='Activo', nombre_legal=None,
                  nombre_comun='', telefono=None, edificio_cc='', piso='', 
                  apartamento='', local='', casa='', calle=None, 
                  sector_urb_barrio=None, pagina_web='', facebook='', twitter='',
                  correo_electronico_publico='', *args, **kwargs):
-        if propietario_id is None:
-            raise Exception('propietario_id no puede ser nulo')
+        if propietario is None:
+            raise Exception('propietario no puede ser nulo')
 
-        creador = DBSession.query(Rastreable.rastreable_id).\
-        join(RastreableAsociacion).\
-        join(Usuario).\
-        filter(Usuario.usuario_id == propietario_id).first()[0]
-
-        super(Cliente, self).__init__(creador=creador, *args, **kwargs)
-        self.propietario_id = propietario_id
-        self.ubicacion_id = ubicacion_id
+        super(Cliente, self).__init__(
+            creador=propietario.rastreable.rastreable_id, *args, **kwargs
+        )
+        self.propietario = propietario
+        self.ubicacion = ubicacion
         self.rif = rif
         self.categoria = categoria
         self.estatus = estatus
-        self.nombre_legal = estatus
+        self.nombre_legal = nombre_legal
         self.nombre_comun = nombre_comun
         self.telefono = telefono
         self.edificio_cc = edificio_cc

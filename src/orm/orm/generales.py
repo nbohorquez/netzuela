@@ -32,8 +32,12 @@ class Categoria(EsEtiquetable, Base):
         backref=backref('padre', remote_side='Categoria.categoria_id')
     )
 
-    clientes = relationship('Cliente')
-    productos = relationship('Producto')
+    clientes = relationship(
+        'Cliente', backref=backref('categoria', uselist=False)
+    )
+    productos = relationship(
+        'Producto', backref=backref('categoria', uselist=False)
+    )
 
     def __init__(self, raiz=False, categoria_id=None, nombre=None, 
                  hijo_de_categoria=None, nivel=-1):

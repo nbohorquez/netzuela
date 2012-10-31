@@ -36,7 +36,6 @@ class Dibujable(Base):
     asociacion_id = Column(
         Integer, ForeignKey('dibujable_asociacion.dibujable_asociacion_id')
     )
-    #tipo = Column(String(45), nullable=False)
 
     # Propiedades
     asociacion = relationship(
@@ -118,10 +117,9 @@ class PuntoDeCroquis(Base):
     )
 
     # Propiedades
-    """
-    croquis = relationship('Croquis', backref='puntos_de_croquis_x')
-    punto = relationship('Punto', backref='puntos_de_croquis_x')
-    """
-    def __init__(self, croquis_id=None, punto_id=None):
-        self.croquis_id = croquis_id
-        self.punto_id = punto_id
+    croquis = relationship('Croquis')
+    punto = relationship('Punto')
+
+    def __init__(self, croquis=None, punto=None):
+        self.croquis = croquis
+        self.punto = punto
