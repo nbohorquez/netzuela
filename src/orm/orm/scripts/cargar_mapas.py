@@ -84,8 +84,9 @@ def analizar_placemark(placemark, tipo_de_placemark):
         abuelo.nombre == terr[tipo_de_placemark-2]
     )).first()[0]
 
-    terro = Territorio(creador=1, nombre=terr[tipo_de_placemark], 
-        poblacion=0, idioma='Espanol', territorio_padre_id=territorio_padre,
+    terro = Territorio(
+        creador=1, nombre=terr[tipo_de_placemark], poblacion=0, 
+        idioma='Espanol', territorio_padre_id=territorio_padre, 
         codigo_postal='', pib=0, nivel=tipo_de_placemark
     )
     DBSession.add(terro)
@@ -109,7 +110,7 @@ def ingresar_silueta(silueta, dibujable):
     if dibujable is None:
         raise Exception("dibujable no puede ser nulo")
 
-    dibujable.croquis.append(Croquis(creador=1))
+    dibujable.croquis.append(Croquis(dibujable=dibujable, creador=1))
     for coordenadas in silueta.LinearRing.coordinates.text.split(' '):
         coo = coordenadas.split(',')
         dibujable.croquis[0].puntos.append(
@@ -118,14 +119,16 @@ def ingresar_silueta(silueta, dibujable):
         
 def main():
     with transaction.manager:
-        mun = Territorio(raiz=True, creador=1, nombre='La Tierra', poblacion=0, 
+        mun = Territorio(
+            raiz=True, creador=1, nombre='La Tierra', poblacion=0, 
             territorio_id='0.00.00.00.00.00', idioma='Mandarin', 
             territorio_padre_id='0.00.00.00.00.00', codigo_postal='', 
             pib=0, nivel=0
         )
         DBSession.add(mun)
 
-        ven = Territorio(creador=1, nombre='Venezuela', poblacion=0, 
+        ven = Territorio(
+            creador=1, nombre='Venezuela', poblacion=0, 
             idioma='Espanol', territorio_padre_id=mun.territorio_id, 
             codigo_postal='', pib=0
         )

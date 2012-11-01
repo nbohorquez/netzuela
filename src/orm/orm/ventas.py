@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
 
-from comunes import Base, DBSession
+from comunes import Base, DBSession, fecha_hora_a_mysql
 from rastreable import EsRastreable
 from sqlalchemy import *
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -89,13 +89,13 @@ class Factura(EsRastreable, Base):
     cobrables = association_proxy('servicios_vendidos', 'cobrable')
 
     def __init__(self, cliente=None, inicio_de_medicion=None, 
-                 fin_de_medicion=None):
+                 fin_de_medicion=None, *args, **kwargs):
         super(Factura, self).__init__(
             creador=cliente.rastreable.rastreable_id,*args, **kwargs
         )
         self.cliente = cliente
-        self.inicio_de_medicion = inicio_de_medicion
-        self.fin_de_medicion = fin_de_medicion
+        self.inicio_de_medicion = fecha_hora_a_mysql(inicio_de_medicion)
+        self.fin_de_medicion = fecha_hora_a_mysql(fin_de_medicion)
         self.subtotal = 0
         self.impuestos = 0
         self.total = 0

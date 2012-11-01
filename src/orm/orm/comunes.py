@@ -46,12 +46,14 @@ class _Base(object):
 
 Base = declarative_base(cls=_Base)
 
-def ahorita():
-    ahora = datetime.now()
+def fecha_hora_a_mysql(fecha_hora):
     return "{}.{}".format(
-        ahora.strftime("%Y%m%d%H%M%S"), 
-        int(round(Decimal(ahora.microsecond)/1000))
+        fecha_hora.strftime("%Y%m%d%H%M%S"), 
+        int(round(Decimal(fecha_hora.microsecond)/1000))
     )
+    
+def ahorita():
+    return fecha_hora_a_mysql(datetime.now())
 
 # Codigo para crear 'views' tomado de: 
 # http://stackoverflow.com/questions/9766940/how-to-create-an-sql-view-with-sqlalchemy

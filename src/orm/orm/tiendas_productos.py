@@ -79,10 +79,8 @@ class PrecioCantidad(Base):
         DBSession.execute(expirar_precio_cantidad_anterior)
 
     def __init__(self, precio=0, cantidad=0):
-        #self.tienda_id = tienda.tienda_id
         self.fecha_inicio = ahorita()
         self.fecha_fin = None
-        #self.codigo = codigo
         self.precio = precio
         self.cantidad = cantidad
 

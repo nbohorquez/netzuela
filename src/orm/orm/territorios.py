@@ -115,8 +115,9 @@ class TiendasConsumidores(Base):
         'Territorio', backref='poblacion_de_usuarios'
     )
 
-    def __init__(self, territorio_id=None, numero_de_consumidores=0, 
-                 numero_de_tiendas=0):
+    # Metodos
+    @staticmethod
+    def despues_de_insertar(mapper, connection, target):
         tiendas_consumidores = TiendasConsumidores.__table__
         territorio = Territorio.__table__
         ya = ahorita()
@@ -125,16 +126,10 @@ class TiendasConsumidores(Base):
         values(fecha_fin = func.IF(
             exists(tiendas_consumidores.select()), ya, fecha_fin
         )).where(and_(
-            tiendas_consumidores.c.territorio_id == territorio_id,
-            tiendas_consumidores.c.fecha_fin is None
+            tiendas_consumidores.c.territorio_id == target.territorio_id,
+            tiendas_consumidores.c.fecha_fin == None
         ))
         DBSession.execute(expirar_tnds_cnsms_anteriores)
-
-        self.territorio_id = territorio_id
-        self.fecha_inicio = ya
-        self.fecha_fin = None
-        self.numero_de_tiendas = numero_de_tiendas
-        self.numero_de_consumidores = numero_de_consumidores
 
         pob = select([territorio.c.poblacion]).\
         where(territorio.c.territorio_id == territorio_id)
@@ -153,6 +148,12 @@ class TiendasConsumidores(Base):
             )
         ).where(territorio.c.territorio_id == territorio_id)
         DBSession.execute(actualizar_territorio)
+
+    def __init__(self, numero_de_consumidores=0, numero_de_tiendas=0):
+        self.fecha_inicio = ya
+        self.fecha_fin = None
+        self.numero_de_tiendas = numero_de_tiendas
+        self.numero_de_consumidores = numero_de_consumidores
 
 class Idioma(Base):
     __tablename__ = 'idioma'

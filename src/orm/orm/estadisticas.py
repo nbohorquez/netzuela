@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from comunes import Base, DBSession
+from comunes import Base, DBSession, ahorita
 from rastreable import EsRastreable
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, backref
@@ -27,10 +27,7 @@ class Estadisticas(EsRastreable, Base):
             creador=territorio.rastreable.rastreable_id, *args, **kwargs
         )
         self.territorio = territorio
-        self.estadisticas_temporales = EstadisticasTemporales(
-            self.estadisticas_id, 0, 0, 0
-        )
-        #DBSession.add(estadisticas_temporales)
+        self.estadisticas_temporales.append(EstadisticasTemporales(0, 0, 0))
 
 class EstadisticasTemporales(Base):
     __tablename__ = 'estadisticas_temporales'
@@ -51,20 +48,22 @@ class EstadisticasTemporales(Base):
         'Estadisticas', backref='estadisticas_temporales'
     )
 
-    def __init__(self, estadisticas_id=None, contador=0, ranking=0, indice=0):
+    # Metodos
+    @staticmethod
+    def despues_de_insertar(mapper, connection, target):
         estadisticas_temporales = EstadisticasTemporales.__table__
-        ya = ahorita()
         
         expirar_stats_tmp_anteriores = estadisticas_temporales.update().\
         values(fecha_fin = func.IF(
-            exists(estadisticas_temporales.select()), ya, fecha_fin
+            exists(estadisticas_temporales.select()), ahorita(), fecha_fin
         )).where(and_(
-            estadisticas_temporales.c.estadisticas_id == estadisticas_id,
+            estadisticas_temporales.c.estadisticas_id == target.estadisticas_id,
             estadisticas_temporales.c.fecha_fin is None
         ))
         DBSession.execute(expirar_stats_tmp_anteriores)
 
-        self.fecha_inicio = ya
+    def __init__(self, contador=0, ranking=0, indice=0):
+        self.fecha_inicio = ahorita()
         self.fecha_fin = None
         self.contador = contador
         self.ranking = ranking
@@ -98,15 +97,17 @@ class EstadisticasDePopularidad(Estadisticas):
         'CalificableSeguible', backref='estadisticas_de_popularidad'
     )
     
-    def __init__(self, calificable_seguible_id=None, *args, **kwargs):
+    def __init__(self, numero_de_calificaciones=0, numero_de_resenas=0,
+                 numero_de_seguidores=0, numero_de_menciones=0, 
+                 numero_de_vendedores=0, numero_de_mensajes=0, *args, **kwargs):
         super(EstadisticasDePopularidad, self).__init__(*args, **kwargs)
-        self.calificable_seguible_id = calificable_seguible_id
-        self.numero_de_calificaciones = 0
-        self.numero_de_resenas = 0
-        self.numero_de_seguidores = 0
-        self.numero_de_menciones = 0
-        self.numero_de_vendedores = 0
-        self.numero_de_mensajes = 0
+        #self.calificable_seguible_id = calificable_seguible_id
+        self.numero_de_calificaciones = numero_de_calificaciones
+        self.numero_de_resenas = numero_de_resenas
+        self.numero_de_seguidores = numero_de_seguidores
+        self.numero_de_menciones = numero_de_menciones
+        self.numero_de_vendedores = numero_de_vendedores
+        self.numero_de_mensajes = numero_de_mensajes
     
 class EstadisticasDeInfluencia(Estadisticas):
     __tablename__ = 'estadisticas_de_influencia'
@@ -132,14 +133,16 @@ class EstadisticasDeInfluencia(Estadisticas):
     # Propiedades
     palabra = relationship('Palabra', backref='estadisticas_de_influencia')
         
-    def __init__(self, palabra_id=None, *args, **kwargs):
+    def __init__(self, numero_de_descripciones=0, numero_de_mensajes=0,
+                 numero_de_categorias=0, numero_de_resenas=0, 
+                 numero_de_publicidades=0, *args, **kwargs):
         super(EstadisticasDeInfluencia, self).__init__(*args, **kwargs)
-        self.palabra_id = palabra_id
-        self.numero_de_descripciones = 0
-        self.numero_de_mensajes = 0
-        self.numero_de_categorias = 0
-        self.numero_de_resenas = 0
-        self.numero_de_publicidades = 0
+        #self.palabra_id = palabra_id
+        self.numero_de_descripciones = numero_de_descripciones
+        self.numero_de_mensajes = numero_de_mensajes
+        self.numero_de_categorias = numero_de_categorias
+        self.numero_de_resenas = numero_de_resenas
+        self.numero_de_publicidades = numero_de_publicidades
 
 class EstadisticasDeVisitas(Estadisticas):
     __tablename__ = 'estadisticas_de_visitas'
@@ -160,13 +163,11 @@ class EstadisticasDeVisitas(Estadisticas):
     # Propiedades
     buscable = relationship('Buscable', backref='estadisticas_de_visitas')
 
-    def __init__(self, buscable_id=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(EstadisticasDeVisitas, self).__init__(*args, **kwargs)
-        self.buscable_id = buscable_id
-        contador_de_exhibiciones = ContadorDeExhibiciones(
-            self.estadisticas_de_visitas_id, 0
-        )
-        DBSession.add(contador_de_exhibiciones)
+        #self.buscable_id = buscable_id
+        self.contadores_de_exhibiciones.append(ContadorDeExhibiciones(0))
+        #DBSession.add(contador_de_exhibiciones)
 
 class ContadorDeExhibiciones(Base):
     __tablename__ = 'contador_de_exhibiciones'
@@ -186,19 +187,22 @@ class ContadorDeExhibiciones(Base):
         'EstadisticasDeVisitas', backref='contadores_de_exhibiciones'
     )
 
-    def __init__(self, estadisticas_de_visitas_id=None, valor=0):
+    # Metodos
+    @staticmethod
+    def despues_de_insertar(mapper, connection, target):
         contador = ContadorDeExhibiciones.__table__
-        ya = ahorita()
         
         expirar_contador_anterior = contador.update().\
         values(fecha_fin = func.IF(
-            exists(contador.select()), ya, fecha_fin
+            exists(contador.select()), ahorita(), fecha_fin
         )).where(and_(
-            contador.c.estadisticas_de_visitas_id == estadisticas_de_visitas_id,
-            contador.c.fecha_fin is None
+            contador.c.estadisticas_de_visitas_id == 
+                target.estadisticas_de_visitas_id,
+            contador.c.fecha_fin == None
         ))
         DBSession.execute(expirar_contador_anterior)
 
-        self.fecha_inicio = ya
+    def __init__(self, valor=0):
+        self.fecha_inicio = ahorita()
         self.fecha_fin = None
         self.valor = valor

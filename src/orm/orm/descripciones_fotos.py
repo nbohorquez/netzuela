@@ -80,9 +80,9 @@ class Foto(Base):
     )
 
     # Propiedades
-    describle = relationship('Describible', backref='fotos')
+    describible = relationship('Describible', backref='fotos')
 
-    def __init__(self, ruta_de_foto=None, describible=None):
+    def __init__(self, describible=None, ruta_de_foto=None):
         self.ruta_de_foto = ruta_de_foto
         self.describible = describible
 
@@ -97,11 +97,9 @@ class Descripcion(EsRastreable, EsEtiquetable, Base):
     contenido = Column(Text, nullable=False)
 
     # Propiedades
-    describle = relationship("Describible", backref="descripciones")
+    describible = relationship("Describible", backref="descripciones")
 
-    def __init__(self, describible=None, contenido=''):
-        super(Descripcion, self).__init__(
-            creador=describible.padre.rastreable.rastreable_id, *args, **kwargs
-        )
+    def __init__(self, describible=None, contenido='', *args, **kwargs):
+        super(Descripcion, self).__init__(*args, **kwargs)
         self.describible = describible
         self.contenido = contenido
