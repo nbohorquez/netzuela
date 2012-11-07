@@ -5,7 +5,7 @@ from rastreable import EsRastreable
 from descripciones_fotos import EsDescribible
 from sqlalchemy import *
 from sqlalchemy import event
-from orm.rastreable import Rastreable, RastreableAsociacion
+from rastreable import Rastreable, RastreableAsociacion
 from sqlalchemy.orm import relationship, backref
 from datetime import timedelta
 

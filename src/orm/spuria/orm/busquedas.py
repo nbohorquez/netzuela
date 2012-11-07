@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from orm.comunes import Base, DBSession, ahorita
-from orm.palabras import EsEtiquetable
-from orm.rastreable import EsRastreable, RastreableAsociacion, Rastreable
-from orm.usuarios import Usuario
+from comunes import Base, DBSession, ahorita
+from palabras import EsEtiquetable
+from rastreable import EsRastreable, RastreableAsociacion, Rastreable
+from usuarios import Usuario
 from sqlalchemy import *
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.ext.declarative import declared_attr

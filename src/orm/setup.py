@@ -13,15 +13,15 @@ requires = [
 	'pykml'
 ]
 
-setup(name='orm', 
+setup(name='spuria.orm', 
       version='0.0.1', 
       description='Interfaz ORM de la base de datos de Netzuela',
       packages=find_packages(),
       install_requires=requires,
       entry_points="""
       [console_scripts]
-      cargar_constantes = orm.scripts.cargar_constantes:main
-	  cargar_mapas = orm.scripts.cargar_mapas:main
-	  codigo_prueba = orm.scripts.codigo_prueba:main
+      cargar_constantes = spuria.orm.scripts.cargar_constantes:main
+	  cargar_mapas = spuria.orm.scripts.cargar_mapas:main
+	  codigo_prueba = spuria.orm.scripts.codigo_prueba:main
       """
 )

@@ -1,11 +1,11 @@
 from __future__ import absolute_import
 from bs4 import BeautifulSoup, NavigableString
-from productos.celery import celery
+from spuria.workers import celery
 import urllib2, sys  
 
 #http://yoopsie.com/query.php?query=0075678014345&locale=US&index=All
 
-@celery.task
+@celery.celery.task
 def registrar_producto(upc):
     sitio = 'http://yoopsie.com/query.php'
     query = upc

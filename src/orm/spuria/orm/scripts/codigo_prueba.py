@@ -1,36 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from orm.scripts.cargar_constantes import hash_cat
-from orm.busquedas import Busqueda, ResultadoDeBusqueda
-from orm.comunes import DBSession
-from orm.consumidores import Consumidor, Sexo, GrupoDeEdad, GradoDeInstruccion
-from orm.territorios import Territorio
-from orm.generales import Categoria
-from orm.estadisticas import (
-    EstadisticasDeVisitas, 
-    EstadisticasDePopularidad,
-    EstadisticasDeInfluencia
-)
-from orm.usuarios import Usuario
-from orm.palabras import Palabra
-from orm.croquis_puntos import Croquis, Punto
-from orm.descripciones_fotos import Descripcion, Foto
-from orm.patrocinantes_publicidades import Patrocinante, Publicidad
-from orm.calificaciones_resenas import CalificacionResena, Seguimiento
-from orm.tiendas_productos import (
-    Producto, 
-    Tienda, 
-    HorarioDeTrabajo, 
-    Turno,
-    Inventario
-)
-from orm.mensajes import Mensaje
-from orm.ventas import Factura, ServicioVendido
-from sqlalchemy import and_
+from comunes import ARCHIVO_CONFIG
 from datetime import date, time, datetime, timedelta
+from spuria.orm import (
+    Busqueda, ResultadoDeBusqueda, DBSession, Consumidor, Sexo, GrupoDeEdad, 
+    GradoDeInstruccion, Territorio, Categoria, EstadisticasDeVisitas, 
+    EstadisticasDePopularidad, EstadisticasDeInfluencia, Usuario, Palabra,
+    Croquis, Punto, Descripcion, Foto, Patrocinante, Publicidad, 
+    CalificacionResena, Seguimiento, Producto, Tienda, HorarioDeTrabajo, Turno,
+    Inventario, Mensaje, Factura, ServicioVendido, inicializar
+)
+from sqlalchemy import and_
 import transaction
 
 def main():
+    inicializar(archivo=ARCHIVO_CONFIG)
+
     with transaction.manager:
         """
         PRODUCTOS

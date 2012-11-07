@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from orm.comunes import Base, DBSession
+from comunes import ARCHIVO_CONFIG
 from constantes import (
     codigos_de_error,
     privilegios,
@@ -16,65 +16,30 @@ from constantes import (
     dias,
     arbol_categorias
 )
-from orm.busquedas import Buscable, ResultadoDeBusqueda, Busqueda
-from orm.estadisticas import (
-    Estadisticas,
-    EstadisticasTemporales, 
-    EstadisticasDePopularidad, 
-    EstadisticasDeInfluencia, 
-    EstadisticasDeVisitas, 
-    ContadorDeExhibiciones
+"""
+from orm import (
+    inicializar, Base, DBSession, Buscable, ResultadoDeBusqueda, Busqueda, 
+    Estadisticas, EstadisticasTemporales, EstadisticasDePopularidad, 
+    EstadisticasDeInfluencia, EstadisticasDeVisitas, ContadorDeExhibiciones, 
+    Rastreable, Estatus, Categoria, Accion, CodigoDeError, Registro, Territorio,
+    TiendasConsumidores, Region, RegionTerritorio, Idioma, Mensaje, 
+    Interlocutor, TipoDeCodigo, Producto, Visibilidad, PrecioCantidad, 
+    Inventario, Tamano, Tienda, Dia, HorarioDeTrabajo, Turno, Punto, Croquis, 
+    PuntoDeCroquis, Dibujable, Etiquetable, Etiqueta, Palabra, 
+    RelacionDePalabras, Cliente, Usuario, Acceso, Administrador, Privilegios, 
+    Describible, Foto, Descripcion, Patrocinante, Publicidad, 
+    ConsumidorObjetivo, GrupoDeEdadObjetivo, GradoDeInstruccionObjetivo, 
+    TerritorioObjetivo, SexoObjetivo, Cobrable, ServicioVendido, Factura, 
+    Calificacion, CalificacionResena, CalificableSeguible, Seguimiento, 
+    Consumidor, Sexo, GrupoDeEdad, GradoDeInstruccion
 )
-from orm.rastreable import Rastreable
-from orm.generales import Estatus, Categoria
-from orm.registros import Accion, CodigoDeError, Registro
-from orm.territorios import (
-    Territorio, 
-    TiendasConsumidores, 
-    Region, 
-    RegionTerritorio, 
-    Idioma
+"""
+from spuria.orm import (
+    inicializar, Base, DBSession, Estatus, Categoria, Accion, CodigoDeError,
+    Idioma, TipoDeCodigo, Visibilidad, Dia, Administrador, Privilegios, 
+    Calificacion, Sexo, GrupoDeEdad, GradoDeInstruccion
 )
-from orm.mensajes import Mensaje, Interlocutor
-from orm.tiendas_productos import (
-    TipoDeCodigo, 
-    Producto, 
-    Visibilidad, 
-    PrecioCantidad, 
-    Inventario, 
-    Tamano, 
-    Tienda, 
-    Dia, 
-    HorarioDeTrabajo, 
-    Turno
-)
-from orm.croquis_puntos import Punto, Croquis, PuntoDeCroquis, Dibujable
-from orm.palabras import Etiquetable, Etiqueta, Palabra, RelacionDePalabras
-from orm.usuarios import Cliente, Usuario, Acceso, Administrador, Privilegios
-from orm.descripciones_fotos import Describible, Foto, Descripcion
-from orm.patrocinantes_publicidades import (
-    Patrocinante, 
-    Publicidad, 
-    ConsumidorObjetivo, 
-    GrupoDeEdadObjetivo, 
-    GradoDeInstruccionObjetivo, 
-    TerritorioObjetivo, 
-    SexoObjetivo
-)
-from orm.ventas import Cobrable, ServicioVendido, Factura
-from orm.calificaciones_resenas import (
-    Calificacion, 
-    CalificacionResena, 
-    CalificableSeguible
-)
-from orm.consumidores import (
-    Consumidor, 
-    Sexo, 
-    GrupoDeEdad, 
-    GradoDeInstruccion
-)
-from sqlalchemy import create_engine
-import ConfigParser, transaction
+import transaction
 
 hash_cat = {}
 
@@ -93,6 +58,8 @@ def parsear_arbol_categorias(padre, arbol=arbol_categorias):
         #hash_cat[tmp.categoria_id] = hijo
 
 def main():
+    inicializar(archivo=ARCHIVO_CONFIG)
+
     with transaction.manager:
         print "Cargando constantes"
         DBSession.add_all(

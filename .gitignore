@@ -7,19 +7,14 @@ bin/env/
 bin/config_dev.ini
 bin/crear_db_dev.sh
 
-src/mapas/build/
-src/mapas/dist/
-src/mapas/env/
-src/mapas/mapas.egg-info
-
 src/orm/build/
 src/orm/dist/
 src/orm/env/
-src/orm/orm.egg-info
+src/orm/spuria.orm.egg-info
 
 src/sql/mysql/modelo_de_datos_relacional.mwb.bak
 
 src/workers/build/
 src/workers/dist/
 src/workers/env/
-src/workers/workers.egg-info
+src/workers/spuria.workers.egg-info

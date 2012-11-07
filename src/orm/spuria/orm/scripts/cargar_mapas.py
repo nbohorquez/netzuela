@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
+from comunes import ARCHIVO_CONFIG
 from constantes import puntos_venezuela
 from decimal import *
-from orm.comunes import DBSession
-from orm.croquis_puntos import Croquis, Dibujable, Punto
-from orm.territorios import Territorio
+from spuria.orm import (
+    inicializar, DBSession, Croquis, Dibujable, Punto, Territorio
+)
 from os import path
 from pykml import parser
 from sqlalchemy import create_engine, and_, MetaData, Table
@@ -20,8 +21,6 @@ i dado, el TERRITORIO en i-1 representa el territorio contenedor. Ej:
 
 Para i = 1: TERRITORIO[i] = MUNICIPIO contenido en TERRITORIO[i-1] = ESTADO
 """
-
-ARCHIVO_CONFIG = 'config.ini'
 
 config = ConfigParser.ConfigParser()
 with open(ARCHIVO_CONFIG) as fp:
@@ -118,6 +117,8 @@ def ingresar_silueta(silueta, dibujable):
         )
         
 def main():
+    inicializar(archivo=ARCHIVO_CONFIG)
+
     with transaction.manager:
         mun = Territorio(
             raiz=True, creador=1, nombre='La Tierra', poblacion=0, 
