@@ -64,6 +64,6 @@ class CreateView(Executable, ClauseElement):
 
 @compiles(CreateView)
 def visit_create_view(element, compiler, **kw):
-    return "CREATE VIEW {} AS {}".format(
+    return "CREATE OR REPLACE VIEW {} AS {}".format(
         element.name, compiler.process(element.select, literal_binds=True)
     )

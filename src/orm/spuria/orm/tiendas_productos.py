@@ -58,7 +58,7 @@ class PrecioCantidad(Base):
 
     # Metodos
     @staticmethod
-    def despues_de_insertar(mapper, connection, target):
+    def antes_de_insertar(mapper, connection, target):
         precio_cantidad = PrecioCantidad.__table__
         precio_cantidad_alias = precio_cantidad.alias()
         
@@ -105,7 +105,7 @@ class Tamano(Base):
 
     # Metodos
     @staticmethod
-    def despues_de_insertar(mapper, connection, target):
+    def antes_de_insertar(mapper, connection, target):
         tamano = Tamano.__table__
         tamano_alias = tamano.alias()
         ya = ahorita()
@@ -343,6 +343,15 @@ class Producto(EsRastreable, EsDescribible, EsBuscable, EsCalificableSeguible,
         self.peso = peso
         self.pais_de_origen = pais_de_origen
 
+class TamanoReciente(object):
+    pass
+
+class InventarioReciente(object):
+    pass
+
+class InventarioTienda(object):
+    pass
+
 inventario = Inventario.__table__
 precio_cantidad = PrecioCantidad.__table__
 tamano = Tamano.__table__
@@ -358,13 +367,14 @@ crear_inventario_tienda = CreateView('inventario_tienda',
         ], 
         from_obj=[
             inventario.join(
-                precio_cantidad, 
-                onclause='and_('
-                    'inventario.tienda_id == precio_cantidad.tienda_id,'
-                    'inventario.codigo == precio_cantidad.codigo)'
+                precio_cantidad,
+                onclause=and_(
+                    inventario.c.tienda_id == precio_cantidad.c.tienda_id,
+                    inventario.c.codigo == precio_cantidad.c.codigo
+                )
             )
         ]
-    ).where(precio_cantidad.c.fecha_fin is None)
+    ).where(precio_cantidad.c.fecha_fin == None)
 )
 
 crear_inventario_reciente = CreateView('inventario_reciente', 
@@ -380,12 +390,13 @@ crear_inventario_reciente = CreateView('inventario_reciente',
         from_obj=[
             inventario.join(
                 precio_cantidad,
-                onclause='and_('
-                    'inventario.tienda_id == precio_cantidad.tienda_id,'
-                    'inventario.codigo == precio_cantidad.codigo)'
+                onclause=and_(
+                    inventario.c.tienda_id == precio_cantidad.c.tienda_id,
+                    inventario.c.codigo == precio_cantidad.c.codigo
+                )
             )
         ]
-    ).where(precio_cantidad.c.fecha_fin is None)
+    ).where(precio_cantidad.c.fecha_fin == None)
 )
 
 crear_tamano_reciente = CreateView('tamano_reciente', 
@@ -395,5 +406,5 @@ crear_tamano_reciente = CreateView('tamano_reciente',
         tamano.c.numero_total_de_productos,
         tamano.c.cantidad_total_de_productos,
         tamano.c.valor
-    ]).where(tamano.c.fecha_fin is None)
+    ]).where(tamano.c.fecha_fin == None)
 )

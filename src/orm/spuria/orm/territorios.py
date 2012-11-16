@@ -117,7 +117,7 @@ class TiendasConsumidores(Base):
 
     # Metodos
     @staticmethod
-    def despues_de_insertar(mapper, connection, target):
+    def antes_de_insertar(mapper, connection, target):
         tiendas_consumidores = TiendasConsumidores.__table__
         territorio = Territorio.__table__
         ya = ahorita()

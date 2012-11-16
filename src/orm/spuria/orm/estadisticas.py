@@ -50,7 +50,7 @@ class EstadisticasTemporales(Base):
 
     # Metodos
     @staticmethod
-    def despues_de_insertar(mapper, connection, target):
+    def antes_de_insertar(mapper, connection, target):
         estadisticas_temporales = EstadisticasTemporales.__table__
         
         expirar_stats_tmp_anteriores = estadisticas_temporales.update().\
@@ -58,7 +58,7 @@ class EstadisticasTemporales(Base):
             exists(estadisticas_temporales.select()), ahorita(), fecha_fin
         )).where(and_(
             estadisticas_temporales.c.estadisticas_id == target.estadisticas_id,
-            estadisticas_temporales.c.fecha_fin is None
+            estadisticas_temporales.c.fecha_fin == None
         ))
         DBSession.execute(expirar_stats_tmp_anteriores)
 
@@ -189,7 +189,7 @@ class ContadorDeExhibiciones(Base):
 
     # Metodos
     @staticmethod
-    def despues_de_insertar(mapper, connection, target):
+    def antes_de_insertar(mapper, connection, target):
         contador = ContadorDeExhibiciones.__table__
         
         expirar_contador_anterior = contador.update().\

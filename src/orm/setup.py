@@ -5,12 +5,12 @@ here = path.abspath(path.dirname(__file__))
 README = open(path.join(here, 'README.rst')).read()
 CHANGES = open(path.join(here, 'CHANGES.txt')).read()
 requires = [
-	'mysql-python', 
-	'SQLAlchemy', 
-	'zope.sqlalchemy', 
-	'transaction', 
-	'lxml', 
-	'pykml'
+    'mysql-python', 
+    'SQLAlchemy', 
+    'zope.sqlalchemy', 
+    'transaction', 
+    'lxml', 
+    'pykml'
 ]
 
 setup(name='spuria.orm', 
@@ -21,7 +21,7 @@ setup(name='spuria.orm',
       entry_points="""
       [console_scripts]
       cargar_constantes = spuria.orm.scripts.cargar_constantes:main
-	  cargar_mapas = spuria.orm.scripts.cargar_mapas:main
-	  codigo_prueba = spuria.orm.scripts.codigo_prueba:main
+      cargar_mapas = spuria.orm.scripts.cargar_mapas:main
+      codigo_prueba = spuria.orm.scripts.codigo_prueba:main
       """
 )

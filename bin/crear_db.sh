@@ -27,7 +27,7 @@ crear_env() {
     source env/bin/activate
     easy_install -U distribute
     cd ../src/orm
-    python setup.py install
+    python setup.py develop
     deactivate
     cd "$dir"
 }
@@ -111,6 +111,6 @@ crear_db
 if [ "$codigo_de_muestra" == "si" ]; then
     #eval "$prueba"
     cargar_codigo_prueba
-    ./cargar_imagenes.sh "$directorio_entrada" "$directorio_salida"
+    #./cargar_imagenes.sh "$directorio_entrada" "$directorio_salida"
     echo "Datos de prueba instalados"
 fi

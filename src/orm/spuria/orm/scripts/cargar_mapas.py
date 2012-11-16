@@ -111,9 +111,9 @@ def ingresar_silueta(silueta, dibujable):
 
     dibujable.croquis.append(Croquis(dibujable=dibujable, creador=1))
     for coordenadas in silueta.LinearRing.coordinates.text.split(' '):
-        coo = coordenadas.split(',')
-        dibujable.croquis[0].puntos.append(
-            Punto(latitud=Decimal(coo[1]), longitud=Decimal(coo[0]))
+        par = coordenadas.split(',')
+        dibujable.croquis[-1].puntos.append(
+            Punto(latitud=Decimal(par[1]), longitud=Decimal(par[0]))
         )
         
 def main():
@@ -147,7 +147,7 @@ def main():
             archivo_corregido = path.abspath(archivo)
             with open(archivo_corregido) as a:
                 print "Archivo ({0},{1}): {2}".format(
-                    num_arch, cantidad_arch, archivo_corregido
+                    num_arch + 1, cantidad_arch, archivo_corregido
                 )
                 doc = parser.parse(a).getroot()
                 tipo_de_placemark = analizar_esquema(doc.Document.Folder.Schema)
