@@ -84,7 +84,7 @@ class PrecioCantidad(Base):
         self.precio = precio
         self.cantidad = cantidad
 
-PrecioCantidad.registrar_eventos()
+#PrecioCantidad.registrar_eventos()
 
 class Tamano(Base):
     __tablename__ = 'tamano'
@@ -136,7 +136,7 @@ class Tamano(Base):
         self.cantidad_total_de_productos = cantidad_total_de_productos
         self.valor = valor
 
-Tamano.registrar_eventos()
+#Tamano.registrar_eventos()
 
 class Dia(Base):
     __tablename__ = 'dia'

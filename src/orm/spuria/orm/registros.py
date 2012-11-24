@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from comunes import ahorita, Base, DBSession
+from comunes import ahorita, Base
 from sqlalchemy import *
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import  relationship, backref
 
 class Accion(Base):
     __tablename__ = 'accion'
@@ -31,26 +31,24 @@ class Registro(Base):
     actor_activo_id = Column(Integer, nullable=False, index=True)
     accion = Column(CHAR(13), ForeignKey('accion.valor'), nullable=False)
     actor_pasivo_id = Column(Integer, nullable=True, index=True)
-    columna = Column(Text)
-    valor = Column(Text)
+    detalles = Column(Text, nullable=True)
 
     # Propiedades
     actor_activo = relationship(
         "Rastreable", backref="registro_activo", 
-		foreign_keys='Rastreable.rastreable_id',
+		foreign_keys='Registro.actor_activo_id',
         primaryjoin="Registro.actor_activo_id == Rastreable.rastreable_id"
     )
     actor_pasivo = relationship(
         "Rastreable", backref="registro_pasivo",
-		foreign_keys='Rastreable.rastreable_id',
+		foreign_keys='Registro.actor_pasivo_id',
         primaryjoin="Registro.actor_pasivo_id == Rastreable.rastreable_id"
     )
     
-    def __init__(self, actor_activo_id=None, accion=None, actor_pasivo_id=None, 
-                 columna='', valor=''):
+    def __init__(self, actor_activo=None, accion=None, actor_pasivo=None, 
+                 detalles=''):
         self.fecha_hora = ahorita()
-        self.actor_activo_id = actor_activo_id
+        self.actor_activo = actor_activo
         self.accion = accion
-        self.actor_pasivo_id = actor_pasivo_id
-        self.columna = columna
-        self.valor = valor
+        self.actor_pasivo = actor_pasivo
+        self.detalles = detalles

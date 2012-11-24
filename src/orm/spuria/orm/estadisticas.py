@@ -52,11 +52,18 @@ class EstadisticasTemporales(Base):
     @staticmethod
     def antes_de_insertar(mapper, connection, target):
         estadisticas_temporales = EstadisticasTemporales.__table__
+        estadisticas_temporales_alias = estadisticas_temporales.alias()
         
         expirar_stats_tmp_anteriores = estadisticas_temporales.update().\
-        values(fecha_fin = func.IF(
-            exists(estadisticas_temporales.select()), ahorita(), fecha_fin
-        )).where(and_(
+        values(
+            fecha_fin = func.IF(
+                select(
+                    [func.count('*')], 
+                    from_obj=[estadisticas_temporales_alias]
+                ) > 0, 
+                ahorita(), estadisticas_temporales.c.fecha_fin
+            )
+        ).where(and_(
             estadisticas_temporales.c.estadisticas_id == target.estadisticas_id,
             estadisticas_temporales.c.fecha_fin == None
         ))
@@ -191,11 +198,18 @@ class ContadorDeExhibiciones(Base):
     @staticmethod
     def antes_de_insertar(mapper, connection, target):
         contador = ContadorDeExhibiciones.__table__
+        contador_alias = contador.alias()
         
         expirar_contador_anterior = contador.update().\
-        values(fecha_fin = func.IF(
-            exists(contador.select()), ahorita(), fecha_fin
-        )).where(and_(
+        values(
+            fecha_fin = func.IF(
+                select(
+                    [func.count('*')], 
+                    from_obj=[contador_alias]
+                ) > 0, 
+                ahorita(), contador.c.fecha_fin
+            )
+        ).where(and_(
             contador.c.estadisticas_de_visitas_id == 
                 target.estadisticas_de_visitas_id,
             contador.c.fecha_fin == None

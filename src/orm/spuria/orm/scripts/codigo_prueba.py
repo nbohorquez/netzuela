@@ -82,21 +82,21 @@ def main():
         )
 
         pro3 = Producto(
-            creador=1, tipo_de_codigo='GTIN-13', codigo='P-004', 
-            estatus='Activo', fabricante='Shure', 
-            modelo='SM57', nombre='SM57', 
-            debut_en_el_mercado=date(1996,9,23), largo=3.64, 
-            ancho=2.18, alto=2.18, peso=0.45, pais_de_origen=pyVenezuela,
-            categoria=cat2100
-        )
-
-        pro4 = Producto(
             creador=1, tipo_de_codigo='GTIN-13', codigo='P-003', 
             estatus='Activo', fabricante='Nintendo', 
             modelo='NUS-001', nombre='Nintendo 64 Control', 
             debut_en_el_mercado=date(1996,9,23), largo=3.64, 
             ancho=2.18, alto=2.18, peso=0.21, pais_de_origen=pyVenezuela,
             categoria=cat2200
+        )
+
+        pro4 = Producto(
+            creador=1, tipo_de_codigo='GTIN-13', codigo='P-004', 
+            estatus='Activo', fabricante='Shure', 
+            modelo='SM57', nombre='SM57', 
+            debut_en_el_mercado=date(1996,9,23), largo=3.64, 
+            ancho=2.18, alto=2.18, peso=0.45, pais_de_origen=pyVenezuela,
+            categoria=cat2100
         )
 
         DBSession.add_all([pro1, pro2, pro3, pro4])
@@ -144,7 +144,7 @@ def main():
         tie1.horarios_de_trabajo[6].turnos.append(Turno(time(0), time(0)))
 
         tie2 = Tienda(
-            ubicacion=paAmbrosio, rif='J151545970', 
+            ubicacion=paCHerrera, rif='J151545970', 
             propietario=usu1, categoria=cat2000, estatus='Activo', 
             nombre_legal='Fralneca C.A.', 
             nombre_comun='Planeta Virtual', telefono='0264-3711515',

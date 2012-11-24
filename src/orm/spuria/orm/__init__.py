@@ -71,7 +71,7 @@ def inicializar(archivo, **kwargs):
         create_engine, MetaData, Table, Column, Integer, CHAR, Numeric
     )
     from sqlalchemy.orm import mapper
-    import ConfigParser
+    import ConfigParser, sys, inspect
 
     if archivo is not None:
         config = ConfigParser.ConfigParser()
@@ -80,7 +80,9 @@ def inicializar(archivo, **kwargs):
 
         motor = create_engine(
             config.get('base_de_datos', 'sqlalchemy.url'), 
-            echo=True if config.get('base_de_datos', 'textual')=='si' else False
+            echo = { 
+                'si': True, 'no': False
+            }[config.get('base_de_datos', 'textual')]
         )
     elif kwargs is not None and 'sqlalchemy.url' in kwargs:
         motor = create_engine(kwargs['sqlalchemy.url'], echo=True)
@@ -123,3 +125,11 @@ def inicializar(archivo, **kwargs):
         autoload=True
     )
     mapper(TamanoReciente, esquema_tabla)
+
+    # Inicializamos los eventos insert, update y delete
+    for nombre, objeto in inspect.getmembers(sys.modules[__name__]):
+        try:
+            objeto.registrar_eventos()
+        except Exception as e:
+            continue
+        

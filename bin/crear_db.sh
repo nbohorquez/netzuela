@@ -111,6 +111,6 @@ crear_db
 if [ "$codigo_de_muestra" == "si" ]; then
     #eval "$prueba"
     cargar_codigo_prueba
-    #./cargar_imagenes.sh "$directorio_entrada" "$directorio_salida"
+    ./cargar_imagenes.sh "$directorio_entrada" "$directorio_salida"
     echo "Datos de prueba instalados"
 fi

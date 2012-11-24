@@ -10,7 +10,8 @@ requires = [
     'zope.sqlalchemy', 
     'transaction', 
     'lxml', 
-    'pykml'
+    'pykml',
+    'cPickle'
 ]
 
 setup(name='spuria.orm', 

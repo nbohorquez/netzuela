@@ -27,7 +27,7 @@ class Usuario(EsRastreable, EsDescribible, Base):
     # Propiedades
     __mapper_args__ = {
         'polymorphic_on': tipo, 
-        'polymorphic_identity': 'administrador'
+        'polymorphic_identity': 'usuario'
     }
     ubicacion = relationship(
         'Territorio', backref='usuarios',
