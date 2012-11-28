@@ -43,8 +43,8 @@ class PrecioCantidad(Base):
         CHAR(15), ForeignKey('inventario.codigo'), primary_key=True,
         autoincrement=False
     )
-    fecha_inicio = Column(Numeric(17,3), primary_key=True, autoincrement=False)
-    fecha_fin = Column(Numeric(17,3))
+    fecha_inicio = Column(Numeric(20,6), primary_key=True, autoincrement=False)
+    fecha_fin = Column(Numeric(20,6))
     precio = Column(Numeric(10,2), nullable=False)
     cantidad = Column(Numeric(9,3), nullable=False)
 
@@ -94,8 +94,8 @@ class Tamano(Base):
         Integer, ForeignKey('tienda.tienda_id'), primary_key=True,
         autoincrement=False
     )
-    fecha_inicio = Column(Numeric(17,3), primary_key=True, autoincrement=False)
-    fecha_fin = Column(Numeric(17,3))
+    fecha_inicio = Column(Numeric(20,6), primary_key=True, autoincrement=False)
+    fecha_fin = Column(Numeric(20,6))
     numero_total_de_productos = Column(Integer, nullable=False)
     cantidad_total_de_productos = Column(Integer)
     valor = Column(Integer)

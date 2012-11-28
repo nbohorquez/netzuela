@@ -134,7 +134,14 @@ def main():
             codigo_postal='', pib=0
         )
         DBSession.add(ven)
- 
+
+        chi = Territorio(
+            creador=1, nombre='China', poblacion=0,
+            idioma='Mandarin', territorio_padre_id=mun.territorio_id,
+            codigo_postal='', pib=0
+        )
+        DBSession.add(chi)
+
         ven.dibujable.croquis.append(Croquis(creador=1))
         for punto in puntos_venezuela:
             ven.dibujable.croquis[0].puntos.append(

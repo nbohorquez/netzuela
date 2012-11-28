@@ -121,7 +121,7 @@ def inicializar(archivo, **kwargs):
     esquema_tabla = Table(
         'tamano_reciente', metadata,
         Column('tienda_id', Integer, primary_key=True),
-        Column('fecha_inicio', Numeric(17,3), primary_key=True),
+        Column('fecha_inicio', Numeric(20,6), primary_key=True),
         autoload=True
     )
     mapper(TamanoReciente, esquema_tabla)

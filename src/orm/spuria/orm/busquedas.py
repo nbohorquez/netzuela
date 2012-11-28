@@ -79,7 +79,7 @@ class Busqueda(EsRastreable, EsEtiquetable, Base):
     usuario_id = Column(
         Integer, ForeignKey('usuario.usuario_id'), nullable=False
     )
-    fecha_hora = Column(Numeric(17,3), nullable=False)
+    fecha_hora = Column(Numeric(20,6), nullable=False)
     contenido = Column(Text, nullable=False)
 
     # Propiedades

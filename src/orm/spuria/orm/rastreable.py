@@ -37,13 +37,13 @@ class Rastreable(Base):
     asociacion_id = Column(
         Integer, ForeignKey('rastreable_asociacion.rastreable_asociacion_id')
     )
-    fecha_de_creacion = Column(Numeric(17,3), nullable=False)
+    fecha_de_creacion = Column(Numeric(20,6), nullable=False)
     creado_por = Column(Integer, nullable=False)
-    fecha_de_modificacion = Column(Numeric(17,3), nullable=False)
+    fecha_de_modificacion = Column(Numeric(20,6), nullable=False)
     modificado_por = Column(Integer, nullable=False)
-    fecha_de_eliminacion = Column(Numeric(17,3), nullable=True)
+    fecha_de_eliminacion = Column(Numeric(20,6), nullable=True)
     eliminado_por = Column(Integer, nullable=True)
-    fecha_de_acceso = Column(Numeric(17,3), nullable=False)
+    fecha_de_acceso = Column(Numeric(20,6), nullable=False)
     accesado_por = Column(Integer, nullable=False)
 
     # Propiedades

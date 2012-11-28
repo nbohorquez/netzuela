@@ -14,9 +14,14 @@ DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
 def fecha_hora_a_mysql(fecha_hora):
     return "{}.{}".format(
+        fecha_hora.strftime("%Y%m%d%H%M%S"), Decimal(fecha_hora.microsecond)
+    )
+    """
+    return "{}.{}".format(
         fecha_hora.strftime("%Y%m%d%H%M%S"), 
         int(round(Decimal(fecha_hora.microsecond)/1000))
     )
+    """
     
 def ahorita():
     return fecha_hora_a_mysql(datetime.now())

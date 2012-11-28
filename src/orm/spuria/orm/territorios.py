@@ -105,8 +105,8 @@ class TiendasConsumidores(Base):
         CHAR(16), ForeignKey('territorio.territorio_id'), primary_key=True,
         autoincrement=False
     )
-    fecha_inicio = Column(Numeric(17,3), primary_key=True, autoincrement=False)
-    fecha_fin = Column(Numeric(17,3), nullable=True)
+    fecha_inicio = Column(Numeric(20,6), primary_key=True, autoincrement=False)
+    fecha_fin = Column(Numeric(20,6), nullable=True)
     numero_de_consumidores = Column(Integer, nullable=False)
     numero_de_tiendas = Column(Integer, nullable=False)
     

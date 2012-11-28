@@ -61,8 +61,8 @@ class Acceso(Base):
         String(45), nullable=False, unique=True, index=True
     )
     contrasena = Column(VARBINARY(60), nullable=False)
-    fecha_de_registro = Column(Numeric(17,3), nullable=False)
-    fecha_de_ultimo_acceso = Column(Numeric(17,3), nullable=True)
+    fecha_de_registro = Column(Numeric(20,6), nullable=False)
+    fecha_de_ultimo_acceso = Column(Numeric(20,6), nullable=True)
     duracion_de_ultimo_acceso = Column(Interval, nullable=False)
     numero_total_de_accesos = Column(Integer, nullable=False)
     tiempo_total_de_accesos = Column(Interval, nullable=False)

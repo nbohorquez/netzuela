@@ -30,8 +30,9 @@ done
 dir1=${ARREGLO[0]:0:2}
 dir2=${ARREGLO[0]:2:2}
 archivo=${ARREGLO[0]:4}
-indice_punto=$( expr index "${ARREGLO[1]}" . )
-extension=$( echo ${ARREGLO[1]:$indice_punto} | tr '[A-Z]' '[a-z]')
+#indice_punto=$( expr index "${ARREGLO[1]}" . )
+#extension=$( echo ${ARREGLO[1]:$indice_punto} | tr '[A-Z]' '[a-z]')
+extension="${ARREGLO[1]##*.}"
 
 # Comprobamos que el directorio de salida existe
 if [ ! $2 ]; then
@@ -48,11 +49,13 @@ fi
 command -v convert >/dev/null 2>&1 || { 
 	echo "imagemagick no esta instalado, instalando...";
 	instalar_imagemagick;
+	echo "imagemagick instalado"
 }
-echo "imagemagick instalado"
 
-for i in "${!TAMANOS[@]}"
-do
+echo -n $(basename "$entrada")"="
+
+n=1
+for i in "${!TAMANOS[@]}"; do
 	# Chequeamos que el primer directorio exista
 	if [ ! -d "$base"/"$i" ];
 	then
@@ -74,6 +77,7 @@ do
 	ancho=`identify -format '%w' $entrada`
 	alto=`identify -format '%h' $entrada`
 	ruta_archivo="$base"/"$i"/"$dir1"/"$dir2"/"$archivo"."$extension"
+    ruta_simple="$i"/"$dir1"/"$dir2"/"$archivo"."$extension"
 
 	if [ $ancho -gt $alto -a \( $i = 'medianas' -o $i = 'pequenas' -o $i = 'miniaturas' \) ];
 	then
@@ -94,5 +98,13 @@ do
 	fi
 
 	# Convertimos la imagen a los tamanos especificados en TAMANOS
-	echo 'El archivo' $entrada 'fue copiado a la ubicacion: ' "$ruta_archivo"
+    if [ "$n" -eq ${#TAMANOS[@]} ]; then
+    	echo -n "$ruta_simple"
+    else    
+    	echo -n "$ruta_simple"","
+    fi
+    
+    ((n++))
 done
+
+echo ""

@@ -23,8 +23,9 @@ if [ ! -d $2 ]; then
 fi
 
 # Procesamos cada imagen del directorio especificado
+echo "[imagenes]"
 for i in "$1"/*
 do
-	echo "Procesando $i..."
+	#echo "Procesando $i..."
 	./procesar_imagen.sh "$i" "$2"
 done

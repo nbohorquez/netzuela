@@ -68,14 +68,14 @@ def main():
             + [Idioma(idioma) for idioma in idiomas]
             + [TipoDeCodigo(tdc) for tdc in tipos_de_codigo]
             + [Sexo(sexo) for sexo in sexos]
-            + [GradoDeInstruccion(valor=gdi['instruccion'], orden=gdi['grado'])
+            + [GradoDeInstruccion(valor=gdi[1], orden=gdi[0])
                 for gdi in grados_de_instruccion]
             + [Visibilidad(vis) for vis in visibilidades]
             + [Accion(acc) for acc in acciones]
             + [Calificacion(cal) for cal in calificaciones]
             + [GrupoDeEdad(gde) for gde in grupos_de_edades]
             + [Estatus(est) for est in estatus]
-            + [Dia(valor=dia['nombre'], orden=dia['orden']) for dia in dias]
+            + [Dia(valor=dia[1], orden=dia[0]) for dia in dias]
         )
         
         print "Cargando categoria base"
@@ -89,7 +89,7 @@ def main():
         
         print "Creando administrador"
         adm = Administrador(
-            creador=1, ubicacion=None, nombre='Nestor', apellido='Bohorquez',
+            creador=1, ubicacion=None, nombre='R2', apellido='D2',
             privilegios='Todos', correo_electronico='admin@netzuela.com',
             contrasena='$2a$12$MOM8uMGo9XmH1BDYPrTns.k/WLl6vt45qeKEXn5ZqoiBsQeBMfTQG'
         )

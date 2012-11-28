@@ -1,6 +1,7 @@
 #!/bin/bash
 
 archivo_config="config.ini"
+archivo_imagenes="imagenes.ini"
 
 parse_config() {
 	if [ ! -f "$1" ]; then

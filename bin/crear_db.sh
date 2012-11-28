@@ -1,19 +1,13 @@
 #!/bin/bash
 
 source comunes.sh
-parse_config $archivo_config
+parse_config "$archivo_config"
 
+dir_img="/srv/img/"
+var_img="/var/www/img"
 ingresar_mysql="mysql -u $usuario -p'$contrasena'"
-crear_db="$ingresar_mysql << EOF
-source ../src/sql/mysql/spuria_srv.sql
-EOF
-"
 prueba="$ingresar_mysql << EOF
 source ../src/sql/mysql/prueba_1.sql
-EOF
-"
-crear_now_msec="$ingresar_mysql << EOF
-CREATE FUNCTION now_msec RETURNS STRING SONAME 'now_msec.so';
 EOF
 "
 crear_spuria="$ingresar_mysql << EOF
@@ -41,7 +35,6 @@ instalar_libxslt() {
 }
 
 crear_db() {
-    #eval "$crear_db"
     eval "$crear_spuria"
 
     source env/bin/activate
@@ -58,30 +51,12 @@ cargar_codigo_prueba() {
     deactivate
 }
 
-instalar_now_msec() {
-    dir=`pwd`
-    cd ../src/db/mysql
-    gcc -shared -o now_msec.so now_msec.cc -I /usr/include/mysql
-    mv now_msec.so /usr/lib/mysql/plugin
-    eval "$crear_now_msec"
-    cd "$dir"
-}
-
 # Chequeamos root
 if [ "$USER" != "root" ]; then
         echo "Error: Debe correr este script como root"
         exit 1;
 fi
 echo "Ejecutando script como root"
-
-# Chequeamos que now_msec.so este en su sitio
-<<COM
-if [ ! -f /usr/lib/mysql/plugin/now_msec.so ]; then
-    echo "La funcion 'now_msec()' no esta instalada, instalando..."
-    instalar_now_msec
-fi
-echo "now_msec() instalada"
-COM
 
 # Instalamos componentes necesarios para cargar los mapas
 existe_libxml=`dpkg -l | grep 'libxml2-dev'`
@@ -108,9 +83,22 @@ echo "Ambiente virtual creado"
 # Creamos la base de datos
 crear_db
 
+# Creamos el directorio de imagenes
+if [ ! -d "$dir_img" ]; then
+        echo "Directorio $dir_img no existe, creandolo..."
+        mkdir "$dir_img" || abortar "No se pudo crear el directorio $dir_img"
+fi
+echo "$dir_img creado"
+
+# Creamos el directorio simbolico de imagenes
+if [ ! -L "$var_img" ]; then
+    echo "El directorio /var/www/ no esta configurado, trabajando..."
+    ln -s "$dir_img" "$var_img"
+fi
+echo "Directorio /var/www/ configurado"
+
 if [ "$codigo_de_muestra" == "si" ]; then
-    #eval "$prueba"
+    ./cargar_imagenes.sh ../img "$var_img" > "$archivo_imagenes"
     cargar_codigo_prueba
-    ./cargar_imagenes.sh "$directorio_entrada" "$directorio_salida"
     echo "Datos de prueba instalados"
 fi

@@ -27,7 +27,7 @@ class Registro(Base):
     
     # Columnas
     registro_id = Column(Integer, primary_key=True, autoincrement=True)
-    fecha_hora = Column(Numeric(17,3), nullable=False)
+    fecha_hora = Column(Numeric(20,6), nullable=False)
     actor_activo_id = Column(Integer, nullable=False, index=True)
     accion = Column(CHAR(13), ForeignKey('accion.valor'), nullable=False)
     actor_pasivo_id = Column(Integer, nullable=True, index=True)

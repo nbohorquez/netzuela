@@ -11,7 +11,6 @@ requires = [
     'transaction', 
     'lxml', 
     'pykml',
-    'cPickle'
 ]
 
 setup(name='spuria.orm', 

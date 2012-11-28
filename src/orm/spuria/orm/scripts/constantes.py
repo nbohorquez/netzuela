@@ -6,14 +6,14 @@ idiomas = ["Espanol", "English", "Francais", "Deutsch", "Mandarin"]
 tipos_de_codigo = ["GTIN-13", "GTIN-8", "GTIN-14", "GS1-128", "Otro"]
 sexos = ["Hombre", "Mujer"]
 grados_de_instruccion = [
-    {'grado': 1, 'instruccion': "Primaria"},
-    {'grado': 2, 'instruccion': "Secundaria"},
-    {'grado': 3, 'instruccion': "Tecnico Medio"},
-    {'grado': 4, 'instruccion': "Tecnico Superior"},
-    {'grado': 5, 'instruccion': "Universitaria"},
-    {'grado': 6, 'instruccion': "Especializacion"},
-    {'grado': 7, 'instruccion': "Maestria"},
-    {'grado': 8, 'instruccion': "Doctorado"}
+    (1, "Primaria"),
+    (2, "Secundaria"),
+    (3, "Tecnico Medio"),
+    (4, "Tecnico Superior"),
+    (5, "Universitaria"),
+    (6, "Especializacion"),
+    (7, "Maestria"),
+    (8, "Doctorado")
 ]
 visibilidades = [
     "Ninguno visible", "Cantidad visible", "Precio visible", "Ambos visibles"
@@ -29,13 +29,13 @@ grupos_de_edades = [
 ]
 estatus = ["Activo", "Bloqueado", "Eliminado"]
 dias = [
-    {'orden': 1, 'nombre': "Lunes"},
-    {'orden': 2, 'nombre': "Martes"},
-    {'orden': 3, 'nombre': "Miercoles"},
-    {'orden': 4, 'nombre': "Jueves"},
-    {'orden': 5, 'nombre': "Viernes"},
-    {'orden': 6, 'nombre': "Sabado"},
-    {'orden': 7, 'nombre': "Domingo"}
+    (1, "Lunes"),
+    (2, "Martes"),
+    (3, "Miercoles"),
+    (4, "Jueves"),
+    (5, "Viernes"),
+    (6, "Sabado"),
+    (7, "Domingo")
 ]
 arbol_categorias = [
     {

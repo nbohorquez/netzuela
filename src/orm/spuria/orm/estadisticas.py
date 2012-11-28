@@ -37,8 +37,8 @@ class EstadisticasTemporales(Base):
         Integer, ForeignKey('estadisticas.estadisticas_id'), primary_key=True,
         autoincrement=False
     )
-    fecha_inicio = Column(Numeric(17,3), primary_key=True, autoincrement=False)
-    fecha_fin = Column(Numeric(17,3), nullable=True)
+    fecha_inicio = Column(Numeric(20,6), primary_key=True, autoincrement=False)
+    fecha_fin = Column(Numeric(20,6), nullable=True)
     contador = Column(Integer, nullable=False)
     ranking = Column(Integer, nullable=False)
     indice = Column(Integer, nullable=False)
@@ -185,8 +185,8 @@ class ContadorDeExhibiciones(Base):
         ForeignKey('estadisticas_de_visitas.estadisticas_de_visitas_id'),
         primary_key=True, autoincrement=False
     )
-    fecha_inicio = Column(Numeric(17,3), primary_key=True, autoincrement=False)
-    fecha_fin = Column(Numeric(17,3), nullable=True)
+    fecha_inicio = Column(Numeric(20,6), primary_key=True, autoincrement=False)
+    fecha_fin = Column(Numeric(20,6), nullable=True)
     valor = Column(Integer, nullable=False)
     
     # Propiedades

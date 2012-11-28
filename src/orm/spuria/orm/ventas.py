@@ -75,8 +75,8 @@ class Factura(EsRastreable, Base):
     # Columnas
     factura_id = Column(Integer, primary_key=True, autoincrement=True)
     cliente_id = Column(CHAR(10), ForeignKey('cliente.rif'), nullable=False)
-    inicio_de_medicion = Column(Numeric(17,3), nullable=False)
-    fin_de_medicion = Column(Numeric(17,3), nullable=False)
+    inicio_de_medicion = Column(Numeric(20,6), nullable=False)
+    fin_de_medicion = Column(Numeric(20,6), nullable=False)
     subtotal = Column(Numeric, nullable=False)
     impuestos = Column(Numeric, nullable=False)
     total = Column(Numeric, nullable=False)
