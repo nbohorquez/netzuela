@@ -84,8 +84,6 @@ class PrecioCantidad(Base):
         self.precio = precio
         self.cantidad = cantidad
 
-#PrecioCantidad.registrar_eventos()
-
 class Tamano(Base):
     __tablename__ = 'tamano'
 
@@ -129,14 +127,11 @@ class Tamano(Base):
 
     def __init__(self, numero_total_de_productos=0,
                  cantidad_total_de_productos=None, valor=0):
-        #self.tienda = tienda
         self.fecha_inicio = ahorita()
         self.fecha_fin = None
         self.numero_total_de_productos = numero_total_de_productos
         self.cantidad_total_de_productos = cantidad_total_de_productos
         self.valor = valor
-
-#Tamano.registrar_eventos()
 
 class Dia(Base):
     __tablename__ = 'dia'
@@ -172,8 +167,6 @@ class Turno(Base):
     )
 
     def __init__(self, hora_de_apertura=time(8), hora_de_cierre=time(16)):
-        #self.tienda = tienda
-        #self.dia = dia
         self.hora_de_apertura = hora_de_apertura
         self.hora_de_cierre = hora_de_cierre
 
@@ -194,7 +187,6 @@ class HorarioDeTrabajo(Base):
     tienda = relationship('Tienda', backref='horarios_de_trabajo')
 
     def __init__(self, dia=None, laborable=True):
-        #self.tienda = tienda
         self.dia = dia
         self.laborable = laborable
 
@@ -264,7 +256,6 @@ class Inventario(EsRastreable, EsCobrable, Base):
         super(Inventario, self).__init__(
             creador=tienda.rastreable.rastreable_id, *args, **kwargs
         )
-        #self.tienda = tienda
         self.codigo = codigo
         self.descripcion = descripcion
         self.visibilidad = visibilidad
@@ -275,19 +266,8 @@ class Inventario(EsRastreable, EsCobrable, Base):
 
         # Actualizamos el tamaño de la tienda
         tamano_viejo = tienda.tamanos[-1]
-        """
-        tamano_viejo = DBSession.query(Tamano).filter(and_(
-            Tamano.tienda_id == target.tienda_id, 
-            Tamano.fecha_fin == None
-        )).first()
-        """
         numero_nuevo = tamano_viejo.numero_total_de_productos + 1
         cantidad_nueva = tamano_viejo.cantidad_total_de_productos + cantidad
-
-        """
-        tienda = DBSession.query(Tienda).filter(Tienda.tienda_id == tienda_id).\
-        first()
-        """
 
         tienda.tamanos.append(
             Tamano(

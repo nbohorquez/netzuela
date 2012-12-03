@@ -73,6 +73,8 @@ def inicializar(archivo, **kwargs):
     from sqlalchemy.orm import mapper
     import ConfigParser, sys, inspect
 
+    global DBSession
+
     if archivo is not None:
         config = ConfigParser.ConfigParser()
         with open(archivo) as fp:
@@ -86,6 +88,8 @@ def inicializar(archivo, **kwargs):
         )
     elif kwargs is not None and 'sqlalchemy.url' in kwargs:
         motor = create_engine(kwargs['sqlalchemy.url'], echo=True)
+    else:
+        raise Exception('No hay ninguna URL especificada para la base de datos')
 
     DBSession.configure(bind=motor)
     Base.metadata.create_all(motor)
@@ -132,4 +136,3 @@ def inicializar(archivo, **kwargs):
             objeto.registrar_eventos()
         except Exception as e:
             continue
-        

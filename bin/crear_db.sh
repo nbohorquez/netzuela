@@ -3,7 +3,7 @@
 source comunes.sh
 parse_config "$archivo_config"
 
-dir_img="/srv/img/"
+dir_img="$dir_salida"
 var_img="/var/www/img"
 ingresar_mysql="mysql -u $usuario -p'$contrasena'"
 prueba="$ingresar_mysql << EOF
@@ -20,7 +20,7 @@ crear_env() {
     dir=`pwd`
     source env/bin/activate
     easy_install -U distribute
-    cd ../src/orm
+    cd ../src
     python setup.py develop
     deactivate
     cd "$dir"
@@ -39,7 +39,7 @@ crear_db() {
 
     source env/bin/activate
     cargar_constantes
-    echo "Esquema de la base de datos creada"
+    echo "Constantes de la base de datos cargadas"
     cargar_mapas
     echo "Mapas de Venezuela cargados"
     deactivate
@@ -85,8 +85,8 @@ crear_db
 
 # Creamos el directorio de imagenes
 if [ ! -d "$dir_img" ]; then
-        echo "Directorio $dir_img no existe, creandolo..."
-        mkdir "$dir_img" || abortar "No se pudo crear el directorio $dir_img"
+    echo "Directorio $dir_img no existe, creandolo..."
+    mkdir "$dir_img" || abortar "No se pudo crear el directorio $dir_img"
 fi
 echo "$dir_img creado"
 
@@ -98,7 +98,7 @@ fi
 echo "Directorio /var/www/ configurado"
 
 if [ "$codigo_de_muestra" == "si" ]; then
-    ./cargar_imagenes.sh ../img "$var_img" > "$archivo_imagenes"
+    ./cargar_imagenes.sh "$dir_entrada" "$dir_salida" > "$archivo_imagenes"
     cargar_codigo_prueba
     echo "Datos de prueba instalados"
 fi

@@ -11,17 +11,21 @@ requires = [
     'transaction', 
     'lxml', 
     'pykml',
+    'pyelasticsearch',
+    'celery', 
+    'beautifulsoup4'
 ]
 
-setup(name='spuria.orm', 
+setup(name='spuria', 
       version='0.0.1', 
-      description='Interfaz ORM de la base de datos de Netzuela',
+      description='Base de datos de Netzuela',
       packages=find_packages(),
       install_requires=requires,
       entry_points="""
       [console_scripts]
-      cargar_constantes = spuria.orm.scripts.cargar_constantes:main
-      cargar_mapas = spuria.orm.scripts.cargar_mapas:main
-      codigo_prueba = spuria.orm.scripts.codigo_prueba:main
+      cargar_constantes = spuria.scripts.cargar_constantes:main
+      cargar_mapas = spuria.scripts.cargar_mapas:main
+      codigo_prueba = spuria.scripts.codigo_prueba:main
+      inicializar_buscador = spuria.scripts.inicializar_buscador:main
       """
 )

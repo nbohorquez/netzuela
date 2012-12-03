@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from comunes import ARCHIVO_CONFIG
 from constantes import (
     codigos_de_error,
     privilegios,
@@ -16,29 +15,13 @@ from constantes import (
     dias,
     arbol_categorias
 )
-"""
-from orm import (
-    inicializar, Base, DBSession, Buscable, ResultadoDeBusqueda, Busqueda, 
-    Estadisticas, EstadisticasTemporales, EstadisticasDePopularidad, 
-    EstadisticasDeInfluencia, EstadisticasDeVisitas, ContadorDeExhibiciones, 
-    Rastreable, Estatus, Categoria, Accion, CodigoDeError, Registro, Territorio,
-    TiendasConsumidores, Region, RegionTerritorio, Idioma, Mensaje, 
-    Interlocutor, TipoDeCodigo, Producto, Visibilidad, PrecioCantidad, 
-    Inventario, Tamano, Tienda, Dia, HorarioDeTrabajo, Turno, Punto, Croquis, 
-    PuntoDeCroquis, Dibujable, Etiquetable, Etiqueta, Palabra, 
-    RelacionDePalabras, Cliente, Usuario, Acceso, Administrador, Privilegios, 
-    Describible, Foto, Descripcion, Patrocinante, Publicidad, 
-    ConsumidorObjetivo, GrupoDeEdadObjetivo, GradoDeInstruccionObjetivo, 
-    TerritorioObjetivo, SexoObjetivo, Cobrable, ServicioVendido, Factura, 
-    Calificacion, CalificacionResena, CalificableSeguible, Seguimiento, 
-    Consumidor, Sexo, GrupoDeEdad, GradoDeInstruccion
-)
-"""
+from spuria.comunes import ARCHIVO_CONFIG
 from spuria.orm import (
-    inicializar, Base, DBSession, Estatus, Categoria, Accion, CodigoDeError,
-    Idioma, TipoDeCodigo, Visibilidad, Dia, Administrador, Privilegios, 
-    Calificacion, Sexo, GrupoDeEdad, GradoDeInstruccion
+    inicializar as inicializar_db, Base, DBSession, Estatus, Categoria, Accion,
+    CodigoDeError, Idioma, TipoDeCodigo, Visibilidad, Dia, Administrador, 
+    Privilegios, Calificacion, Sexo, GrupoDeEdad, GradoDeInstruccion
 )
+from spuria.search import inicializar as inicializar_se
 import transaction
 
 hash_cat = {}
@@ -58,7 +41,8 @@ def parsear_arbol_categorias(padre, arbol=arbol_categorias):
         #hash_cat[tmp.categoria_id] = hijo
 
 def main():
-    inicializar(archivo=ARCHIVO_CONFIG)
+    inicializar_db(archivo=ARCHIVO_CONFIG)
+    inicializar_se(archivo=ARCHIVO_CONFIG)
 
     with transaction.manager:
         print "Cargando constantes"

@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from comunes import ARCHIVO_CONFIG
 from constantes import puntos_venezuela
 from decimal import *
-from spuria.orm import (
-    inicializar, DBSession, Croquis, Dibujable, Punto, Territorio
-)
 from os import path
 from pykml import parser
+from spuria.comunes import ARCHIVO_CONFIG
+from spuria.orm import (
+    inicializar as inicializar_db, DBSession, Croquis, Dibujable, Punto, 
+    Territorio
+)
+from spuria.search import inicializar as inicializar_se
 from sqlalchemy import create_engine, and_, MetaData, Table
 from sqlalchemy.orm import sessionmaker, aliased, mapper
 from sqlalchemy.sql import select, func, bindparam
@@ -117,7 +119,8 @@ def ingresar_silueta(silueta, dibujable):
         )
         
 def main():
-    inicializar(archivo=ARCHIVO_CONFIG)
+    inicializar_db(archivo=ARCHIVO_CONFIG)
+    inicializar_se(archivo=ARCHIVO_CONFIG)
 
     with transaction.manager:
         mun = Territorio(

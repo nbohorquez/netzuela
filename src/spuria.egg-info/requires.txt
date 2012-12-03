@@ -1,0 +1,9 @@
+mysql-python
+SQLAlchemy
+zope.sqlalchemy
+transaction
+lxml
+pykml
+pyelasticsearch
+celery
+beautifulsoup4

@@ -1,0 +1,7 @@
+
+      [console_scripts]
+      cargar_constantes = spuria.scripts.cargar_constantes:main
+      cargar_mapas = spuria.scripts.cargar_mapas:main
+      codigo_prueba = spuria.scripts.codigo_prueba:main
+      inicializar_buscador = spuria.scripts.inicializar_buscador:main
+      

@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from comunes import ARCHIVO_CONFIG, ARCHIVO_IMAGENES
 from datetime import date, time, datetime, timedelta
 from decimal import Decimal
+from spuria.comunes import ARCHIVO_CONFIG, ARCHIVO_IMAGENES
 from spuria.orm import (
     Busqueda, ResultadoDeBusqueda, DBSession, Consumidor, Sexo, GrupoDeEdad, 
     GradoDeInstruccion, Territorio, Categoria, EstadisticasDeVisitas, 
     EstadisticasDePopularidad, EstadisticasDeInfluencia, Usuario, Palabra,
     Croquis, Punto, Descripcion, Foto, Patrocinante, Publicidad, 
     CalificacionResena, Seguimiento, Producto, Tienda, HorarioDeTrabajo, Turno,
-    Inventario, Mensaje, Factura, ServicioVendido, inicializar
+    Inventario, Mensaje, Factura, ServicioVendido, inicializar as inicializar_db
 )
+from spuria.search import inicializar as inicializar_se
 from sqlalchemy import and_
 import ConfigParser, transaction
 
 def main():
-    inicializar(archivo=ARCHIVO_CONFIG)
+    inicializar_db(archivo=ARCHIVO_CONFIG)
+    inicializar_se(archivo=ARCHIVO_CONFIG)
 
     with transaction.manager:
         """

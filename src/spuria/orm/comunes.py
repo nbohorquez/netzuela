@@ -9,6 +9,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.sql.expression import Executable, ClauseElement
 from zope.sqlalchemy import ZopeTransactionExtension
 from time import strftime
+from spuria.search import SEConn
 
 DBSession = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 
@@ -16,12 +17,6 @@ def fecha_hora_a_mysql(fecha_hora):
     return "{}.{}".format(
         fecha_hora.strftime("%Y%m%d%H%M%S"), Decimal(fecha_hora.microsecond)
     )
-    """
-    return "{}.{}".format(
-        fecha_hora.strftime("%Y%m%d%H%M%S"), 
-        int(round(Decimal(fecha_hora.microsecond)/1000))
-    )
-    """
     
 def ahorita():
     return fecha_hora_a_mysql(datetime.now())
@@ -44,6 +39,19 @@ class _Base(object):
 
         if not isinstance(target, EsRastreable):
             return
+
+        if target.__tablename__ == 'inventario':
+            SEConn.index(
+                "spuria", "inventario",
+                {
+                    "tienda_id": target.tienda_id, 
+                    "codigo": target.codigo, 
+                    "descripcion": target.descripcion, 
+                    "visibilidad": target.visibilidad,
+                    "producto_id": target.producto_id
+                }
+            )
+            SEConn.refresh('spuria')
 
         registro = Registro.__table__
 
