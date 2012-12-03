@@ -10,6 +10,7 @@ from calificaciones_resenas import EsCalificableSeguible
 from usuarios import Cliente
 from croquis_puntos import EsDibujable
 from mensajes import EsInterlocutor
+from spuria.search import SEConn
 from sqlalchemy import *
 from sqlalchemy.orm import relationship, backref
 
@@ -249,6 +250,23 @@ class Inventario(EsRastreable, EsCobrable, Base):
         'Producto', primaryjoin='Inventario.producto_id==Producto.producto_id',
          backref='inventario'
     )
+
+    # Metodos
+    @staticmethod
+    def despues_de_insertar(mapper, connection, target):
+        # Llamamos a la funcion que estamos extendiendo
+        Base.despues_de_insertar(mapper, connection, target)
+        SEConn.index(
+            "spuria", "inventario",
+            {
+                "tienda_id": target.tienda_id, 
+                "codigo": target.codigo, 
+                "descripcion": target.descripcion, 
+                "visibilidad": target.visibilidad,
+                "producto_id": target.producto_id
+            }
+        )
+        SEConn.refresh('spuria')
 
     def __init__(self, tienda=None, codigo=None, descripcion='', 
                  visibilidad="Ambos visibles", producto=None, precio=0, 

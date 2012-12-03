@@ -10,10 +10,8 @@ def inicializar(archivo, **kwargs):
         with open(archivo) as fp:
     	    config.readfp(fp)
         urls = config.get('buscador', 'elasticsearch.url')
-        print "SEConn configurador por spuria"
     elif kwargs is not None and 'elasticsearch.url' in kwargs:
         urls = kwargs['elasticsearch.url']
-        print "SEConn configurador por paris"
     else:
         raise Exception('No hay ninguna URL especificada para el buscador')
 

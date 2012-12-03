@@ -68,7 +68,7 @@ class EsInterlocutor(object):
 
     def __init__(self, *args, **kwargs):
         # Aqui la explicacion de por que tengo que llamar a super desde este
-        # constructor para que esta clase sea inicializada en la cadaena de
+        # constructor para que esta clase sea inicializada en la cadena de
         # inicializacion:
         # http://stackoverflow.com/questions/9575409/python-calling-parent-class-init-with-multiple-inheritance-whats-the-righ
         # http://rhettinger.wordpress.com/2011/05/26/super-considered-super/
