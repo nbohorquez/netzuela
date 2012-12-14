@@ -1,7 +1,7 @@
 #!/bin/bash
 
 instalar_imagemagick() {
-	apt-get install -y imagemagick
+	apt-get install -qy imagemagick >/dev/null 2>&1
 }
 
 declare -A TAMANOS=(["grandes"]="500" ["medianas"]="300" ["pequenas"]="160" ["miniaturas"]="70")
@@ -47,9 +47,9 @@ fi
 
 # Chequeamos imagemagick
 command -v convert >/dev/null 2>&1 || { 
-	echo "imagemagick no esta instalado, instalando...";
+	#echo "imagemagick no esta instalado, instalando...";
 	instalar_imagemagick;
-	echo "imagemagick instalado"
+	#echo "imagemagick instalado"
 }
 
 echo -n $(basename "$entrada")"="

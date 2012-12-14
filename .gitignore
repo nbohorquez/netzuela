@@ -4,6 +4,7 @@
 map/
 
 bin/env/
+bin/imagenes.ini
 
 src/build/
 src/dist/
