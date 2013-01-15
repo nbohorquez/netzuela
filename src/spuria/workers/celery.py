@@ -3,7 +3,7 @@ from celery import Celery
 
 celery = Celery(
     broker='amqp://', backend='redis://localhost:6379/0', 
-    include=['productos.tareas']
+    include=['tareas']
 )
 celery.conf.update(
     CELERY_TASK_RESULT_EXPIRES=3600,

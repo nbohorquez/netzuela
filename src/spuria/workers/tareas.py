@@ -3,10 +3,13 @@ from bs4 import BeautifulSoup, NavigableString
 from spuria.workers import celery
 import urllib2, sys  
 
-#http://yoopsie.com/query.php?query=0075678014345&locale=US&index=All
+@celery.celery.task
+def crear_objeto(*args, **kwargs):
 
 @celery.celery.task
 def registrar_producto(upc):
+    #http://yoopsie.com/query.php?query=0075678014345&locale=US&index=All
+
     sitio = 'http://yoopsie.com/query.php'
     query = upc
     locale = 'US'
