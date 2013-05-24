@@ -13,7 +13,8 @@ requires = [
     'pykml',
     'pyelasticsearch',
     'celery', 
-    'beautifulsoup4'
+    'beautifulsoup4',
+    'python-dateutil'
 ]
 
 setup(name='spuria', 
