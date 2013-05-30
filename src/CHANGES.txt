@@ -1,4 +1,9 @@
 0.0.1
 =====
 
-Version inicial
+-   Version inicial
+
+0.1
+===
+
+-   Version beta para AWS

@@ -18,9 +18,22 @@ requires = [
 ]
 
 setup(name='spuria', 
-      version='0.0.1', 
+      version='0.1', 
       description='Base de datos de Netzuela',
+      long_description=README + '\n\n' +  CHANGES,
+      classifiers=[
+        "Programming Language :: Python",
+        "Topic :: Database :: Database Engines/Servers",
+        "Topic :: Internet :: WWW/HTTP :: Indexing/Search"
+      ],
+      author='Zuliaworks C.A.',
+      author_email='contacto@zuliaworks.com',
+      url='www.zuliaworks.com',
+      keywords='web database netzuela sqlalchemy elasticsearch celery',
       packages=find_packages(),
+      include_package_data=True,
+      zip_safe=False,
+      test_suite='spuria',
       install_requires=requires,
       entry_points="""
       [console_scripts]
