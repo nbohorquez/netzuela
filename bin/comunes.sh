@@ -26,12 +26,10 @@ parse_config() {
 crear_env() {
     alias rollback="rm -rf env 2>/dev/null; return 1"
 
-    if [ -f env/bin/python ]; then
-        return 0
+    if [ ! -f env/bin/python ]; then
+        virtualenv --no-site-packages --distribute env 2>&1 || rollback
+        rm *.tar.gz 2>/dev/null
     fi
-
-    virtualenv --no-site-packages --distribute env 2>&1 || rollback
-    rm *.tar.gz 2>/dev/null
 
     source env/bin/activate
     easy_install -U distribute 2>&1 || { deactivate; rollback; }
@@ -39,7 +37,7 @@ crear_env() {
 
     dir=`pwd`
     cd ../src
-    python setup.py develop 2>&1 || { deactivate; cd "$dir"; rollback; }
+    python setup.py install 2>&1 || { deactivate; cd "$dir"; rollback; }
     deactivate
     cd "$dir"
  

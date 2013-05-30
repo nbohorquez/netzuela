@@ -27,12 +27,12 @@ instalar_libxslt() {
 
 crear_db() {
     eval "$crear_spuria" || return 1
-    info "\tEsquema de la base de datos cargado"
+    info "Esquema de la base de datos cargado"
     source env/bin/activate
     cargar_constantes || return 1
-    info "\tConstantes de la base de datos cargadas"
+    info "Constantes de la base de datos cargadas"
     cargar_mapas || return 1
-    info "\tMapas de Venezuela cargados"
+    info "Mapas de Venezuela cargados"
     deactivate
 }
 
