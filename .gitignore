@@ -1,7 +1,7 @@
 *.*~
 *.pyc
 *.bak
-map/
+*.DS_Store
 
 bin/env/
 bin/imagenes.ini
